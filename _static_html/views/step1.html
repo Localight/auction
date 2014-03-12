@@ -1,0 +1,78 @@
+<div class="bid-bg">
+    <div class="container ">
+        <div class="row logo bid-title">
+        <span class="pull-right step">
+            Step 1 of 2
+        </span>
+            <img src="images/pic/dollar.png" alt="" width="32" height="32"/>
+            <h1 class="title">
+                ENTER YOUR BID
+            </h1>
+        </div>
+        <form name="form" class="bid-form control-group">
+            <p>
+                Please enter your auction bid! You will not be charged until you win an item.
+                Don’t forget: items are one-of-a-kind!
+            </p>
+
+            <p>
+                <span class="glyphicon glyphicon-usd"></span>
+                Bid amount
+            </p>
+
+            <div class="row">
+                <div class="col-xs-5">
+                    <input name="amount" required type="number" min="15" ng-model="model.amount"
+                           class="amount"
+                           style="width: 70%;display: inline;text-align: right;"/> .00
+                </div>
+                <div class="col-xs-7">
+                    <p class="prompt" ng-show="form.amount.$error.min">
+                        A min $15 starting bid is recommended for this item.
+                    </p>
+                </div>
+            </div>
+            <p style="margin-top: 0.6em;">
+                <span class="glyphicon glyphicon-lock"></span>
+                Payment info
+            </p>
+            <div class="payment">
+                <p data-ng-show="invalid" style="color: red;font-size: 0.9em;">
+                    <span class="glyphicon glyphicon-warning-sign"></span> Oops! Something's wrong.
+                    Please check it.
+                </p>
+                <div>
+                    <img src="images/pic/account.png" style="position: absolute;width: 3em;margin: 0.7em;"/>
+                    <input name="card1" data-ng-pattern="/\d{16,16}/" data-ng-model="model.card1"
+                           data-ng-minlength="16" data-ng-maxlength="16" required
+                           data-ng-class="{error:card1Invalid}"
+                           type="text" style="padding-left: 3.5em;" placeholder="XXXXXXXXXXXXXXXX"/>
+                </div>
+                <div style="margin-bottom: 2em;">
+                    <img data-ng-show="isCard2Correct" src="images/pic/go.png" class="go" data-ng-click="saveCard()"/>
+                    <div style="background: #ffffff;padding-bottom: 1px;" class="card" data-ng-class="{error:card2Invalid}">
+                        <input data-ng-model="model.MM" name="MM" type="number" required style="width: 18%;padding-left: 0.4em;" placeholder="MM" min="1" max="12"/>
+                        <input data-ng-model="model.YY" name="YY" type="number" required style="width: 15%" placeholder="YY" data-ng-minlength="2"data-ng-maxlength="2"/>
+                        <input data-ng-model="model.CVV" name="CVV" type="number" required style="width: 25%" placeholder="CVV" data-ng-minlength="3"data-ng-maxlength="4"/>
+                        <input data-ng-model="model.zipCode" name="zipCode" type="number" required style="width: 35%"
+                               placeholder="ZIPCODE" data-ng-pattern="/\d{5}/" data-ng-minlength="5"data-ng-maxlength="5"/>
+                    </div>
+                </div>
+                <img data-ng-src="images/gallery/{{selectedPic.src}}" class="img-responsive" alt=""/>
+                <div class="row pic-detail">
+                    <div class="col-xs-4">
+                        <div>Item</div>
+                        <div class="big">7864</div>
+                    </div>
+                    <div class="col-xs-8 right">
+                        <div>Made by</div>
+                        <div class="big">{{selectedPic.title}}</div>
+                    </div>
+                </div>
+                <button data-ng-click="saveCard()">
+                    <img src="images/pic/processd.png" class="proceed" alt=""/>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
