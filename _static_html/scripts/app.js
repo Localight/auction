@@ -34,9 +34,6 @@ angular.module('NonProfitApp', [
                 redirectTo: '/'
             });
     })
-    .run(function ($rootScope) {
-        $rootScope.showMask = true;
-    })
     .controller('MainCtrl', function ($scope, $rootScope, util) {
         $(window).scrollTop(0);// go to top when a new page loads
         // if the number of pics are less than 1000, I suggest just write here is better.
@@ -153,13 +150,6 @@ angular.module('NonProfitApp', [
         $scope.selectPic = function (pic) {
             $rootScope.selectedPic = pic;
         }
-        // should be execute only once
-        setTimeout(function () {
-            if($rootScope.showMask){
-                $rootScope.showMask = false;
-                $scope.$apply();
-            }
-        }, 3000);
         $scope.endTime = util.endTime();
     })
     .controller('AboutCtrl', function ($scope, util) {
