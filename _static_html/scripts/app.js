@@ -141,9 +141,7 @@ angular.module('NonProfitApp', [
         $scope.picList = [];
         var length = pics.length;
         var i = 0;
-        var initCount = 3 * 4; // the number of pictures at the begin
-        var step = 3 * 2;   // when need more pictures, the number of pictures
-        for (i = 0; i < length && i < initCount; i += 3) {
+        for (; i < length ; i += 3) {
             var row = [];
             row.push(pics[i]);
             if (i + 1 < length)
@@ -163,26 +161,6 @@ angular.module('NonProfitApp', [
             }
         }, 3000);
         $scope.endTime = util.endTime();
-        setInterval(function () {
-            var scrollTop = $(this).scrollTop();
-            var scrollHeight = $(document).height();
-            var windowHeight = $(this).height();
-            $scope.isToBottom = (scrollTop + windowHeight == scrollHeight) && (i < length);
-            // if scroll page to bottom, load more pictures
-            if ($scope.isToBottom) {
-                var j = 0;
-                for (; i < length && j < step; i += 3, j += 3) {
-                    var row = [];
-                    row.push(pics[i]);
-                    if (i + 1 < length)
-                        row.push(pics[i + 1]);
-                    if (i + 2 < length)
-                        row.push(pics[i + 2]);
-                    $scope.picList.push(row);
-                }
-            }
-            $scope.$apply();
-        }, 1000);
     })
     .controller('AboutCtrl', function ($scope, util) {
         $(window).scrollTop(0);// go to top when a new page loads
