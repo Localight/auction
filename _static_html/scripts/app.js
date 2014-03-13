@@ -151,7 +151,7 @@ angular.module('NonProfitApp', [
         }
         $scope.endTime = util.endTime();
     })
-    .controller('AboutCtrl', function ($scope, util,$window) {
+    .controller('AboutCtrl', function ($scope, util) {
         $(window).scrollTop(0);// go to top when a new page loads
         $scope.endTime = util.endTime();
     })
@@ -184,13 +184,14 @@ angular.module('NonProfitApp', [
         }
     }).controller('Step2Ctrl', function ($scope, $rootScope, $location) {
         $(window).scrollTop(0);// go to top when a new page loads
-        $scope.$watch('model.email', function () {
-            $scope.isEmailCorrect = !$scope.form.email.$pristine && $scope.form.email.$valid;
+        $scope.$watch('model.mobile', function () {
+            $scope.isMobileCorrect = !$scope.form.mobile.$pristine && $scope.form.mobile.$valid;
         });
         $scope.saveUser = function () {
             $scope.invalid = $scope.form.$invalid;
             $scope.nameInvalid = $scope.form.name.$invalid;
             $scope.emailInvalid = $scope.form.email.$invalid;
+            $scope.mobileInvalid = $scope.form.mobile.$invalid;
             if ($scope.form.$valid) {
                 // model should be correct data like
                 // {name: "Yong", email: "zengjunyong@gmail.com"}
