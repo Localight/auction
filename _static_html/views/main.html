@@ -47,9 +47,7 @@
                 <a href="#/step1" data-ng-click="selectPic(pic)">
                     <img data-ng-src="images/gallery/IMG_{{pic.itemNumber}}.jpg" class="img-responsive" alt=""/>
                 </a>
-                <span>
-                    {{pic.studentName}}
-                </span>
+                <span>{{pic.studentName.substr(0,pic.studentName.indexOf(','))}}</span>
             </td>
         </tr>
     </table>
