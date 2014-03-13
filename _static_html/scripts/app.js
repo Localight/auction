@@ -34,6 +34,9 @@ angular.module('NonProfitApp', [
                 redirectTo: '/'
             });
     })
+    .run(function ($rootScope) {
+        $rootScope.isCCExist = false;
+    })
     .controller('MainCtrl', function ($scope, $rootScope, util) {
         // if the number of pics are less than 1000, I suggest just write here is better.
         // else loading these data via Back-end API`
@@ -157,17 +160,23 @@ angular.module('NonProfitApp', [
     })
     .controller('Step1Ctrl',function ($scope, $rootScope, $location) {
         $(window).scrollTop(0);// go to top when a new page loads
+        $scope.readonly = true;
         var isCard2Correct = function () {
-            return !$scope.form.MM.$pristine && $scope.form.MM.$valid &&
-                !$scope.form.YY.$pristine && $scope.form.YY.$valid &&
-                !$scope.form.CVV.$pristine && $scope.form.CVV.$valid &&
-                !$scope.form.zipCode.$pristine && $scope.form.zipCode.$valid;
+//            return !$scope.form.MM.$pristine && $scope.form.MM.$valid &&
+//                !$scope.form.YY.$pristine && $scope.form.YY.$valid &&
+//                !$scope.form.CVV.$pristine && $scope.form.CVV.$valid &&
+//                !$scope.form.zipCode.$pristine && $scope.form.zipCode.$valid;
+            return $scope.form.MM.$valid &&
+                      $scope.form.YY.$valid &&
+                      $scope.form.CVV.$valid &&
+                      $scope.form.zipCode.$valid;
         }
         $scope.$watch('model', function () {
             $scope.isCard2Correct = isCard2Correct();
         },true);
         $scope.saveCard = function () {
             $scope.invalid = $scope.form.$invalid;
+            $rootScope.isCCExist = $scope.form.$valid;
             $scope.card1Invalid = $scope.form.card1.$pristine || $scope.form.card1.$invalid;
             $scope.card2Invalid = !isCard2Correct();
             if ($scope.form.$valid) {
@@ -194,7 +203,8 @@ angular.module('NonProfitApp', [
             $scope.mobileInvalid = $scope.form.mobile.$invalid;
             if ($scope.form.$valid) {
                 // model should be correct data like
-                // {name: "Yong", email: "zengjunyong@gmail.com"}
+                // {name: "Yong", email: "zengjunyong@gmail.com",mobile:"9492026850"}
+                // mobile must be digital, and the length is from 10 to 11
                 console.log($scope.model);
                 $location.path('/registered');
             }
