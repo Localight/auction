@@ -27,6 +27,10 @@ angular.module('NonProfitApp', [
                 templateUrl: 'views/step2.html',
                 controller: 'Step2Ctrl'
             })
+            .when('/step3', {
+                templateUrl: 'views/step3.html',
+                controller: 'Step1Ctrl'
+            })
             .when('/registered', {
                 templateUrl: 'views/registered.html'
             })
@@ -158,8 +162,9 @@ angular.module('NonProfitApp', [
         $(window).scrollTop(0);// go to top when a new page loads
         $scope.endTime = util.endTime();
     })
-    .controller('Step1Ctrl',function ($scope, $rootScope, $location) {
+    .controller('Step1Ctrl',function ($scope, $rootScope, $location,util) {
         $(window).scrollTop(0);// go to top when a new page loads
+        $scope.endTime = util.endTime();
         $scope.readonly = true;
         var isCard2Correct = function () {
 //            return !$scope.form.MM.$pristine && $scope.form.MM.$valid &&

@@ -137,6 +137,22 @@ h2 {
     color: #444444;
 }
 
+.days-3 {
+    color: #373437;
+}
+
+.hours-3 {
+    color: #424042;
+}
+
+.mins-3 {
+    color: #666566;
+}
+
+.secs-3 {
+    color: #8d8e91;
+}
+
 .gallery {
     padding-left: 0.2em;
     padding-right: 0;
