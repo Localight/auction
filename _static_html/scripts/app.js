@@ -4,8 +4,8 @@ angular.module('NonProfitApp', [
     .service('util', function () {
         return {
             endTime: function () {
-                // Ends March 30, 2014 at 5 PM (PST)
-                return (new Date(2014, 2, 30, 17)).getTime();
+                // Ends March 31 2014 at midnight
+                return (new Date(2014, 2, 31)).getTime();
             }
         }
     })
