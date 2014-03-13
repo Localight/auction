@@ -4,43 +4,21 @@
     src: url('../fonts/ProFontWindows-webfont.eot?iefix') format('eot'), url('../fonts/ProFontWindows-webfont.woff') format('woff'), url('../fonts/ProFontWindows-webfont.ttf') format('truetype'), url('../fonts/ProFontWindows-webfont.svg#webfont') format('svg');
 }
 
-.font {
-    color: #ffffff;
-    font-family: 'MyWebFont', Arial, sans-serif;
-}
-
-.font2 {
-    color: #ffffff;
-    font-family: 'Roboto Slab', serif;
-}
-
-.font3 {
-    color: #ffffff;
-    font-family: 'Roboto', sans-serif;
-}
-
 body {
     font-family: 'Roboto';
     background-size: 100%;
     background-repeat: repeat-y;
 }
 
-.body-bg-pre {
-    background-image: url("../images/background/bg-image-sharp.jpg");
-}
-
 .body-bg-loaded {
     background-image: url("../images/background/bg-image-blur.jpg");
+    background-attachment: fixed;
 }
 
 @media all and (-webkit-min-device-pixel-ratio: 1.5) {
     body {
         background-size: 100%;
         background-repeat: repeat-y;
-    }
-
-    .body-bg-pre {
-        background-image: url("../images/background/bg-image-sharp@2x.jpg");
     }
 
     .body-bg-loaded {
