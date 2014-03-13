@@ -35,7 +35,6 @@ angular.module('NonProfitApp', [
             });
     })
     .controller('MainCtrl', function ($scope, $rootScope, util) {
-        $(window).scrollTop(0);// go to top when a new page loads
         // if the number of pics are less than 1000, I suggest just write here is better.
         // else loading these data via Back-end API`
         var pics = [
