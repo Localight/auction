@@ -151,7 +151,7 @@ angular.module('NonProfitApp', [
         }
         $scope.endTime = util.endTime();
     })
-    .controller('AboutCtrl', function ($scope, util) {
+    .controller('AboutCtrl', function ($scope, util,$window) {
         $(window).scrollTop(0);// go to top when a new page loads
         $scope.endTime = util.endTime();
     })
