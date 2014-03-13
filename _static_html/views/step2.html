@@ -51,16 +51,16 @@
                 <button data-ng-click="saveUser()">
                     <img src="images/pic/processd.png" class="proceed" alt=""/>
                 </button>
-                <img data-ng-src="images/gallery/{{selectedPic.src}}" class="img-responsive" alt=""/>
+                <img data-ng-src="images/gallery/IMG_{{selectedPic.itemNumber}}.jpg" class="img-responsive" alt=""/>
 
                 <div class="row pic-detail">
                     <div class="col-xs-4">
                         <div>Item</div>
-                        <div class="big">7864</div>
+                        <div class="big">{{selectedPic.itemNumber}}</div>
                     </div>
                     <div class="col-xs-8 right">
                         <div>Made by</div>
-                        <div class="big">{{selectedPic.title}}</div>
+                        <div class="big">{{selectedPic.studentName}}</div>
                     </div>
                 </div>
                 <button data-ng-click="saveUser()">

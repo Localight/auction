@@ -44,105 +44,600 @@ angular.module('NonProfitApp', [
     .controller('MainCtrl', function ($scope, $rootScope, util) {
         // if the number of pics are less than 1000, I suggest just write here is better.
         // else loading these data via Back-end API`
-        var pics = [
-            {src: 'IMG_7722.jpg', title: 'IMG_7722.jpg'},
-            {src: 'IMG_7725.jpg', title: 'IMG_7725.jpg'},
-            {src: 'IMG_7726.jpg', title: 'IMG_7726.jpg'},
-            {src: 'IMG_7727.jpg', title: 'IMG_7727.jpg'},
-            {src: 'IMG_7729.jpg', title: 'IMG_7729.jpg'},
-            {src: 'IMG_7733.jpg', title: 'IMG_7733.jpg'},
-            {src: 'IMG_7734.jpg', title: 'IMG_7734.jpg'},
-            {src: 'IMG_7736.jpg', title: 'IMG_7736.jpg'},
-            {src: 'IMG_7739.jpg', title: 'IMG_7739.jpg'},
-            {src: 'IMG_7740.jpg', title: 'IMG_7740.jpg'},
-            {src: 'IMG_7742.jpg', title: 'IMG_7742.jpg'},
-            {src: 'IMG_7743.jpg', title: 'IMG_7743.jpg'},
-            {src: 'IMG_7745.jpg', title: 'IMG_7745.jpg'},
-            {src: 'IMG_7747.jpg', title: 'IMG_7747.jpg'},
-            {src: 'IMG_7748.jpg', title: 'IMG_7748.jpg'},
-            {src: 'IMG_7749.jpg', title: 'IMG_7749.jpg'},
-            {src: 'IMG_7750.jpg', title: 'IMG_7750.jpg'},
-            {src: 'IMG_7751.jpg', title: 'IMG_7751.jpg'},
-            {src: 'IMG_7753.jpg', title: 'IMG_7753.jpg'},
-            {src: 'IMG_7754.jpg', title: 'IMG_7754.jpg'},
-            {src: 'IMG_7756.jpg', title: 'IMG_7756.jpg'},
-            {src: 'IMG_7758.jpg', title: 'IMG_7758.jpg'},
-            {src: 'IMG_7767.jpg', title: 'IMG_7767.jpg'},
-            {src: 'IMG_7768.jpg', title: 'IMG_7768.jpg'},
-            {src: 'IMG_7769.jpg', title: 'IMG_7769.jpg'},
-            {src: 'IMG_7772.jpg', title: 'IMG_7772.jpg'},
-            {src: 'IMG_7773.jpg', title: 'IMG_7773.jpg'},
-            {src: 'IMG_7774.jpg', title: 'IMG_7774.jpg'},
-            {src: 'IMG_7775.jpg', title: 'IMG_7775.jpg'},
-            {src: 'IMG_7778.jpg', title: 'IMG_7778.jpg'},
-            {src: 'IMG_7779.jpg', title: 'IMG_7779.jpg'},
-            {src: 'IMG_7780.jpg', title: 'IMG_7780.jpg'},
-            {src: 'IMG_7782.jpg', title: 'IMG_7782.jpg'},
-            {src: 'IMG_7783.jpg', title: 'IMG_7783.jpg'},
-            {src: 'IMG_7785.jpg', title: 'IMG_7785.jpg'},
-            {src: 'IMG_7786.jpg', title: 'IMG_7786.jpg'},
-            {src: 'IMG_7788.jpg', title: 'IMG_7788.jpg'},
-            {src: 'IMG_7793.jpg', title: 'IMG_7793.jpg'},
-            {src: 'IMG_7794.jpg', title: 'IMG_7794.jpg'},
-            {src: 'IMG_7795.jpg', title: 'IMG_7795.jpg'},
-            {src: 'IMG_7798.jpg', title: 'IMG_7798.jpg'},
-            {src: 'IMG_7799.jpg', title: 'IMG_7799.jpg'},
-            {src: 'IMG_7802.jpg', title: 'IMG_7802.jpg'},
-            {src: 'IMG_7803.jpg', title: 'IMG_7803.jpg'},
-            {src: 'IMG_7805.jpg', title: 'IMG_7805.jpg'},
-            {src: 'IMG_7811.jpg', title: 'IMG_7811.jpg'},
-            {src: 'IMG_7812.jpg', title: 'IMG_7812.jpg'},
-            {src: 'IMG_7813.jpg', title: 'IMG_7813.jpg'},
-            {src: 'IMG_7814.jpg', title: 'IMG_7814.jpg'},
-            {src: 'IMG_7815.jpg', title: 'IMG_7815.jpg'},
-            {src: 'IMG_7816.jpg', title: 'IMG_7816.jpg'},
-            {src: 'IMG_7819.jpg', title: 'IMG_7819.jpg'},
-            {src: 'IMG_7820.jpg', title: 'IMG_7820.jpg'},
-            {src: 'IMG_7822.jpg', title: 'IMG_7822.jpg'},
-            {src: 'IMG_7823.jpg', title: 'IMG_7823.jpg'},
-            {src: 'IMG_7824.jpg', title: 'IMG_7824.jpg'},
-            {src: 'IMG_7825.jpg', title: 'IMG_7825.jpg'},
-            {src: 'IMG_7826.jpg', title: 'IMG_7826.jpg'},
-            {src: 'IMG_7827.jpg', title: 'IMG_7827.jpg'},
-            {src: 'IMG_7828.jpg', title: 'IMG_7828.jpg'},
-            {src: 'IMG_7830.jpg', title: 'IMG_7830.jpg'},
-            {src: 'IMG_7832.jpg', title: 'IMG_7832.jpg'},
-            {src: 'IMG_7833.jpg', title: 'IMG_7833.jpg'},
-            {src: 'IMG_7835.jpg', title: 'IMG_7835.jpg'},
-            {src: 'IMG_7836.jpg', title: 'IMG_7836.jpg'},
-            {src: 'IMG_7838.jpg', title: 'IMG_7838.jpg'},
-            {src: 'IMG_7839.jpg', title: 'IMG_7839.jpg'},
-            {src: 'IMG_7840.jpg', title: 'IMG_7840.jpg'},
-            {src: 'IMG_7841.jpg', title: 'IMG_7841.jpg'},
-            {src: 'IMG_7842.jpg', title: 'IMG_7842.jpg'},
-            {src: 'IMG_7843.jpg', title: 'IMG_7843.jpg'},
-            {src: 'IMG_7844.jpg', title: 'IMG_7844.jpg'},
-            {src: 'IMG_7845.jpg', title: 'IMG_7845.jpg'},
-            {src: 'IMG_7846.jpg', title: 'IMG_7846.jpg'},
-            {src: 'IMG_7847.jpg', title: 'IMG_7847.jpg'},
-            {src: 'IMG_7848.jpg', title: 'IMG_7848.jpg'},
-            {src: 'IMG_7849.jpg', title: 'IMG_7849.jpg'},
-            {src: 'IMG_7850.jpg', title: 'IMG_7850.jpg'},
-            {src: 'IMG_7851.jpg', title: 'IMG_7851.jpg'},
-            {src: 'IMG_7852.jpg', title: 'IMG_7852.jpg'},
-            {src: 'IMG_7853.jpg', title: 'IMG_7853.jpg'},
-            {src: 'IMG_7855.jpg', title: 'IMG_7855.jpg'},
-            {src: 'IMG_7856.jpg', title: 'IMG_7856.jpg'},
-            {src: 'IMG_7857.jpg', title: 'IMG_7857.jpg'},
-            {src: 'IMG_7859.jpg', title: 'IMG_7859.jpg'},
-            {src: 'IMG_7860.jpg', title: 'IMG_7860.jpg'},
-            {src: 'IMG_7861.jpg', title: 'IMG_7861.jpg'},
-            {src: 'IMG_7862.jpg', title: 'IMG_7862.jpg'},
-            {src: 'IMG_7863.jpg', title: 'IMG_7863.jpg'},
-            {src: 'IMG_7864.jpg', title: 'IMG_7864.jpg'},
-            {src: 'IMG_7866.jpg', title: 'IMG_7866.jpg'},
-            {src: 'IMG_7867.jpg', title: 'IMG_7867.jpg'},
-            {src: 'IMG_7869.jpg', title: 'IMG_7869.jpg'},
-            {src: 'IMG_7871.jpg', title: 'IMG_7871.jpg'},
-            {src: 'IMG_7873.jpg', title: 'IMG_7873.jpg'}
+        var auction = [];
+        auction.name = "Los Alamitos High School";
+        auction.items = [
+            {
+                "studentName":"Freiert, Jacob ",
+                "studentID":16098,
+                "classPeriod":1,
+                "itemNumber":7722
+            },
+            /* attention: this picture is not exist!
+            {
+                "studentName":"Garcia, Harrison ",
+                "studentID":17016,
+                "classPeriod":5,
+                "itemNumber":7723
+            },
+            */
+            {
+                "studentName":"Sasaki, Brandon ",
+                "studentID":16613,
+                "classPeriod":1,
+                "itemNumber":7725
+            },
+            {
+                "studentName":"Gomez, Zaira ",
+                "studentID":14260,
+                "classPeriod":1,
+                "itemNumber":7726
+            },
+            {
+                "studentName":"Mendoza, Dylan ",
+                "studentID":17035,
+                "classPeriod":1,
+                "itemNumber":7727
+            },
+            {
+                "studentName":"Tout, Collin ",
+                "studentID":13659,
+                "classPeriod":1,
+                "itemNumber":7729
+            },
+            {
+                "studentName":"Jentes, Korey ",
+                "studentID":16914,
+                "classPeriod":1,
+                "itemNumber":7733
+            },
+            {
+                "studentName":"Moynihan, Connor ",
+                "studentID":14194,
+                "classPeriod":1,
+                "itemNumber":7734
+            },
+            {
+                "studentName":"Hensley, Jordon ",
+                "studentID":17064,
+                "classPeriod":1,
+                "itemNumber":7736
+            },
+            {
+                "studentName":"Lopez, Cash ",
+                "studentID":16885,
+                "classPeriod":1,
+                "itemNumber":7739
+            },
+            {
+                "studentName":"Wakamoto, Andrew ",
+                "studentID":16653,
+                "classPeriod":1,
+                "itemNumber":7740
+            },
+            {
+                "studentName":"Deal, Luke ",
+                "studentID":16792,
+                "classPeriod":1,
+                "itemNumber":7742
+            },
+            {
+                "studentName":"Hamamoto, Jack ",
+                "studentID":16626,
+                "classPeriod":1,
+                "itemNumber":7743
+            },
+            {
+                "studentName":"Derry, Caitlin ",
+                "studentID":14052,
+                "classPeriod":1,
+                "itemNumber":7745
+            },
+            {
+                "studentName":"Lim, Brandon ",
+                "studentID":17341,
+                "classPeriod":1,
+                "itemNumber":7747
+            },
+            {
+                "studentName":"Hollomon, Skylar ",
+                "studentID":16966,
+                "classPeriod":1,
+                "itemNumber":7748
+            },
+            {
+                "studentName":"North, Marissa ",
+                "studentID":16943,
+                "classPeriod":1,
+                "itemNumber":7749
+            },
+            {
+                "studentName":"Cameron, Lauren ",
+                "studentID":17117,
+                "classPeriod":1,
+                "itemNumber":7750
+            },
+            {
+                "studentName":"Ladd, Caitlin ",
+                "studentID":16994,
+                "classPeriod":1,
+                "itemNumber":7751
+            },
+            {
+                "studentName":"Pierson, Cade ",
+                "studentID":16916,
+                "classPeriod":1,
+                "itemNumber":7753
+            },
+            {
+                "studentName":"Shean, McKenzie ",
+                "studentID":17208,
+                "classPeriod":1,
+                "itemNumber":7754
+            },
+            {
+                "studentName":"Lilley, Colleen ",
+                "studentID":13684,
+                "classPeriod":1,
+                "itemNumber":7756
+            },
+            {
+                "studentName":"Nguyen,  Christian ",
+                "studentID":17451,
+                "classPeriod":1,
+                "itemNumber":7758
+            },
+            {
+                "studentName":"Gutierrez, Richard ",
+                "studentID":14776,
+                "classPeriod":6,
+                "itemNumber":7767
+            },
+            {
+                "studentName":"Scoville, Michael ",
+                "studentID":15806,
+                "classPeriod":6,
+                "itemNumber":7768
+            },
+            {
+                "studentName":"Ledesma, Eric ",
+                "studentID":17068,
+                "classPeriod":6,
+                "itemNumber":7769
+            },
+            {
+                "studentName":"Nguyen, Alex ",
+                "studentID":14854,
+                "classPeriod":6,
+                "itemNumber":7772
+            },
+            {
+                "studentName":"Garcia, Raymond ",
+                "studentID":14724,
+                "classPeriod":6,
+                "itemNumber":7773
+            },
+            {
+                "studentName":"Sells, Alison ",
+                "studentID":16197,
+                "classPeriod":6,
+                "itemNumber":7774
+            },
+            {
+                "studentName":"Bayer, Alison ",
+                "studentID":14831,
+                "classPeriod":6,
+                "itemNumber":7775
+            },
+            {
+                "studentName":"Desimone, Ruby ",
+                "studentID":15435,
+                "classPeriod":6,
+                "itemNumber":7778
+            },
+            {
+                "studentName":"Reales, Nathaly ",
+                "studentID":13711,
+                "classPeriod":6,
+                "itemNumber":7779
+            },
+            {
+                "studentName":"Drake, Christen ",
+                "studentID":14011,
+                "classPeriod":6,
+                "itemNumber":7780
+            },
+            {
+                "studentName":"Rowe, Zach",
+                "studentID":15244,
+                "classPeriod":6,
+                "itemNumber":7782
+            },
+            {
+                "studentName":"Petersen, Patrick ",
+                "studentID":16756,
+                "classPeriod":6,
+                "itemNumber":7783
+            },
+            {
+                "studentName":"Johnson, Hailey ",
+                "studentID":17273,
+                "classPeriod":6,
+                "itemNumber":7785
+            },
+            {
+                "studentName":"Tirpak, Jacob",
+                "studentID":16925,
+                "classPeriod":6,
+                "itemNumber":7786
+            },
+            {
+                "studentName":"Schwartz, Arnold ",
+                "studentID":16529,
+                "classPeriod":6,
+                "itemNumber":7788
+            },
+            {
+                "studentName":"Gascoyne, Julian ",
+                "studentID":16476,
+                "classPeriod":6,
+                "itemNumber":7793
+            },
+            {
+                "studentName":"Pukini, Kyle ",
+                "studentID":14758,
+                "classPeriod":4,
+                "itemNumber":7794
+            },
+            {
+                "studentName":"Conners, Kara ",
+                "studentID":16904,
+                "classPeriod":4,
+                "itemNumber":7795
+            },
+            {
+                "studentName":"Mais, Zachary ",
+                "studentID":16995,
+                "classPeriod":4,
+                "itemNumber":7798
+            },
+            {
+                "studentName":"Herron, Mia ",
+                "studentID":17093,
+                "classPeriod":4,
+                "itemNumber":7799
+            },
+            /* attention: this picture is not exist
+            {
+                "studentName":"Heintzelman, Andrew ",
+                "studentID":17363,
+                "classPeriod":4,
+                "itemNumber":7800
+            },
+            */
+            {
+                "studentName":"Allred, Dylan ",
+                "studentID":17173,
+                "classPeriod":4,
+                "itemNumber":7802
+            },
+            {
+                "studentName":"Ramos, Andrew ",
+                "studentID":17126,
+                "classPeriod":4,
+                "itemNumber":7803
+            },
+            {
+                "studentName":"Bliss, Nicole ",
+                "studentID":16546,
+                "classPeriod":4,
+                "itemNumber":7805
+            },
+            {
+                "studentName":"Curtis, Akilah ",
+                "studentID":15974,
+                "classPeriod":4,
+                "itemNumber":7811
+            },
+            {
+                "studentName":"Millan, Jacob ",
+                "studentID":17125,
+                "classPeriod":4,
+                "itemNumber":7812
+            },
+            {
+                "studentName":"Rockwell, Sasha ",
+                "studentID":14074,
+                "classPeriod":4,
+                "itemNumber":7813
+            },
+            {
+                "studentName":"Andersen, Scott ",
+                "studentID":15882,
+                "classPeriod":4,
+                "itemNumber":7814
+            },
+            {
+                "studentName":"Brittain, DavstudentID ",
+                "studentID":14602,
+                "classPeriod":4,
+                "itemNumber":7815
+            },
+            {
+                "studentName":"Gogley, Liam ",
+                "studentID":13916,
+                "classPeriod":4,
+                "itemNumber":7816
+            },
+            {
+                "studentName":"Kusch, Taylor ",
+                "studentID":16557,
+                "classPeriod":4,
+                "itemNumber":7819
+            },
+            {
+                "studentName":"Pearson, Emma ",
+                "studentID":15202,
+                "classPeriod":4,
+                "itemNumber":7820
+            },
+            {
+                "studentName":"Frankenberg, Mark ",
+                "studentID":14054,
+                "classPeriod":4,
+                "itemNumber":7822
+            },
+            {
+                "studentName":"Weinman, Molly ",
+                "studentID":16951,
+                "classPeriod":4,
+                "itemNumber":7823
+            },
+            {
+                "studentName":"Banez, Isaac ",
+                "studentID":17124,
+                "classPeriod":4,
+                "itemNumber":7824
+            },
+            {
+                "studentName":"Williams, Ian ",
+                "studentID":16704,
+                "classPeriod":4,
+                "itemNumber":7825
+            },
+            {
+                "studentName":"ChastudentIDez, Andrew ",
+                "studentID":14006,
+                "classPeriod":4,
+                "itemNumber":7826
+            },
+            {
+                "studentName":"Gironda, Daniel ",
+                "studentID":17018,
+                "classPeriod":4,
+                "itemNumber":7827
+            },
+            {
+                "studentName":"Eastwood, Carlie ",
+                "studentID":13636,
+                "classPeriod":4,
+                "itemNumber":7828
+            },
+            {
+                "studentName":"Ibarra, Brendan",
+                "studentID":16856,
+                "classPeriod":4,
+                "itemNumber":7830
+            },
+            {
+                "studentName":"Vengoechea, Christian ",
+                "studentID":14578,
+                "classPeriod":5,
+                "itemNumber":7832
+            },
+            {
+                "studentName":"Captain, Andrew ",
+                "studentID":13533,
+                "classPeriod":1,
+                "itemNumber":7833
+            },
+            {
+                "studentName":"O'Gorman, Joseph ",
+                "studentID":16645,
+                "classPeriod":5,
+                "itemNumber":7835
+            },
+            {
+                "studentName":"Ferguson, Shane ",
+                "studentID":16107,
+                "classPeriod":6,
+                "itemNumber":7836
+            },
+            {
+                "studentName":"Snow-Romero, Santana ",
+                "studentID":17461,
+                "classPeriod":5,
+                "itemNumber":7838
+            },
+            {
+                "studentName":"Koford, Austin ",
+                "studentID":15586,
+                "classPeriod":5,
+                "itemNumber":7839
+            },
+            {
+                "studentName":"Williams, Nick",
+                "studentID":14993,
+                "classPeriod":5,
+                "itemNumber":7840
+            },
+            {
+                "studentName":"Hood-Cunningham, Chazz ",
+                "studentID":16099,
+                "classPeriod":5,
+                "itemNumber":7841
+            },
+            {
+                "studentName":"Warner, Steven ",
+                "studentID":16784,
+                "classPeriod":5,
+                "itemNumber":7842
+            },
+            {
+                "studentName":"DeLaCruz Garcia, Elijah ",
+                "studentID":17040,
+                "classPeriod":5,
+                "itemNumber":7843
+            },
+            {
+                "studentName":"Castillo, Gianni ",
+                "studentID":14005,
+                "classPeriod":5,
+                "itemNumber":7844
+            },
+            {
+                "studentName":"Graves, Emil ",
+                "studentID":14952,
+                "classPeriod":5,
+                "itemNumber":7845
+            },
+            {
+                "studentName":"Meacham, Kody ",
+                "studentID":17145,
+                "classPeriod":5,
+                "itemNumber":7846
+            },
+            {
+                "studentName":"Teufel, Lisa ",
+                "studentID":17118,
+                "classPeriod":5,
+                "itemNumber":7847
+            },
+            {
+                "studentName":"Biache-Forman, Cheyene ",
+                "studentID":16428,
+                "classPeriod":6,
+                "itemNumber":7848
+            },
+            {
+                "studentName":"Yelin, Nicholas ",
+                "studentID":17207,
+                "classPeriod":1,
+                "itemNumber":7849
+            },
+            {
+                "studentName":"Buxton, Elizabeth ",
+                "studentID":15924,
+                "classPeriod":1,
+                "itemNumber":7850
+            },
+            {
+                "studentName":"Kim, Justin ",
+                "studentID":16739,
+                "classPeriod":1,
+                "itemNumber":7851
+            },
+            {
+                "studentName":"Olney, Eric ",
+                "studentID":16437,
+                "classPeriod":6,
+                "itemNumber":7852
+            },
+            {
+                "studentName":"Toland, Bradley ",
+                "studentID":16460,
+                "classPeriod":5,
+                "itemNumber":7853
+            },
+            {
+                "studentName":"Stevens, Colton ",
+                "studentID":16246,
+                "classPeriod":5,
+                "itemNumber":7855
+            },
+            {
+                "studentName":"Barnett, Andy",
+                "studentID":15480,
+                "classPeriod":1,
+                "itemNumber":7856
+            },
+            {
+                "studentName":"Rouchon, Alexa",
+                "studentID":14846,
+                "classPeriod":5,
+                "itemNumber":7857
+            },
+            {
+                "studentName":"Makiyama, Kimiye ",
+                "studentID":16630,
+                "classPeriod":1,
+                "itemNumber":7859
+            },
+            {
+                "studentName":"Platt, Drew",
+                "studentID":17334,
+                "classPeriod":5,
+                "itemNumber":7860
+            },
+            {
+                "studentName":"Cortez, Brent ",
+                "studentID":17130,
+                "classPeriod":5,
+                "itemNumber":7861
+            },
+            {
+                "studentName":"Nikolau, Pano",
+                "studentID":16038,
+                "classPeriod":6,
+                "itemNumber":7862
+            },
+            {
+                "studentName":"Popa, Ana ",
+                "studentID":14832,
+                "classPeriod":5,
+                "itemNumber":7863
+            },
+            {
+                "studentName":"Loftus, Aubrianna ",
+                "studentID":15391,
+                "classPeriod":1,
+                "itemNumber":7864
+            },
+            {
+                "studentName":"Tripp, Bianca ",
+                "studentID":14548,
+                "classPeriod":5,
+                "itemNumber":7866
+            },
+            {
+                "studentName":"Hernandez, Shane ",
+                "studentID":14113,
+                "classPeriod":1,
+                "itemNumber":7867
+            },
+            {
+                "studentName":"Bonde, Tiana ",
+                "studentID":14004,
+                "classPeriod":1,
+                "itemNumber":7869
+            },
+            {
+                "studentName":"DeMott, Rachael ",
+                "studentID":16930,
+                "classPeriod":5,
+                "itemNumber":7871
+            },
+            {
+                "studentName":"Vallejo, Janette ",
+                "studentID":17080,
+                "classPeriod":5,
+                "itemNumber":7873
+            }
         ];
+        $scope.auction = auction;
         $scope.picList = [];
-        var length = pics.length;
+        var length = auction.items.length;
+        var pics = auction.items;
         var i = 0;
         for (; i < length ; i += 3) {
             var row = [];

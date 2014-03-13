@@ -45,10 +45,10 @@
         <tr data-ng-repeat="row in picList">
             <td data-ng-repeat="pic in row">
                 <a href="#/step1" data-ng-click="selectPic(pic)">
-                    <img data-ng-src="images/gallery/{{pic.src}}" class="img-responsive" alt=""/>
+                    <img data-ng-src="images/gallery/IMG_{{pic.itemNumber}}.jpg" class="img-responsive" alt=""/>
                 </a>
                 <span>
-                    {{pic.title}}
+                    {{pic.studentName}}
                 </span>
             </td>
         </tr>
