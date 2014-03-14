@@ -25,12 +25,12 @@
                         </p>
                         <div>
                             <input type="text" required data-ng-model="model.name"
-                                   name="name"
+                                   name="name" style="font-family: 'Roboto Slab';"
                                    data-ng-class="{error:nameInvalid}"
                                    placeholder="Full name"/>
                         </div>
                         <div>
-                            <input type="email" name="email"
+                            <input type="email" name="email" style="font-family: 'Roboto Slab';"
                                    data-ng-class="{error:emailInvalid}"
                                    data-ng-model="model.email"
                                    required placeholder="Email address"/>
@@ -45,9 +45,9 @@
                         <div>
                             <img data-ng-show="isMobileCorrect" class="go" data-ng-click="saveUser()"
                                  src="images/pic/go.png"/>
-                            <input type="text" name="mobile"
+                            <input type="text" name="mobile" style="font-family: 'Roboto Slab';"
                                    data-ng-class="{error:mobileInvalid}"
-                                   data-ng-model="model.mobile" data-ng-pattern="/\d{10}/" data-ng-minlength="10"data-ng-maxlength="11"
+                                   data-ng-model="model.mobile" data-ng-minlength="10"data-ng-maxlength="13"
                                    required placeholder="Mobile number"/>
                         </div>
                         <button data-ng-click="saveUser()">

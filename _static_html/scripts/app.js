@@ -32,7 +32,8 @@ angular.module('NonProfitApp', [
                 controller: 'Step1Ctrl'
             })
             .when('/registered', {
-                templateUrl: 'views/registered.html'
+                templateUrl: 'views/registered.html',
+                controller: 'RegisteredCtrl'
             })
             .otherwise({
                 redirectTo: '/'
@@ -691,6 +692,14 @@ angular.module('NonProfitApp', [
                 $location.path('/step2');
             }
         }
+        $scope.edit = function () {
+            $scope.readonly = false;
+            delete $scope.model.card1;
+            delete $scope.model.MM;
+            delete $scope.model.YY;
+            delete $scope.model.CVV;
+            delete $scope.model.zipCode;
+        }
     }).controller('Step2Ctrl', function ($scope, $rootScope, $location) {
         $(window).scrollTop(0);// go to top when a new page loads
         $scope.$watch('model.mobile', function () {
@@ -709,4 +718,6 @@ angular.module('NonProfitApp', [
                 $location.path('/registered');
             }
         }
+    }).controller('RegisteredCtrl', function ($scope, $rootScope, $location) {
+        $(window).scrollTop(0);// go to top when a new page loads
     });
