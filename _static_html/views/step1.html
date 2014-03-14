@@ -53,7 +53,7 @@
                                 <input name="card1" data-ng-pattern="/\d{16,16}/" data-ng-model="model.card1"
                                        data-ng-minlength="16" data-ng-maxlength="16" required
                                        data-ng-class="{error:card1Invalid}"
-                                       type="text" style="padding-left: 3.5em;" placeholder="XXXXXXXXXXXXXXXX"/>
+                                       type="number" style="padding-left: 3.5em;" placeholder="XXXXXXXXXXXXXXXX"/>
                             </div>
                             <div style="margin-bottom: 2em;">
                                 <img data-ng-show="isCard2Correct" src="images/pic/go.png" class="go"
@@ -81,8 +81,8 @@
                             </button>
                             <div class="readyonlyCC">
                                 <p style="margin-top: 0.6em;">
-                                    <span data-ng-click="edit()"
-                                          style="cursor: pointer;float: right;border-radius: 0.4em;border: 1px solid #78787b;padding: 0.2em 0.4em 0.2em 0.4em;margin-top: -0.3em;">Edit</span>
+                                    <span data-ng-click="change()"
+                                          style="cursor: pointer;float: right;border-radius: 0.4em;border: 1px solid #78787b;padding: 0.2em 0.4em 0.2em 0.4em;margin-top: -0.3em;">Change</span>
                                     <span class="glyphicon glyphicon-lock"></span>
                                     Payment info
                                 </p>

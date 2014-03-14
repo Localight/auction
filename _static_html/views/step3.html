@@ -12,12 +12,12 @@
         <form name="form" class="bid-form control-group">
             <div class="row">
                 <div class="col-md-6">
-                    <p style="font-size: 1.8em;">
+                    <p style="font-size: 1.5em;font-family: 'Roboto Slab';">
                         You have been out-bid!<br>
                         What's your next move?
                     </p>
                     <p>
-                        The current high bid is $50. The recommended new bid is $55 or higher. Time remaining:
+                        The current high bid is $50. The suggested bid is $55 or higher. Time remaining:
                     </p>
                     <div class="wrapper">
                         <div class="row count-down" style="border: none;margin-top: 0;margin-bottom: 0.4em;">
@@ -73,7 +73,7 @@
                                 <input name="card1" data-ng-pattern="/\d{16,16}/" data-ng-model="model.card1"
                                        data-ng-minlength="16" data-ng-maxlength="16" required
                                        data-ng-class="{error:card1Invalid}"
-                                       type="text" style="padding-left: 3.5em;" placeholder="XXXXXXXXXXXXXXXX"/>
+                                       type="number" style="padding-left: 3.5em;" placeholder="XXXXXXXXXXXXXXXX"/>
                             </div>
                             <div style="margin-bottom: 2em;">
                                 <img data-ng-show="isCard2Correct" src="images/pic/go.png" class="go" data-ng-click="saveCard()"/>
@@ -92,7 +92,8 @@
                             </button>
                             <div  class="readyonlyCC">
                                 <p style="margin-top: 0.6em;">
-                                    <span data-ng-click="readonly=false" style="cursor: pointer;float: right;border-radius: 0.4em;border: 1px solid #78787b;padding: 0.2em 0.4em 0.2em 0.4em;margin-top: -0.3em;">Edit</span>
+                                    <span data-ng-click="change()"
+                                          style="cursor: pointer;float: right;border-radius: 0.4em;border: 1px solid #78787b;padding: 0.2em 0.4em 0.2em 0.4em;margin-top: -0.3em;">Change</span>
                                     <span class="glyphicon glyphicon-lock"></span>
                                     Payment info
                                 </p>

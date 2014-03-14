@@ -692,7 +692,7 @@ angular.module('NonProfitApp', [
                 $location.path('/step2');
             }
         }
-        $scope.edit = function () {
+        $scope.change = function () {
             $scope.readonly = false;
             delete $scope.model.card1;
             delete $scope.model.MM;
