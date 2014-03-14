@@ -11,61 +11,72 @@
                 ENTER YOUR BID
             </h1>
         </div>
-        <form name="form" class="bid-form">
-            <p>
-                <span class="glyphicon glyphicon-user"></span>
-                Send the receipt to:
-            </p>
-            <div class="payment">
-                <p data-ng-show="invalid" style="color: red;font-size: 0.9em;">
-                    <span class="glyphicon glyphicon-warning-sign"></span> Oops! Something's wrong. Please check it.
-                </p>
-                <div>
-                    <input type="text" required data-ng-model="model.name"
-                           name="name"
-                           data-ng-class="{error:nameInvalid}"
-                           placeholder="Full name"/>
-                </div>
-                <div>
-                    <input type="email" name="email"
-                           data-ng-class="{error:emailInvalid}"
-                           data-ng-model="model.email"
-                           required placeholder="Email address"/>
-                </div>
-                <p>
-                    <span class="glyphicon glyphicon-lock"></span>
-                    Card security
-                </p>
-                <p>
-                    Enter your mobile number to verify your transaction via textSMS. You will receive a verification message.
-                </p>
-                <div>
-                    <img data-ng-show="isMobileCorrect" class="go" data-ng-click="saveUser()"
-                         src="images/pic/go.png"/>
-                    <input type="text" name="mobile"
-                           data-ng-class="{error:mobileInvalid}"
-                           data-ng-model="model.mobile" data-ng-pattern="/\d{10}/" data-ng-minlength="10"data-ng-maxlength="11"
-                           required placeholder="Mobile number"/>
-                </div>
-                <button data-ng-click="saveUser()">
-                    <img src="images/pic/processd.png" class="proceed" alt=""/>
-                </button>
-                <img data-ng-src="images/gallery/IMG_{{selectedPic.itemNumber}}.jpg" class="img-responsive" alt=""/>
 
-                <div class="row pic-detail">
-                    <div class="col-xs-4">
-                        <div>Item</div>
-                        <div class="big">{{selectedPic.itemNumber}}</div>
-                    </div>
-                    <div class="col-xs-8 right">
-                        <div>Made by</div>
-                        <div class="big">{{selectedPic.studentName}}</div>
+        <form name="form" class="bid-form">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        <span class="glyphicon glyphicon-user"></span>
+                        Send the receipt to:
+                    </p>
+                    <div class="payment">
+                        <p data-ng-show="invalid" style="color: red;font-size: 0.9em;">
+                            <span class="glyphicon glyphicon-warning-sign"></span> Oops! Something's wrong. Please check it.
+                        </p>
+                        <div>
+                            <input type="text" required data-ng-model="model.name"
+                                   name="name"
+                                   data-ng-class="{error:nameInvalid}"
+                                   placeholder="Full name"/>
+                        </div>
+                        <div>
+                            <input type="email" name="email"
+                                   data-ng-class="{error:emailInvalid}"
+                                   data-ng-model="model.email"
+                                   required placeholder="Email address"/>
+                        </div>
+                        <p>
+                            <span class="glyphicon glyphicon-lock"></span>
+                            Card security
+                        </p>
+                        <p>
+                            Enter your mobile number to verify your transaction via textSMS. You will receive a verification message.
+                        </p>
+                        <div>
+                            <img data-ng-show="isMobileCorrect" class="go" data-ng-click="saveUser()"
+                                 src="images/pic/go.png"/>
+                            <input type="text" name="mobile"
+                                   data-ng-class="{error:mobileInvalid}"
+                                   data-ng-model="model.mobile" data-ng-pattern="/\d{10}/" data-ng-minlength="10"data-ng-maxlength="11"
+                                   required placeholder="Mobile number"/>
+                        </div>
+                        <button data-ng-click="saveUser()">
+                            <img src="images/pic/processd.png" class="proceed" alt=""/>
+                        </button>
+
                     </div>
                 </div>
-                <button data-ng-click="saveUser()">
-                    <img src="images/pic/processd.png" class="proceed" alt=""/>
-                </button>
+                <div class="col-md-6">
+                    <img data-ng-src="images/gallery/IMG_{{selectedPic.itemNumber}}.jpg" class="img-responsive" alt=""/>
+
+                    <div class="row pic-detail">
+                        <div class="col-xs-4">
+                            <div>Item</div>
+                            <div class="big">{{selectedPic.itemNumber}}</div>
+                        </div>
+                        <div class="col-xs-8 right">
+                            <div>Made by</div>
+                            <div class="big">{{selectedPic.studentName}}</div>
+                        </div>
+                    </div>
+                    <button data-ng-click="saveUser()" class="visible-xs">
+                        <img src="images/pic/processd.png" class="proceed" alt=""/>
+                    </button>
+
+                </div>
             </div>
+
+
         </form>
     </div>
 </div>
