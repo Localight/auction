@@ -17,7 +17,6 @@ mongoose.connect(config.db.uri, config.db.opts);
 
 // setup mailer and poller
 mailer.setup(config.mailgun)
-// poller.start();
 
 // Setup the express app
 app.set('port', process.env.PORT || 4000);
@@ -61,6 +60,7 @@ app.get('/api/notify-losers', auth, bids.notifyAllLosers);
 app.get('*', function(req, res) {
     res.sendfile('404.html', {root: './public'});
 });
+
 
 server.listen(app.get('port'), function(){
     'use strict';

@@ -9,3 +9,4 @@ var auctionsSchema = new Schema({
 });
 
 module.exports = mongoose.model('auctions', auctionsSchema)
+module.exports = mongoose.model('auctions', auctionsSchema)

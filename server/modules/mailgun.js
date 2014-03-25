@@ -79,7 +79,7 @@ setup({
     , domain: 'https://api.mailgun.net/v2/outgoing.arstempo.hr/messages'
     , from: 'zlatko@arstempo.hr'
 });
-sendMessage('zladuric@gmail.com', 'Test email on TeacArt', 'plain text body', '<h2>h2 text</h2>')
+sendMessage('zladuric@gmail.com', 'Test email on TeachArt', 'Auction server restart', '<h2>Auction server restart.</h2>')
 // helper
 function getBidByItemAndBidder(itemNumber, bidderId) {
     var d = Q.defer();
@@ -120,6 +120,7 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
         var bid2 = math.add(winning, '10.00');
         var bid3 = math.add(winning, '20.00');
         var cid = 'image.png';
+
         var locals = {
             outbid: {
                 amount: amount
@@ -267,3 +268,4 @@ function getEndTime(time) {
     return days + ' ' + pluralize('day', days) + ', Fri Apr 04 2014 at midnight (PST)'  ;
 }
 prepareTemplates();
+
