@@ -4,6 +4,7 @@ var mongoose = require('mongoose')
 
 var biddersSchema = new Schema({
     verified: Boolean
+    , name: String
     , token: String
     , phone: String
     , email: String

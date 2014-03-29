@@ -41,11 +41,15 @@ app.get('/test', function(req, res){
     res.end('Hello world!');
 });
 
-// Catchall route
 app.get('/', function(req, res) {
     res.sendfile('index.html', {root: './public'});
 });
+// Phase 1, a few RESTful endpoints
+var items = require('./server/controllers/items');
+app.get('/api/items', items.get);
+app.get('/api/items/:number', items.getItemByNumber);
 
+// Catchall route
 app.get('*', function(req, res) {
     res.sendfile('404.html', {root: './public'});
 });

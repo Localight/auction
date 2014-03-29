@@ -4,7 +4,6 @@ var mongoose = require('mongoose')
 
 var auctionsSchema = new Schema({
     auctionNumber: Number
-    , currentAmount: String
     , start: Date
     , end: Date
 });

@@ -1,0 +1,133 @@
+<div class="bid-bg">
+    <div class="container ">
+        <div class="row logo bid-title">
+        <span class="pull-right step">
+            Step 1 of 2
+        </span>
+            <img src="images/pic/dollar.png" alt="" width="32" height="32"/>
+            <h1 class="title">
+                UPDATE YOUR BID
+            </h1>
+        </div>
+        <form name="form" class="bid-form control-group">
+            <div class="row">
+                <div class="col-md-6">
+                    <p style="font-size: 1.5em;font-family: 'Roboto Slab';">
+                        You have been out-bid!<br>
+                        What's your next move?
+                    </p>
+                    <p>
+                        The current high bid is $50. The suggested bid is $55 or higher. Time remaining:
+                    </p>
+                    <div class="wrapper">
+                        <div class="row count-down" style="border: none;margin-top: 0;margin-bottom: 0.4em;">
+                            <timer end-time="endTime" interval="1000">
+                                <div class="col-xs-3 days-3">
+                                    {{days}}
+                                    <span>Days</span>
+                                </div>
+                                <div class="col-xs-3 hours-3">
+                                    {{hours}}
+                                    <span>Hours</span>
+                                </div>
+                                <div class="col-xs-3 mins-3">
+                                    {{minutes}}
+                                    <span>Mins</span>
+                                </div>
+                                <div class="col-xs-3 secs-3">
+                                    {{seconds}}
+                                    <span>Secs</span>
+                                </div>
+                            </timer>
+                        </div>
+                    </div>
+
+                    <p>
+                        <span class="glyphicon glyphicon-usd"></span>
+                        Your new bid amount
+                    </p>
+
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <input name="amount" required type="number" min="15" ng-model="model.amount"
+                                   class="amount"
+                                   style="width: 70%;display: inline;text-align: right;font-family: 'Roboto Slab';"/> .00
+                        </div>
+                        <div class="col-xs-7">
+                            <p class="prompt" ng-show="form.amount.$error.min">
+                                A min $15 starting bid is recommended for this item.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="payment">
+                        <div data-ng-show="!isCCExist || !readonly">
+                            <p style="margin-top: 0.6em;">
+                                <span class="glyphicon glyphicon-lock"></span>
+                                Payment info
+                            </p>
+                            <p data-ng-show="invalid" style="color: red;font-size: 0.9em;">
+                                <span class="glyphicon glyphicon-warning-sign"></span> Oops! Something's wrong. Please check it.
+                            </p>
+                            <div>
+                                <img src="images/pic/account.png" style="position: absolute;width: 3em;margin: 0.7em;"/>
+                                <input name="card1" data-ng-pattern="/\d{16,16}/" data-ng-model="model.card1"
+                                       data-ng-minlength="16" data-ng-maxlength="16" required
+                                       data-ng-class="{error:card1Invalid}"
+                                       type="number" style="padding-left: 3.5em;" placeholder="XXXXXXXXXXXXXXXX"/>
+                            </div>
+                            <div style="margin-bottom: 2em;">
+                                <img data-ng-show="isCard2Correct" src="images/pic/go.png" class="go" data-ng-click="saveCard()"/>
+                                <div style="background: #ffffff;padding-bottom: 1px;" class="card" data-ng-class="{error:card2Invalid}">
+                                    <input data-ng-model="model.MM" name="MM" type="number" required style="width: 18%;padding-left: 0.4em;" placeholder="MM" min="1" max="12"/>
+                                    <input data-ng-model="model.YY" name="YY" type="number" required style="width: 15%" placeholder="YY" data-ng-minlength="2"data-ng-maxlength="2"/>
+                                    <input data-ng-model="model.CVV" name="CVV" type="number" required style="width: 25%" placeholder="CVV" data-ng-minlength="3"data-ng-maxlength="4"/>
+                                    <input data-ng-model="model.zipCode" name="zipCode" type="number" required style="width: 35%"
+                                           placeholder="ZIPCODE" data-ng-pattern="/\d{5}/" data-ng-minlength="5"data-ng-maxlength="5"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-ng-show="isCCExist && readonly">
+                            <button data-ng-click="saveCard()" class="visible-xs">
+                                <img src="images/pic/processd.png" class="proceed" alt=""/>
+                            </button>
+                            <div  class="readyonlyCC">
+                                <p style="margin-top: 0.6em;">
+                                    <span data-ng-click="change()"
+                                          style="cursor: pointer;float: right;border-radius: 0.4em;border: 1px solid #78787b;padding: 0.2em 0.4em 0.2em 0.4em;margin-top: -0.3em;">Change</span>
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                    Payment info
+                                </p>
+                                <img src="images/pic/account.png" style="width: 3em;margin: 0.7em;"/>
+                                <span style="font-family: 'MyWebFont';font-size: 1.5em;">
+                                    ************{{model.card1.substr(model.card1.length-4)}}
+                                </span>
+                            </div>
+                        </div>
+                        <button data-ng-click="saveCard()" class="hidden-xs">
+                            <img src="images/pic/processd.png" class="proceed" alt=""/>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <img data-ng-src="images/gallery/{{selectedPic.src}}" class="img-responsive" alt=""/>
+                    <div class="row pic-detail">
+                        <div class="col-xs-4">
+                            <div>Item</div>
+                            <div class="big">7864</div>
+                        </div>
+                        <div class="col-xs-8 right">
+                            <div>Made by</div>
+                            <div class="big">{{selectedPic.title}}</div>
+                        </div>
+                    </div>
+                    <button data-ng-click="saveCard()" class="visible-xs">
+                        <img src="images/pic/processd.png" class="proceed" alt=""/>
+                    </button>
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+</div>

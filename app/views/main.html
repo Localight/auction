@@ -1,0 +1,54 @@
+<div class="container">
+    <div class="row logo">
+        <a href="#/about" class="pull-right about">
+            About
+        </a>
+        <img src="images/pic/logo.png" alt="" width="40" height="40"/>
+        <h1 class="title">
+            BENEFIT AUCTION
+        </h1>
+    </div>
+    <div class="row introduce">
+        <h2>
+            The Fallen Butterflies Project: featuring jewelry design from {{auction.name}} students
+        </h2>
+        <p class="end-time">
+            <img src="images/pic/clock.png" alt="" width="20" height="19"/>
+            Ends March 31st at midnight PST
+        </p>
+    </div>
+    <div class="wrapper">
+        <div class="row count-down">
+            <timer end-time="endTime" interval="1000">
+                <div class="col-xs-3 days">
+                    {{days}}
+                    <span>Days</span>
+                </div>
+                <div class="col-xs-3 hours">
+                    {{hours}}
+                    <span>Hours</span>
+                </div>
+                <div class="col-xs-3 mins">
+                    {{minutes}}
+                    <span>Mins</span>
+                </div>
+                <div class="col-xs-3 secs">
+                    {{seconds}}
+                    <span>Secs</span>
+                </div>
+            </timer>
+        </div>
+    </div>
+</div>
+<div class="container gallery">
+    <table class="table">
+        <tr data-ng-repeat="row in picList">
+            <td data-ng-repeat="pic in row">
+                <a href="#/step1" data-ng-click="selectPic(pic)">
+                    <img data-ng-src="images/gallery/IMG_{{pic.itemNumber}}.jpg" class="img-responsive" alt=""/>
+                </a>
+                <span>{{getStudentDisplayName(pic.studentName)}}</span>
+            </td>
+        </tr>
+    </table>
+</div>

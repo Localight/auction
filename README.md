@@ -22,9 +22,15 @@ Further improvements
 
 # Tasks for P1
 
-1. Setup node.js on the server.
-2. Serve static files from node.js
+// 1. Setup node.js on the server.
+// 2. Serve static files from node.js
 3. Capture entered form data
+# ITEM
+- data model to point to havenly objectrocket db
+- REST controller for items
+- angular service for item posting.
+- :w
+-
 4. Validate CC and authorize (capture, no charge) the submited amount, with 3 days expiry.
 5. After valid charge, show Confirmation screen
 6. Send SMS

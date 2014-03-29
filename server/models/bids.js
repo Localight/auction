@@ -5,7 +5,6 @@ var mongoose = require('mongoose')
 // Just keep refs to other models like this.
 var bidsSchema = new Schema({
     bidder: String
-    , auctionId: String
     , item: String
     , bid: String
     , notified: {
