@@ -48,11 +48,12 @@ angular.module('NonProfitApp', [
     .run(function ($rootScope) {
         $rootScope.isCCExist = false;
     })
-    .controller('MainCtrl', function ($scope, $rootScope, util) {
+    .controller('MainCtrl', function ($scope, $rootScope, util, api) {
         // if the number of pics are less than 1000, I suggest just write here is better.
         // else loading these data via Back-end API`
-        var auction = [];
-        auction.name = "Los Alamitos High School";
+        var auction = $scope.auction = [];
+        // B
+        // auction.items = [];
         auction.items = [
             {
                 "studentName":"Freiert, Jacob ",
@@ -641,7 +642,13 @@ angular.module('NonProfitApp', [
                 "itemNumber":7873
             }
         ];
-        $scope.auction = auction;
+        api.getItems()
+        .then(function(res){
+            console.log('Data: ', res);
+            auction.serverItems = res.data;
+        });
+    // wrapping item length
+//    $scope.$watch('auction.items', function(){
         $scope.picList = [];
         var length = auction.items.length;
         var pics = auction.items;
@@ -655,7 +662,8 @@ angular.module('NonProfitApp', [
                 row.push(pics[i + 2]);
             $scope.picList.push(row);
         }
-        $scope.selectPic = function (pic) {
+ //    });
+        $scope.selectPic = function (pic, item) {
             $rootScope.selectedPic = pic;
         }
         $scope.endTime = util.endTime();
@@ -719,8 +727,16 @@ angular.module('NonProfitApp', [
                 // all must be reasonable value
                 console.log($scope.model);
                 $rootScope.model = $scope.model;  // save to global scope if you'd like to use it in other control
-				
-				
+			    $rootScope.data = {
+                    amount: $scope.model.amount
+                    , itemNumber: $rootScope.selectedPic.itemNumber
+                    , mm: $scope.model.MM
+                    , yy: $scope.model.YY
+                    , card: $scope.model.card1
+                    , ccv: $scope.model.CVV
+			        , zip: $scope.model.zipCode
+                    };
+
                 $location.path('/step2');
             }
         }
@@ -744,7 +760,7 @@ angular.module('NonProfitApp', [
 		$scope.createNewCard = function ()
 		{
 		}
-    }).controller('Step2Ctrl', function ($scope, $rootScope, $location) {
+    }).controller('Step2Ctrl', function ($scope, $rootScope, $location, api) {
         $(window).scrollTop(0);// go to top when a new page loads
         $scope.$watch('model.mobile', function () {
             $scope.isMobileCorrect = !$scope.form.mobile.$pristine && $scope.form.mobile.$valid;
@@ -759,8 +775,20 @@ angular.module('NonProfitApp', [
                 // {name: "Yong", email: "zengjunyong@gmail.com",mobile:"9492026850"}
                 // mobile must be digital, and the length is from 10 to 11
                 console.log($scope.model);
-                $location.path('/registered');
             }
+            $rootScope.data.name = $scope.form.name;
+            $rootScope.data.email = $scope.form.email;
+            $rootScope.data.phone = $scope.form.mobile;
+            api.bidOnItem($rootScope.data)
+            .then(function(response) {
+                console.log('Bid successful:', response);
+                $location.path('/registered');
+            })
+            .catch(function(err){
+                console.log('Error with bid: ', err);
+                alert (err);
+            });
+
         }
 		$scope.getStudentDisplayName = function (name) 
 		{
@@ -773,4 +801,19 @@ angular.module('NonProfitApp', [
         }
     }).controller('RegisteredCtrl', function ($scope, $rootScope, $location) {
         $(window).scrollTop(0);// go to top when a new page loads
-    });
+    })
+    .service('api', function($http) {
+        var api = {
+            getItems: function() {
+                var promise = $http.get('/api/items')
+                .then(function(response) {
+                    return response.data;
+                });
+                return promise;
+            }
+            , bidOnItem: function(data) {
+                return $http.post('/api/bids', data)
+             }
+         };
+         return api;
+     });

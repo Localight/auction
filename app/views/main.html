@@ -44,7 +44,7 @@
     <table class="table">
         <tr data-ng-repeat="row in picList">
             <td data-ng-repeat="pic in row">
-                <a href="#/step1" data-ng-click="selectPic(pic)">
+                <a href="#/step1" data-ng-click="selectPic(pic, pic.itemNumber)">
                     <img data-ng-src="images/gallery/IMG_{{pic.itemNumber}}.jpg" class="img-responsive" alt=""/>
                 </a>
                 <span>{{getStudentDisplayName(pic.studentName)}}</span>
