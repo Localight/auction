@@ -38,6 +38,7 @@ function prepareTemplates() {
  * Actual sending of the message for the auction event
  */
 var sendMessage = exports.sendMessage = function sendMessage(to, subject, body, html, attachments) {
+    console.log('Sending msg: ', to, subject, typeof body, typeof html, attachments && attachments.length);
     var composer = new Mailcomposer();
     composer.setMessageOption({
         from: from
@@ -66,6 +67,7 @@ var sendMessage = exports.sendMessage = function sendMessage(to, subject, body, 
     composer.on('end', function(err, messageBody){
         mg.sendRaw('auction@TeachArt.org', to, msgdata, domain, function(err, done){
             console.log('Err or done: ', err || done);
+            if(err) console.log(err.message);
         });
     });
     composer.streamMessage();
@@ -135,13 +137,20 @@ exports.notify = function notify(bidderId, bidId, bidderEmail, bidderAmount, auc
  *
  **/
 exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, auctionEnd, item) {
+    console.log('notifing bidder', item);
     Bidder.findOne({_id: bidderId}, function(err, bidder){
-        if(err || bidder === null || !bidder.verified || bidder.verified === false) {
+        if(err || bidder === null ) {
+            console.log('not sending email');
             return;
         }
-        var amount = math.subtract(bidderAmount);
-        var winning = math.add('0.00', auctionAmount); // format winning bid.
-        var cid = (item.image.length && item.image.lastIndexOf('/') !== -1) ? item.image.substr(item.image.lastIndexOf('/')) : item.png;
+        if(typeof bidderAmount!== 'string') {
+            bidderAmount = '' + bidderAmount;
+        };
+        if(bidderAmount.indexOf('.') == -1) bidderAmount = bidderAmount + '.00';
+            
+        var amount = math.add('0.00', bidderAmount);
+        var winning = amount;
+        var cid = (item.image && item.image.length && item.image.lastIndexOf('/') !== -1) ? item.image.substr(item.image.lastIndexOf('/')) : 'image.png';
         var locals = {
             outbid: {
                 amount: amount
@@ -154,9 +163,12 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
             }
         };
         etemplate('highbid', locals, function(err, html, text){
+        console.log('Template text: ', text.substr(0, 100));
             var to = [bidderEmail];
-            var subject = 'You have been outbid by' + amount + '| Artist: ' + item.artist;
+            var subject = 'You have the high bid: ' + amount + '| Artist: ' + item.artist;
             var attachments = [];
+            console.log('Omage: ', item.image);
+            item.image = 'app/images/gallery/' + item.image;
             if(item.image.length) {
                 attachments.push({
                     fileName: 'image.png'

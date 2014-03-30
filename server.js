@@ -17,7 +17,7 @@ mongoose.connect(config.db.uri, config.db.opts);
 
 // setup mailer and poller
 mailer.setup(config.mailgun)
-poller.start();
+// poller.start();
 
 // Setup the express app
 app.set('port', process.env.PORT || 4000);
@@ -48,6 +48,7 @@ app.get('/', function(req, res) {
 var items = require('./server/controllers/items');
 var bids = require('./server/controllers/bids');
 app.get('/api/items', items.get);
+app.get('/api/students', bids.students);
 app.get('/api/items/:number', items.getItemByNumber);
 app.post('/api/bids', bids.post);
 

@@ -776,9 +776,11 @@ angular.module('NonProfitApp', [
                 // mobile must be digital, and the length is from 10 to 11
                 console.log($scope.model);
             }
-            $rootScope.data.name = $scope.form.name;
-            $rootScope.data.email = $scope.form.email;
-            $rootScope.data.phone = $scope.form.mobile;
+            $rootScope.data.name = $scope.model.name;
+            $rootScope.data.email = $scope.model.email;
+            $rootScope.data.phone = $scope.model.mobile;
+            console.log($rootScope.data)
+            console.log($scope.form.mobile, $scope.model.mobile)
             api.bidOnItem($rootScope.data)
             .then(function(response) {
                 console.log('Bid successful:', response);
