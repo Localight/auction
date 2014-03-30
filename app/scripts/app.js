@@ -788,7 +788,13 @@ angular.module('NonProfitApp', [
             })
             .catch(function(err){
                 console.log('Error with bid: ', err);
-                alert (err);
+                var msg = 'There was a problem with your bid.';
+                if(err && err.message) {
+                  msg = msg + '\r\n ' + err.message;
+                } else if (err && err.data && err.data.message) {
+                  msg = '\r\n ' + msg + err.data.message;
+                }
+                alert (msg);
             });
 
         }

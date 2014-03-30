@@ -12,6 +12,7 @@ var pluralize = require('pluralize');
 var Bidder = require('../models/bidders');
 var Bid = require('../models/bids');
 
+var Q = require('q');
 var mg, domain, key, from, etemplate;
 var baseLink = 'http://www.TeachArt.org/';
 
@@ -80,23 +81,43 @@ setup({
             , from: 'zlatko@arstempo.hr'
         });
 sendMessage('zladuric@gmail.com', 'test sub', 'plain text', '<h2>h2 text</h2>')
-
+// helper
+function getBidByItemAndBidder(itemNumber, bidderId) {
+    var d = Q.defer();
+    Bid.findOne({item: itemNumber, bidder: bidderId})
+    .exec(function(err, data) {
+        console.log('Error getting bid from mailer', err);
+        if(err) return d.reject(err);
+        return d.resolve(data);
+    });
+    return d.promise;
+}
 /**
  * Function that does the actual notification.
  * Skip bidders who are not verified.
  *
  **/
-exports.notify = function notify(bidderId, bidId, bidderEmail, bidderAmount, auctionAmount, auctionEnd, item) {
+
+exports.notifyLoser = function notify(bidderId, bidderEmail,  auctionAmount,auctionEnd, item) {
+    getBidByItemAndBidder(item.itemNumber, bidderId)
+    .then(function(bid){
+//exports.notifyLoser = function notify(bidderId, bidId, bidderEmail, bidderAmount, auctionAmount, auctionEnd, item) {
     Bidder.findOne({_id: bidderId}, function(err, bidder){
         if(err || bidder ===null) {
-//         if(err || bidder === null || !bidder.verified || bidder.verified === false) {
             return;
         }
-        var amount = math.subtract(auctionAmount, bidderAmount).replace('-', '');
+        if(typeof auctionAmount!== 'string') {
+            auctionAmount = '' + auctionAmount;
+        };
+        if(auctionAmount.indexOf('.') == -1) auctionAmount= auctionAmount + '.00';
+        console.log('Auction amount: ', auctionAmount);
+        var amount = bid.bid;
+        if(typeof amount !== 'string') amount = '' + amount;
+        if(amount.indexOf('.') === -1) amount = amount + '.00';
         var winning = math.add('0.00', auctionAmount); // format winning bid.
-        var bid1 = amount;
-        var bid2 = math.mul(amount, '2.00');
-        var bid3 = math.mul(amount, '3.00');
+        var bid1 = math.add(winning, '5.00');
+        var bid2 = math.add(winning, '10.00');
+        var bid3 = math.add(winning, '20.00');
         var cid = (item.image.length && item.image.lastIndexOf('/') !== -1) ? item.image.substr(item.image.lastIndexOf('/')) : item.png;
         var locals = {
             outbid: {
@@ -120,6 +141,7 @@ exports.notify = function notify(bidderId, bidId, bidderEmail, bidderAmount, auc
             var to = [bidderEmail];
             var subject = 'You have been outbid by' + amount + '| Artist: ' + item.artist;
             var attachments = [];
+            item.image = 'app/images/gallery/' + item.image;
             if(item.image.length) {
                 attachments.push({
                     fileName: 'image.png'
@@ -128,7 +150,17 @@ exports.notify = function notify(bidderId, bidId, bidderEmail, bidderAmount, auc
                 });
             }
             sendMessage(to, subject, text, html, attachments);
+            bid.notified = true;
+            bid.timestamp = new Date();
+            bid.save(function(err, sved){
+                console.log('saved the outbid notif flag');
+                console.log(err, sved);
+            });
         });
+    });
+    })
+    .fail(function(err){
+      console.log('No bid to notify about', err);
     });
 };
 
@@ -185,6 +217,6 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
 function getEndTime(time) {
     var ONE_DAY = 1000 * 60 * 60 * 24;
     var days = Math.round((Math.abs(new Date().getTime() - time.getTime()))/ONE_DAY);
-    return days + ' ' + pluralize('day', days) + ', ' + time;
+    return days + ' ' + pluralize('day', days) + ', Fri Apr 04 2014 at midnight (PST)'  ;
 }
 prepareTemplates();

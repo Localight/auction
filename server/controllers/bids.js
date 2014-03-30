@@ -69,6 +69,7 @@ exports.post = function(req, res) {
               } else {
                   console.log('Checking for highest bid');
                   var winning = checkHighestBidder(bids, data);
+                  console.log('Winning: ', winning);
                   if(winning) {
                       insertBidAndNotifyBidder(data, item)
                       .then(function(){
@@ -82,7 +83,8 @@ exports.post = function(req, res) {
                           });
                       });
                   } else {
-                      return res.json({
+                      console.log('Losing bid');
+                      return res.json(400, {
                           message: 'Your bid is too low.'
                       });
                   }
@@ -102,7 +104,7 @@ function findBidsByItemNumber(num) {
     if(!num|| num.length === 0) return Q.reject('Please provide number');
     var d = Q.defer();
     Bid.find({
-        itemNumber: '' + num
+        item: '' + num
         , notified: false
     })
     .exec(function(err, items) {
@@ -188,3 +190,45 @@ exports.students = function students(req, res){
         res.json(data);
     });
 }
+function checkHighestBidder(bids, data) {
+    console.log('checking if ', data , ' is the higest among ', bids.length ,  ' bids', bids[0]);
+    var amount = parseFloat(data.amount);
+    for (var i in bids) {
+        if(parseFloat(bids[i].bid) >= amount) {
+        console.log('Am: ', amount);
+        console.log(parseFloat(bids[i].bid))
+            return false;
+        }
+    }
+    return true;
+}
+function notifyLosers(bids, data, item) {
+    console.log('Notifying losers: ', bids.length, '\r\nWinning: ', data, '\r\nItem: ', item);
+    var bidderIds = [];
+    for (var i in bids) {
+        bidderIds.push(bids[i].bidder);
+    }
+    Bidder.find({_id: {$in: bidderIds}})
+    .exec(function(err, bidders) {
+        if(err) {
+            console.log('Could not fetch bidders.');
+            console.log(err);
+            return;
+        }
+        console.log('Notifying bidders of a new high bid');
+        getAuctionEnd()
+        .then(function(end) {
+            console.log('got auc date', data.email);
+            for (var b in bidders){
+            // (bidderId, bidId, bidderEmail, bidderAmount, auctionAmount, auctionEnd, item) {
+                mailer.notifyLoser(bidders[b]._id, bidders[b].email,  data.amount,end, item); 
+            }
+        })
+        .fail(function(err){
+            console.log('error getting auc date', err);
+            // just in case. bid is there,email not, we can still let the guy know
+            return;
+        });
+    });
+}
+
