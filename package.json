@@ -20,6 +20,8 @@
     "email-templates": "^0.1.6",
     "money-math": "^1.0.0",
     "pluralize": "0.0.7",
-    "ejs": "^1.0.0"
+    "ejs": "^1.0.0",
+    "balanced-official": "~1.0.6",
+    "mongoose-findorcreate": "~0.1.2"
   }
 }

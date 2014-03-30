@@ -27,7 +27,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('sasaddasd3ectKti7WnD9VhWC624mqNhxlrEyhe8C213asd12312YFq7srsK9Hej8IGynWRTlt0FYVddF8e8cMVttE123jWFuIHQF26Hq1ZyAtqcv6KtlgPfBSSBzXac4tN2uSjlGpIN6IA41xUzxzh26t4Ooje5RZtiJTHMYcFkOQq5TiKMyy7cxelOw1bDLUjgXugSClQAL0s2QGzW2G'));
 app.use(express.session({
    secret: 'a22a2ekvhrbj2sdaesasdnyhgfasdnejklda3abw12312312da3zsasdfasda4de34tfgeazfqe2ndklgjrelcm', key: 'connect.sid'}));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'app')));
 app.use(app.router);
 app.set('views', path.join(__dirname, 'public'));
 app.set('view engine', 'jade');
@@ -46,8 +46,10 @@ app.get('/', function(req, res) {
 });
 // Phase 1, a few RESTful endpoints
 var items = require('./server/controllers/items');
+var bids = require('./server/controllers/bids');
 app.get('/api/items', items.get);
 app.get('/api/items/:number', items.getItemByNumber);
+app.post('/api/bids', bids.post);
 
 // Catchall route
 app.get('*', function(req, res) {

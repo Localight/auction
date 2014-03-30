@@ -86,7 +86,8 @@ sendMessage('zladuric@gmail.com', 'test sub', 'plain text', '<h2>h2 text</h2>')
  **/
 exports.notify = function notify(bidderId, bidId, bidderEmail, bidderAmount, auctionAmount, auctionEnd, item) {
     Bidder.findOne({_id: bidderId}, function(err, bidder){
-        if(err || bidder === null || !bidder.verified || bidder.verified === false) {
+        if(err || bidder ===null) {
+//         if(err || bidder === null || !bidder.verified || bidder.verified === false) {
             return;
         }
         var amount = math.subtract(auctionAmount, bidderAmount).replace('-', '');
@@ -114,6 +115,45 @@ exports.notify = function notify(bidderId, bidId, bidderEmail, bidderAmount, auc
             }
         };
         etemplate('outbid', locals, function(err, html, text){
+            var to = [bidderEmail];
+            var subject = 'You have been outbid by' + amount + '| Artist: ' + item.artist;
+            var attachments = [];
+            if(item.image.length) {
+                attachments.push({
+                    fileName: 'image.png'
+                    , cid: cid
+                    , filePath: item.image
+                });
+            }
+            sendMessage(to, subject, text, html, attachments);
+        });
+    });
+};
+
+/**
+ * Notifies about high bid.
+ *
+ **/
+exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, auctionEnd, item) {
+    Bidder.findOne({_id: bidderId}, function(err, bidder){
+        if(err || bidder === null || !bidder.verified || bidder.verified === false) {
+            return;
+        }
+        var amount = math.subtract(bidderAmount);
+        var winning = math.add('0.00', auctionAmount); // format winning bid.
+        var cid = (item.image.length && item.image.lastIndexOf('/') !== -1) ? item.image.substr(item.image.lastIndexOf('/')) : item.png;
+        var locals = {
+            outbid: {
+                amount: amount
+                , artist: item.artist
+                , itemId: item.itemNumber
+                , itemLink: baseLink + 'items?itemNumber=' + item.itemNumber
+                , winning: winning
+                , itemCid: cid
+                , endTime: getEndTime(auctionEnd)
+            }
+        };
+        etemplate('highbid', locals, function(err, html, text){
             var to = [bidderEmail];
             var subject = 'You have been outbid by' + amount + '| Artist: ' + item.artist;
             var attachments = [];
