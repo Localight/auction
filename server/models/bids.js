@@ -7,6 +7,8 @@ var bidsSchema = new Schema({
     bidder: String
     , item: String
     , bid: String
+    , holds: String
+    , charges: String
     , notified: {
         type: Boolean
         , default: false

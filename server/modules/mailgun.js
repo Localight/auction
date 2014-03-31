@@ -99,9 +99,9 @@ function getBidByItemAndBidder(itemNumber, bidderId) {
  **/
 
 exports.notifyLoser = function notify(bidderId, bidderEmail,  auctionAmount,auctionEnd, item) {
+    console.log('notifying...');
     getBidByItemAndBidder(item.itemNumber, bidderId)
     .then(function(bid){
-//exports.notifyLoser = function notify(bidderId, bidId, bidderEmail, bidderAmount, auctionAmount, auctionEnd, item) {
     Bidder.findOne({_id: bidderId}, function(err, bidder){
         if(err || bidder ===null) {
             return;

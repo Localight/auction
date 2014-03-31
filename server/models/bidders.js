@@ -11,6 +11,10 @@ var biddersSchema = new Schema({
     , email: String
     , lastFour: String
     , balanced: String
+    , customer_href: String
+    , cards: [
+    { href: String }
+    ]
 });
 biddersSchema.plugin(findOrCreate);
 module.exports = mongoose.model('bidders', biddersSchema)

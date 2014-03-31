@@ -4,7 +4,7 @@ var Bidder = require('../models/bidders');
 var Item = require('../models/items');
 var Auction = require('../models/auctions');
 var Student = require('../models/students');
-
+var payment = require('../modules/payment');
 var mailer = require('../modules/mailgun');
 
 // var balanced = require('balaced-official');
@@ -53,7 +53,10 @@ exports.post = function(req, res) {
          .then(function(bids) {
               console.log(bids);
               // if no bids, insert and notify
-              if(!bids.length) {
+              console.log('Checking for highest bid');
+              var winning = checkHighestBidder(bids, data);
+              console.log('Winning: ', winning);
+              if(!bids.length || winning) {
                   console.log('No other bids');
                   insertBidAndNotifyBidder(data, item)
                   .then(function(){
@@ -66,28 +69,14 @@ exports.post = function(req, res) {
                           message: 'Failed inserting bid: ' + err
                       });
                   })
+              }
+              // now also notify the losers
+              if(winning) {
+                  notifyLosers(bids, data, item);
               } else {
-                  console.log('Checking for highest bid');
-                  var winning = checkHighestBidder(bids, data);
-                  console.log('Winning: ', winning);
-                  if(winning) {
-                      insertBidAndNotifyBidder(data, item)
-                      .then(function(){
-                          notifyLosers(bids, data, item);
-                          return res.json({message: 'Bid placed.'});
-                      })
-                      .fail(function(err){
-                          console.log('Failed inserting bid: ', err)
-                          return res.json(400, {
-                              message: 'Failed inserting bid: ' +  err
-                          });
-                      });
-                  } else {
-                      console.log('Losing bid');
-                      return res.json(400, {
-                          message: 'Your bid is too low.'
-                      });
-                  }
+              // but if we posted a bid but did not win, inform ourselves
+                  var highest = getHighestBidder(bids);
+                  insertLosingBid(highest, data, item);
               }
           })
           .fail(function(err){
@@ -116,6 +105,51 @@ function findBidsByItemNumber(num) {
     });
     return d.promise;
 }
+function insertLosingBid (highest, data, item) {
+    console.log(highest);
+    var d = Q.defer();
+    Bidder.findOne({
+        email: data.email
+    })
+    .exec(function(err, bidder) {
+        if(err) {
+            return d.reject();
+        }
+        if(!bidder) {
+            bidder = new Bidder({email: data.email});
+        }
+        bidder.name = data.name;
+        bidder.phone = data.phone;
+        bidder.save(function(err, saved) {
+            if(err) {return d.reject();}
+            var bid = new Bid({
+                bidder: bidder._id
+                , item: data.itemNumber
+                , bid: data.amount
+                , notified: false
+            });
+
+            bid.save(function(err, saved) {
+            console.log('saving bid');
+                if(err) {
+                    return d.reject(err);
+                }
+                getAuctionEnd()
+                .then(function(end) {
+                    mailer.notifyLoser(bidder._id, bidder.email,  highest.bid ,end, item);
+                    return d.resolve(bid);
+                })
+                .fail(function(err){
+                   console.log('error getting auc date', err);
+                   // just in case. bid is there,email not, we can still let the guy know
+                   return d.resolve(bid);
+                });
+            });
+        });
+    });
+    return d.promise;
+}
+  
 function insertBidAndNotifyBidder(data, item) {
     var d = Q.defer();
     Bidder.findOne({
@@ -125,14 +159,10 @@ function insertBidAndNotifyBidder(data, item) {
         if(err) {
             return d.reject(err);
         }
-        console.log(bidder);
         // update bidder
         if(!bidder) {
             bidder = new Bidder({email: data.email});
-            console.log('new: ', bidder);
         }
-        console.log(data.email);
-        console.log(data);
         bidder.name = data.name;
         bidder.phone = data.phone;
         bidder.save(function(err, saved) {
@@ -170,6 +200,17 @@ function insertBidAndNotifyBidder(data, item) {
     });
     return d.promise;
 }
+function createPayment(data, bidder, bid) {
+    var d = Q.defer();
+    payment.getCustomer(bidder)
+    .then(function(customer) {
+        console.log('Custeomr:', customer);
+    })
+    .fail(function(err){
+        console.log('Error: ', err);
+    });
+}
+
 function getAuctionEnd(){
     var d = Q.defer();
     Auction.find(function(Err, auc){
@@ -201,6 +242,18 @@ function checkHighestBidder(bids, data) {
         }
     }
     return true;
+}
+function getHighestBidder(bids) {
+    var amount = 0;
+    var idx;
+    for (var i in bids) {
+        if(parseFloat(bids[i].bid) > amount) {
+            amount = parseFloat(bids[i]);
+            idx = i;
+        }
+    }
+    console.log('highest bid: ', idx);
+    return bids[idx];
 }
 function notifyLosers(bids, data, item) {
     console.log('Notifying losers: ', bids.length, '\r\nWinning: ', data, '\r\nItem: ', item);
