@@ -15,6 +15,23 @@ angular.module('NonProfitApp', [
             }
         }
     })
+    .directive('smartFloat', function() {
+        return {
+            require: 'ngModel',
+            link: function(scope, elm, attrs, ctrl) {
+                ctrl.$parsers.unshift(function(viewValue) {
+                    var FLOAT_REGEXP = /^\-?\d+((\.|\,)\d+)?$/;
+                    if (FLOAT_REGEXP.test(viewValue)&&parseFloat(viewValue.replace(',', '.'))>=15) {
+                        ctrl.$setValidity('float', true);
+                        return parseFloat(viewValue.replace(',', '.'));
+                    } else {
+                        ctrl.$setValidity('float', false);
+                        return undefined;
+                    }
+                });
+            }
+        };
+    })
     .config(function ($routeProvider) {
         $routeProvider
             .when('/', {
