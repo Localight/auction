@@ -2,7 +2,7 @@
 <head>
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Winning bid</title>
+    <title>Won</title>
 </head>
 <body bgcolor="#FFFFFF" text="#111111">
     <table id="header" style="width: 100%;" align="center" cellspacing="10">
@@ -16,7 +16,7 @@
                 <!-- Logo placeholder -->
             </td>
             <td>
-                <h4>You are currently the highest bidder for the item # <%= outbid.itemId%>!</h4>
+                <h4>You have won the item # <%= outbid.itemId%>!</h4>
             </td>
         </tr>
     </table><!-- Header table -->
@@ -28,14 +28,14 @@
             <td>Item: <a style="color:#111111; text-decoration:none;" href="<%= outbid.itemLink %>"><%= outbid.itemId %></a></td>
         </tr>
         <tr>
-            <td>Current winning bid: <%= outbid.winning %></td>
+            <td>Your winning bid: <%= outbid.winning %></td>
         </tr>
         <tr>
             <td><img src="cid:<%= outbid.itemCid %>" height="300" width="300"/>
         </td>
         <tr>
-            <td colspan="2">The auction ends in: <%= outbid.endTime %></td>
-            <td></td>
+            <td colspan="2">The auction ended, please visit this link to confirm your payment.</td>
+            <td><a href="#">Link</a></td>
         </tr>
         <tr>
             <td colspan="3"><p>
