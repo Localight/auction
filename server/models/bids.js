@@ -7,8 +7,7 @@ var bidsSchema = new Schema({
     bidder: String
     , item: String
     , bid: String
-    , holds: String
-    , charges: String
+    , balanced_href: String
     , notified: {
         type: Boolean
         , default: false
@@ -17,6 +16,9 @@ var bidsSchema = new Schema({
         type: Date
         , default: Date.now
     }
+     , holds: [{
+        hold_href: String
+    }]
 });
 
 module.exports = mongoose.model('bids', bidsSchema)

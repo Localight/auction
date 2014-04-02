@@ -9,12 +9,16 @@ var biddersSchema = new Schema({
     , token: String
     , phone: String
     , email: String
-    , lastFour: String
     , balanced: String
+    /**
+     * BP data
+     */
     , customer_href: String
-    , cards: [
-    { href: String }
-    ]
+    , cards: [{
+        lastFour: String
+        , card_href: String
+    }]
+
 });
 biddersSchema.plugin(findOrCreate);
 module.exports = mongoose.model('bidders', biddersSchema)

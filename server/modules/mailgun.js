@@ -14,7 +14,7 @@ var Bid = require('../models/bids');
 
 var Q = require('q');
 var mg, domain, key, from, etemplate;
-var baseLink = 'http://www.TeachArt.org/';
+var baseLink = 'http://auctions.TeachArt.org/';
 
 /** Mailgun setup
  * To be called on app bootstrap.
@@ -24,7 +24,7 @@ var setup = exports.setup = function(config) {
     domain = config.domain;
     mg = new Mailgun('key-9dvf0-00loxr-uzq4moazo0gwwc3qsk2');
     //from = config.from || 'zlatko@arstempo.hr';
-    from = 'zlatko@nowhere.com'
+    from = 'mailer@teachart.org'
     prepareTemplates();
 };
 
@@ -106,6 +106,7 @@ exports.notifyLoser = function notify(bidderId, bidderEmail,  auctionAmount,auct
         if(err || bidder ===null) {
             return;
         }
+        var auctionAmount = auctionAmount / 100;
         if(typeof auctionAmount!== 'string') {
             auctionAmount = '' + auctionAmount;
         };
@@ -169,17 +170,20 @@ exports.notifyLoser = function notify(bidderId, bidderEmail,  auctionAmount,auct
  *
  **/
 exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, auctionEnd, item) {
-    console.log('notifing bidder', item);
+    console.log('Sending email to high bidder for: ', item);
     Bidder.findOne({_id: bidderId}, function(err, bidder){
         if(err || bidder === null ) {
-            console.log('not sending email');
+            console.log('NOT!! sending email');
             return;
         }
+        // return to float
+        bidderAmount = bidderAmount / 100;
         if(typeof bidderAmount!== 'string') {
             bidderAmount = '' + bidderAmount;
         };
+
+        console.log('Amount: ', bidderAmount);
         if(bidderAmount.indexOf('.') == -1) bidderAmount = bidderAmount + '.00';
-            
         var amount = math.add('0.00', bidderAmount);
         var winning = amount;
         var cid = (item.image && item.image.length && item.image.lastIndexOf('/') !== -1) ? item.image.substr(item.image.lastIndexOf('/')) : 'image.png';

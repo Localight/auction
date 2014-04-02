@@ -47,10 +47,12 @@ app.get('/', function(req, res) {
 // Phase 1, a few RESTful endpoints
 var items = require('./server/controllers/items');
 var bids = require('./server/controllers/bids');
+var bidders = require('./server/controllers/bidders');
 app.get('/api/items', items.get);
 app.get('/api/students', bids.students);
 app.get('/api/items/:number', items.getItemByNumber);
-app.post('/api/bids', bids.post);
+app.post('/api/bids', bids.getBidder, bids.post);
+app.get('/api/unsubscribe', bidders.unsubscribe);
 
 // Catchall route
 app.get('*', function(req, res) {

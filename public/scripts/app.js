@@ -43,9 +43,9 @@ angular.module('NonProfitApp', [
             $('.mask img').width($(window).width());
         })
         		var auction = [];
-		
+
 		auction.name = "Los Alamitos High School";
-		
+
 		auction.items = [
 						  {
 							"studentName":"Freiert, Jacob ",
@@ -630,10 +630,10 @@ angular.module('NonProfitApp', [
 							"itemNumber":7873
 						  }
 						];
-		
+
 		$scope.auction = auction;
-		
-		
+
+
         $scope.picList = [];
         var length = auction.items.length;
 		var pics = auction.items;

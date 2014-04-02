@@ -6,8 +6,9 @@ module.exports = {
             }
         }
         , mailgun: {
-            apiKey: 'localapikey'
+            apiKey: 'LOCALKEY'
             , domain: 'https://api.mailgun.net/v2/outgoing.arstempo.hr/messages'
+            , from: 'zlatko@arstempo.hr'
         }
     }
     , production: {
@@ -19,8 +20,9 @@ module.exports = {
             }
         }
         , mailgun: {
-            apiKey: 'api:key-212g0rzf7j9z-n9b7zdl797o3bxrsu38'
+            apiKey: 'key-212g0rzf7j9z-n9b7zdl797o3bxrsu38'
             , domain: 'https://api.mailgun.net/v2/rs56424.mailgun.org/messages'
+            , from: 'auction@TeachArt.org'
         }
     }
     , redis: {}

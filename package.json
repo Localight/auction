@@ -22,6 +22,7 @@
     "pluralize": "0.0.7",
     "ejs": "^1.0.0",
     "balanced-official": "~1.0.6",
-    "mongoose-findorcreate": "~0.1.2"
+    "mongoose-findorcreate": "~0.1.2",
+    "request": "^2.34.0"
   }
 }
