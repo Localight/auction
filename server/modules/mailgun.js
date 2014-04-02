@@ -76,17 +76,17 @@ var sendMessage = exports.sendMessage = function sendMessage(to, subject, body, 
 
 // Sending test email message
 setup({
-            apiKey: 'key-9dvf0-00loxr-uzq4moazo0gwwc3qsk2'
-            , domain: 'https://api.mailgun.net/v2/outgoing.arstempo.hr/messages'
-            , from: 'zlatko@arstempo.hr'
-        });
-sendMessage('zladuric@gmail.com', 'test sub', 'plain text', '<h2>h2 text</h2>')
+    apiKey: 'key-9dvf0-00loxr-uzq4moazo0gwwc3qsk2'
+    , domain: 'https://api.mailgun.net/v2/outgoing.arstempo.hr/messages'
+    , from: 'zlatko@arstempo.hr'
+});
+sendMessage('zladuric@gmail.com', 'Test email on TeacArt', 'plain text body', '<h2>h2 text</h2>')
 // helper
 function getBidByItemAndBidder(itemNumber, bidderId) {
     var d = Q.defer();
     Bid.findOne({item: itemNumber, bidder: bidderId})
     .exec(function(err, data) {
-        console.log('Error getting bid from mailer', err);
+        console.log('Error getting bid from mailer', err, data);
         if(err) return d.reject(err);
         return d.resolve(data);
     });
@@ -98,7 +98,7 @@ function getBidByItemAndBidder(itemNumber, bidderId) {
  *
  **/
 
-exports.notifyLoser = function notify(bidderId, bidderEmail,  auctionAmount,auctionEnd, item) {
+exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auctionEnd, item) {
     console.log('notifying...');
     getBidByItemAndBidder(item.itemNumber, bidderId)
     .then(function(bid){
@@ -106,20 +106,21 @@ exports.notifyLoser = function notify(bidderId, bidderEmail,  auctionAmount,auct
         if(err || bidder ===null) {
             return;
         }
-        var auctionAmount = auctionAmount / 100;
-        if(typeof auctionAmount!== 'string') {
+        console.log(auctionAmount);
+        auctionAmount = parseFloat(auctionAmount)/100;
+        if(typeof auctionAmount !== 'string') {
             auctionAmount = '' + auctionAmount;
         };
         if(auctionAmount.indexOf('.') == -1) auctionAmount= auctionAmount + '.00';
         console.log('Auction amount: ', auctionAmount);
-        var amount = bid.bid;
+        var amount = parseFloat(bid.bid)/100;
         if(typeof amount !== 'string') amount = '' + amount;
         if(amount.indexOf('.') === -1) amount = amount + '.00';
         var winning = math.add('0.00', auctionAmount); // format winning bid.
         var bid1 = math.add(winning, '5.00');
         var bid2 = math.add(winning, '10.00');
         var bid3 = math.add(winning, '20.00');
-        var cid = (item.image.length && item.image.lastIndexOf('/') !== -1) ? item.image.substr(item.image.lastIndexOf('/')) : item.png;
+        var cid = 'image.png';
         var locals = {
             outbid: {
                 amount: amount
@@ -136,20 +137,26 @@ exports.notifyLoser = function notify(bidderId, bidderEmail,  auctionAmount,auct
                 , winning: winning
                 , itemCid: cid
                 , endTime: getEndTime(auctionEnd)
+                , email: bidderEmail
             }
         };
+        var howmuch = math.subtract(auctionAmount, amount);
+        console.log('Actual: ', auctionAmount, ' this one: ', amount, ' missed by: ', howmuch);
+        locals.outbid.howmuch = howmuch;
         etemplate('outbid', locals, function(err, html, text){
             var to = [bidderEmail];
-            var subject = 'You have been outbid by' + amount + '| Artist: ' + item.artist;
+            var subject = 'You have been outbid by ' + howmuch + '| Artist: ' + item.artist;
             var attachments = [];
-            item.image = 'app/images/gallery/' + item.image;
+            console.log('Image: ', item.image);
             if(item.image.length) {
+                item.image = 'app/images/gallery/' + item.image;
                 attachments.push({
                     fileName: 'image.png'
                     , cid: cid
                     , filePath: item.image
                 });
             }
+
             sendMessage(to, subject, text, html, attachments);
             bid.notified = true;
             bid.timestamp = new Date();
@@ -186,7 +193,7 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
         if(bidderAmount.indexOf('.') == -1) bidderAmount = bidderAmount + '.00';
         var amount = math.add('0.00', bidderAmount);
         var winning = amount;
-        var cid = (item.image && item.image.length && item.image.lastIndexOf('/') !== -1) ? item.image.substr(item.image.lastIndexOf('/')) : 'image.png';
+        var cid = 'image.png';
         var locals = {
             outbid: {
                 amount: amount
@@ -195,17 +202,19 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
                 , itemLink: baseLink + 'items?itemNumber=' + item.itemNumber
                 , winning: winning
                 , itemCid: cid
+                , cid: cid
                 , endTime: getEndTime(auctionEnd)
+                , email: bidderEmail
             }
         };
         etemplate('highbid', locals, function(err, html, text){
-        console.log('Template text: ', text.substr(0, 100));
+        console.log('Template text: ', text.substr(0, 50));
             var to = [bidderEmail];
             var subject = 'You have the high bid: ' + amount + '| Artist: ' + item.artist;
             var attachments = [];
             console.log('Omage: ', item.image);
-            item.image = 'app/images/gallery/' + item.image;
             if(item.image.length) {
+                item.image = 'app/images/gallery/' + item.image;
                 attachments.push({
                     fileName: 'image.png'
                     , cid: cid
@@ -216,7 +225,42 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
         });
     });
 };
-
+exports.notifyEndAuctionToLosers() = function(email){
+    etemplate('losers', {email: email}, function(err, html, text){
+        var to = [email];
+        var subject = 'You did not win at the auction.';
+        var attachments = [];
+        sendMessage(to, subject, text, html, attachments);
+    })
+};
+exports.notifyWinner = function(email, artist, item, bid) {
+    var money = parseFloat(bid)/100;
+    if(money.indexOf('.') == -1) money = money + '.00';
+    money = math.add('0.00', money);
+    var locals = {
+        itemId: item.itemNumber
+        , email: email
+        , artist: artist
+        , winning: money
+        , itemCid: 'image.png'
+        , itemLink: baseLink + 'items?itemNumber=' + item.itemNumber
+    }
+    etemplate('won', locals, function(err, html, text){
+        var to = [bidderEmail];
+        var subject = 'You have won the auction | ' + artist;
+        var attachments = [];
+        console.log('Omage: ', item.image);
+        if(item.image.length) {
+            item.image = 'app/images/gallery/' + item.image;
+            attachments.push({
+                fileName: 'image.png'
+                , cid: cid
+                , filePath: item.image
+            });
+        }
+        sendMessage(to, subject, text, html, attachments);
+    });
+}
 // helper for date calc
 function getEndTime(time) {
     var ONE_DAY = 1000 * 60 * 60 * 24;

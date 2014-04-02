@@ -44,6 +44,7 @@ app.get('/test', function(req, res){
 app.get('/', function(req, res) {
     res.sendfile('index.html', {root: './public'});
 });
+var auth = express.basicAuth('localism', 'a1207c');
 // Phase 1, a few RESTful endpoints
 var items = require('./server/controllers/items');
 var bids = require('./server/controllers/bids');
@@ -53,6 +54,8 @@ app.get('/api/students', bids.students);
 app.get('/api/items/:number', items.getItemByNumber);
 app.post('/api/bids', bids.getBidder, bids.post);
 app.get('/api/unsubscribe', bidders.unsubscribe);
+app.get('/api/notify-winners', auth, bids.notifyAllWinners);
+app.get('/api/notify-losers', auth, bids.notifyAllLosers);
 
 // Catchall route
 app.get('*', function(req, res) {

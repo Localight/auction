@@ -178,13 +178,23 @@ exports.post = function(req, res) {
                     // yes if we're the only bid or we're the highest id.
                     console.log('Saved new bid: ', bid)
                     var highest = getHighestBid(bids);
-                    if(!(bids.length == 0 || (highest && highest._id == '' + req.bidder._id))) {
+                    // if we have a higher bidder (other then us), insert bid without charge.
+                    if(highest && parseFloat(highest.bid) >= parseFloat(data.amount) && highest._id !== '' + req.bidder._id) {
                         //just notify us we have lost. nothing else changes.
-                        console.log('just notifying bidder he needs to add more..')
-                        notifyLosers([bid], data, item, req);
-                        console.log('no prior bids so i am the king.')
-                        return res.json({message: 'Bid added'});
+                        console.log('just notifying bidder he needs to add more..', bids.length);
+                        console.log('highest', highest);
+                        var high = highest.bid;
+                        console.log('Logging high am oubnt: ', high);
+                        notifyLosers([bid], data, item, req, high);
+                        return res.json({message: 'Bid placed.'});
                     } else {
+                        // if highest bidder and we're it, just skip
+                        if(highest && parseFloat(highest.bid) >= parseFloat(data.amount) && highest._id === '' + req.bidder._id) {
+                            return res.json({
+                                message: 'Bid already submit, no change.'
+                            });
+                        }
+                        // in other cases, we're cool.
                         // try payment first, then notify losers and stuff.
                         createPayment(req.bidder, data, item, bid)
                         .then(function(payment){
@@ -204,7 +214,8 @@ exports.post = function(req, res) {
                                });
                             });
                             console.log('Payment made, second notify losers..');
-                            notifyLosers(bids, data, item);
+                            console.log('Logging high am oubnt: ', data.amount);
+                            notifyLosers(bids, data, item, data.amount);
                         })
                         .fail(function(err){
                             console.log('Error with payment', err);
@@ -277,10 +288,10 @@ exports.students = function students(req, res){
     });
 }
 
-function notifyLosers(bids, data, item, req) {
+function notifyLosers(bids, data, item, req, high) {
     var bidderIds = [];
     for (var i in bids) {
-        if(bids[i].notified == false &&  bids[i].bidder != '' + req.bidder._id) {
+        if(bids[i].notified == false) {
             bidderIds.push(bids[i].bidder);
         }
     }
@@ -296,7 +307,7 @@ function notifyLosers(bids, data, item, req) {
             console.log('got auc date', data.email);
             for (var b in bidders){
                 console.log('Sending out a notif to ', bidders[b].name);
-                mailer.notifyLoser(bidders[b]._id, bidders[b].email,  data.amount,end, item);
+                mailer.notifyLoser(bidders[b]._id, bidders[b].email,  high, end, item);
             }
         })
         .fail(function(err){
@@ -318,4 +329,69 @@ function getAuctionEnd(){
         }
     });
     return d.promise;
+}
+
+exports.notifyAllWinners = function(req, res) {
+    Bid.find({
+        notification: false
+    })
+    .exec(function(err, list){
+        if(err){
+            return res.json(500, {
+                message: 'Error getting list.'
+            });
+        }
+        for (var i in list) {
+            sendAuctionEndNotification(list[i]);
+        }
+        res.json({message: 'Delivery started.'});
+    });
+}
+exports.notifyAllLosers = function(req, res){
+    Bid.find({
+        notification: true
+    })
+    .distinct(email, function(err, list){
+        if(err){
+            return res.json(500, {
+                message: 'Error getting list.'
+            });
+        }
+        for(var i in list) {
+            sendNotificationToLosers(list[i]);
+        }
+        res.json({message: 'Delivery started.'});
+    });
+}
+function sendAuctionEndNotification(bid) {
+    Bidder.findOne({
+        _id: bid.bidder
+    })
+    .exec(function(err, bidder){
+        if(err || bidder == null) return;
+        Item.findOne({
+            itemNumber: bid.item
+        })
+        .exec(function(err, item){
+            if(err || !item) {
+                return;
+            }
+            Student.findOne({
+                number: item.studentNumber
+            })
+            .exec(function(err, student){
+                var artist = student.firstName + ' ' + student.lastName.substr(0,1) + '.';
+                mailer.notifyWinner(bidder.email, artist, item, bid);
+            });
+        })
+        Student.findOne()
+    })
+}
+function sentNotificationToLosers(bid) {
+    Bidder.findOne({
+        _id: bid.bidder
+    })
+    .exec(function(err, bidder){
+        mailer.notifyEndAuctionToLosers(bidder.email);
+    });
 }
