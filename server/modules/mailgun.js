@@ -23,8 +23,7 @@ var setup = exports.setup = function(config) {
     key = config.apiKey;
     domain = config.domain;
     mg = new Mailgun('key-9dvf0-00loxr-uzq4moazo0gwwc3qsk2');
-    //from = config.from || 'zlatko@arstempo.hr';
-    from = 'mailer@teachart.org'
+    from = config.from || 'auction@teachart.org'
     prepareTemplates();
 };
 
@@ -145,7 +144,7 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
         locals.outbid.howmuch = howmuch;
         etemplate('outbid', locals, function(err, html, text){
             var to = [bidderEmail];
-            var subject = 'You have been outbid by ' + howmuch + '| Artist: ' + item.artist;
+            var subject = 'You have been outbid by $' + howmuch + ' | Artist: ' + item.artist;
             var attachments = [];
             console.log('Image: ', item.image);
             if(item.image.length) {
@@ -210,7 +209,7 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
         etemplate('highbid', locals, function(err, html, text){
         console.log('Template text: ', text.substr(0, 50));
             var to = [bidderEmail];
-            var subject = 'You have the high bid: ' + amount + '| Artist: ' + item.artist;
+            var subject = 'You have the high bid: $' + amount + ' | Artist: ' + item.artist;
             var attachments = [];
             console.log('Omage: ', item.image);
             if(item.image.length) {
