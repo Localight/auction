@@ -27,12 +27,12 @@
             <td></td>
         </tr>
         <tr>
-            <td><a style="color:#111111; text-decoration:none;" href="<%= outbid.bidLink1 %>"><%= outbid.bidAmount1 %></a></td>
-            <td><a style="color:#111111; text-decoration:none;" href="<%= outbid.bidLink2 %>"><%= outbid.bidAmount2 %></a></td>
-            <td><a style="color:#111111; text-decoration:none;" href="<%= outbid.bidLink3 %>"><%= outbid.bidAmount3 %></a></td>
+            <td><a href="<%= outbid.bidLink1 %>">$<%= outbid.bidAmount1 %></a></td>
+            <td><a href="<%= outbid.bidLink2 %>">$<%= outbid.bidAmount2 %></a></td>
+            <td><a href="<%= outbid.bidLink3 %>">$<%= outbid.bidAmount3 %></a></td>
         </tr>
         <tr>
-            <td colspan="2">Or other <a style="color:#111111; text-decoration:none;" href="<%= outbid.bidLinkFree %>">amount</a></td>
+            <td colspan="2">Or other <a href="<%= outbid.bidLinkFree %>">amount</a></td>
             <td></td>
         </tr>
     </table><!-- updates table -->
@@ -41,10 +41,10 @@
         <tr>
             <td>Artist: <%= outbid.artist %></td>
             <td></td>
-            <td>Item: <a style="color:#111111; text-decoration:none;" href="<%= outbid.itemLink %>"><%= outbid.itemId %></a></td>
+            <td>Item: <a href="<%= outbid.itemLink %>"><%= outbid.itemId %></a></td>
         </tr>
         <tr>
-            <td>Current winning bid: <%= outbid.winning %></td>
+            <td>Current winning bid: $<%= outbid.winning %></td>
         </tr>
         <tr>
             <td><img src="cid:<%= outbid.itemCid %>" height="300" width="300"/>
@@ -65,7 +65,7 @@
         <tr id="footer">
             <td>
 
-                    <br/><a href="http://auctions.TeachArt.org" alt="Localism" style="color:#111111; text-decoration:none;">TeachArt.org</a>
+                    <br/><a href="http://auctions.TeachArt.org" alt="Localism">TeachArt.org</a>
 
             </td>
         </tr>
@@ -76,7 +76,7 @@
                         <small>To stop receiving emails click <a href="http://auctions.teachart.org/unsubscribe?email=<% outbid.email %>">here</a>.  If you need help don't hesitate to 
                         <a href="mailto:havenly@localism.zendesk.com">email us</a>!<small>
                         <!--To unsubscribe, click here.-->
-                        <br />  Community Auction™ | <a style="color:#111111; text-decoration:none;" href="http://localism.co">A Localism Project</a> | &copy;2014 All rights reserved.
+                        <br />  Community Auction™ | <a href="http://localism.co">A Localism Project</a> | &copy;2014 All rights reserved.
                         </small></small>
                     </font>
 
