@@ -29,7 +29,7 @@ app.use(express.session({
    secret: 'a22a2ekvhrbj2sdaesasdnyhgfasdnejklda3abw12312312da3zsasdfasda4de34tfgeazfqe2ndklgjrelcm', key: 'connect.sid'}));
 app.use(express.static(path.join(__dirname, 'app')));
 app.use(app.router);
-app.set('views', path.join(__dirname, 'public'));
+app.set('views', path.join(__dirname, 'app'));
 app.set('view engine', 'jade');
 // development only
 if ('development' == app.get('env')) {

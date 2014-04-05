@@ -144,11 +144,7 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
         locals.outbid.howmuch = howmuch;
         etemplate('outbid', locals, function(err, html, text){
             var to = [bidderEmail];
-<<<<<<< HEAD
             var subject = 'You have been outbid by $' + howmuch + ' | Artist: ' + item.artist;
-=======
-            var subject = 'You have been outbid by ' + howmuch + '| Artist: ' + item.artist;
->>>>>>> 3a4e5678368e81b5e1980e21c5f560948bfe40d8
             var attachments = [];
             console.log('Image: ', item.image);
             if(item.image.length) {
@@ -228,11 +224,7 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
         });
     });
 };
-<<<<<<< HEAD
 exports.notifyEndAuctionToLosers = function(email){
-=======
-exports.notifyEndAuctionToLosers() = function(email){
->>>>>>> 3a4e5678368e81b5e1980e21c5f560948bfe40d8
     etemplate('losers', {email: email}, function(err, html, text){
         var to = [email];
         var subject = 'You did not win at the auction.';
