@@ -13,7 +13,8 @@ var Bidder = require('../models/bidders');
 var Bid = require('../models/bids');
 
 var Q = require('q');
-var mg, domain, key, from, etemplate;
+var mg, domain, key, from;
+var TemplateWon, TemplateLost, TemplateHigh, TemplateOutbid;
 var baseLink = 'http://auctions.TeachArt.org/';
 
 /** Mailgun setup
@@ -30,15 +31,36 @@ var setup = exports.setup = function(config) {
 /** loads email templates to keep them on hold
  */
 function prepareTemplates() {
-    emailTemplates('./server/templates', function(err, tpl) {
-        etemplate = tpl;
+    emailTemplates('./server/templates/Outbid', function(err, outtpl) {
+        TemplateOutbid = outtpl;
     });
+    emailTemplates('./server/templates/Highbid', function(err, hightpl) {
+        TemplateHigh = hightpl;
+    });
+    emailTemplates('./server/templates/Losers', function(err, losttpl) {
+        TemplateLost = losttpl;
+    });
+    emailTemplates('./server/templates/Won', function(err, wontpl) {
+        TemplateWon = wontpl;
+    });
+
 }
 /**
  * Actual sending of the message for the auction event
  */
+// Try to queue sending
+var sendQueue = [];
+var sending = false;
 var sendMessage = exports.sendMessage = function sendMessage(to, subject, body, html, attachments) {
-    console.log('Sending msg: ', to, subject, typeof body, typeof html, attachments && attachments.length);
+    console.log('################################# SENDING TO ', to, '  ####################################');
+    //console.log('Sending msg: ', to, subject, body, html.substr(0, 500), attachments && attachments.length);
+    if(sending) {
+        // console.log('Sending stuff to queue');
+        sendQueue.push([to, subject, body, html, attachments])
+        return;
+    }
+    // Nothing in queue, let's send the message.
+    sending = true;
     var composer = new Mailcomposer();
     composer.setMessageOption({
         from: from
@@ -59,15 +81,32 @@ var sendMessage = exports.sendMessage = function sendMessage(to, subject, body, 
     }
     var msgdata = '';
     composer.on('error', function(){
-        console.log('Composer error: ', arguments);
+        // console.log('Composer error: ', arguments);
+        sending = false;
+        if(sendQueue.length) {
+            var run = sendQueue.pop();
+            sendMessage.apply(run);
+        }
     });
     composer.on('data', function(data){
         msgdata += data;
     });
     composer.on('end', function(err, messageBody){
+        // console.log('Composer end event, sending to ', to)
+        // console.log('Msgdata: ', msgdata.substr(0,550));
+        // console.log('Sending msg.');
         mg.sendRaw('auction@TeachArt.org', to, msgdata, domain, function(err, done){
-            console.log('Err or done: ', err || done);
-            if(err) console.log(err.message);
+            // console.log('Err or done: ', err || done);
+            if(err) {
+                // // console.log(err.message);
+            }
+            // console.log('Message sent, checking queue');
+            sending = false;
+            if(sendQueue.length) {
+                // console.log('Getting stuff from queue.');
+                var data = sendQueue.pop();
+                sendMessage(data[0], data[1], data[2], data[3], data[4], data[5]);
+            }
         });
     });
     composer.streamMessage();
@@ -79,13 +118,13 @@ setup({
     , domain: 'https://api.mailgun.net/v2/outgoing.arstempo.hr/messages'
     , from: 'zlatko@arstempo.hr'
 });
-sendMessage('zladuric@gmail.com', 'Test email on TeacArt', 'plain text body', '<h2>h2 text</h2>')
+sendMessage('zladuric@gmail.com', 'Test email on TeachArt', 'Mailgun works.', '<h2>Mailgun works.</h2>')
 // helper
 function getBidByItemAndBidder(itemNumber, bidderId) {
     var d = Q.defer();
     Bid.findOne({item: itemNumber, bidder: bidderId})
     .exec(function(err, data) {
-        console.log('Error getting bid from mailer', err, data);
+        // console.log('Error getting bid from mailer', err, data);
         if(err) return d.reject(err);
         return d.resolve(data);
     });
@@ -97,22 +136,20 @@ function getBidByItemAndBidder(itemNumber, bidderId) {
  *
  **/
 
-exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auctionEnd, item) {
-    console.log('notifying...');
-    getBidByItemAndBidder(item.itemNumber, bidderId)
-    .then(function(bid){
+exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auctionEnd, item, bidAmount) {
+    // console.log('notifying...');
     Bidder.findOne({_id: bidderId}, function(err, bidder){
         if(err || bidder ===null) {
             return;
         }
-        console.log(auctionAmount);
+        // console.log(auctionAmount);
         auctionAmount = parseFloat(auctionAmount)/100;
         if(typeof auctionAmount !== 'string') {
             auctionAmount = '' + auctionAmount;
         };
         if(auctionAmount.indexOf('.') == -1) auctionAmount= auctionAmount + '.00';
-        console.log('Auction amount: ', auctionAmount);
-        var amount = parseFloat(bid.bid)/100;
+        // console.log('Auction amount: ', auctionAmount);
+        var amount = parseFloat(bidAmount)/100;
         if(typeof amount !== 'string') amount = '' + amount;
         if(amount.indexOf('.') === -1) amount = amount + '.00';
         var winning = math.add('0.00', auctionAmount); // format winning bid.
@@ -123,16 +160,16 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
         var locals = {
             outbid: {
                 amount: amount
-                , bidLink1: baseLink + '/items?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid1 + '&bidderid=' + bidderId
+                , bidLink1: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid1 + '&bidderid=' + bidderId
                 , bidAmount1: bid1
-                , bidLink2: baseLink + '/items?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid2 + '&bidderid=' + bidderId
+                , bidLink2: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid2 + '&bidderid=' + bidderId
                 , bidAmount2: bid2
-                , bidLink3: baseLink + '/items?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid3 + '&bidderid=' + bidderId
+                , bidLink3: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid3 + '&bidderid=' + bidderId
                 , bidAmount3: bid3
-                , bidLinkFree: baseLink + '/items?itemNumber=' + item.itemNumber + 'action=placebid&bidderid=' + bidderId
+                , bidLinkFree: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bidderid=' + bidderId
                 , artist: item.artist
                 , itemId: item.itemNumber
-                , itemLink: baseLink + 'items?itemNumber=' + item.itemNumber
+                , itemLink: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber
                 , winning: winning
                 , itemCid: cid
                 , endTime: getEndTime(auctionEnd)
@@ -140,13 +177,15 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
             }
         };
         var howmuch = math.subtract(auctionAmount, amount);
-        console.log('Actual: ', auctionAmount, ' this one: ', amount, ' missed by: ', howmuch);
+        // console.log('Actual: ', auctionAmount, ' this one: ', amount, ' missed by: ', howmuch);
         locals.outbid.howmuch = howmuch;
-        etemplate('outbid', locals, function(err, html, text){
+        TemplateOutbid('outbid', locals, function(err, html, text){
+            console.log('###############################################################################')
+            console.log('Template text: ', html.substr(0, 500));
             var to = [bidderEmail];
             var subject = 'You have been outbid by $' + howmuch + ' | Artist: ' + item.artist;
             var attachments = [];
-            console.log('Image: ', item.image);
+            // console.log('Image: ', item.image);
             if(item.image.length) {
                 item.image = 'app/images/gallery/' + item.image;
                 attachments.push({
@@ -155,19 +194,8 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
                     , filePath: item.image
                 });
             }
-
             sendMessage(to, subject, text, html, attachments);
-            bid.notified = true;
-            bid.timestamp = new Date();
-            bid.save(function(err, sved){
-                console.log('saved the outbid notif flag');
-                console.log(err, sved);
-            });
         });
-    });
-    })
-    .fail(function(err){
-      console.log('No bid to notify about', err);
     });
 };
 
@@ -176,10 +204,10 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
  *
  **/
 exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, auctionEnd, item) {
-    console.log('Sending email to high bidder for: ', item);
+    // console.log('Sending email to high bidder for: ', item);
     Bidder.findOne({_id: bidderId}, function(err, bidder){
         if(err || bidder === null ) {
-            console.log('NOT!! sending email');
+            // console.log('NOT!! sending email');
             return;
         }
         // return to float
@@ -188,7 +216,7 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
             bidderAmount = '' + bidderAmount;
         };
 
-        console.log('Amount: ', bidderAmount);
+        // console.log('Amount: ', bidderAmount);
         if(bidderAmount.indexOf('.') == -1) bidderAmount = bidderAmount + '.00';
         var amount = math.add('0.00', bidderAmount);
         var winning = amount;
@@ -198,7 +226,7 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
                 amount: amount
                 , artist: item.artist
                 , itemId: item.itemNumber
-                , itemLink: baseLink + 'items?itemNumber=' + item.itemNumber
+                , itemLink: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber
                 , winning: winning
                 , itemCid: cid
                 , cid: cid
@@ -206,12 +234,13 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
                 , email: bidderEmail
             }
         };
-        etemplate('highbid', locals, function(err, html, text){
-        console.log('Template text: ', text.substr(0, 50));
+        TemplateHigh('highbid', locals, function(err, htm, text){
+            console.log('###############################################################################')
+        console.log('Winning Template text: ', htm.substr(0, 500));
             var to = [bidderEmail];
             var subject = 'You have the high bid: $' + amount + ' | Artist: ' + item.artist;
             var attachments = [];
-            console.log('Omage: ', item.image);
+            // console.log('Omage: ', item.image);
             if(item.image.length) {
                 item.image = 'app/images/gallery/' + item.image;
                 attachments.push({
@@ -220,12 +249,12 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
                     , filePath: item.image
                 });
             }
-            sendMessage(to, subject, text, html, attachments);
+            sendMessage(to, subject, text, htm, attachments);
         });
     });
 };
-exports.notifyEndAuctionToLosers = function(email){
-    etemplate('losers', {email: email}, function(err, html, text){
+exports.notifyAuctionLoser = function(email){
+    TemplateLost('losers', {email: email}, function(err, html, text){
         var to = [email];
         var subject = 'You did not win at the auction.';
         var attachments = [];
@@ -233,8 +262,13 @@ exports.notifyEndAuctionToLosers = function(email){
     })
 };
 exports.notifyWinner = function(email, artist, item, bid) {
-    var money = parseFloat(bid)/100;
-    if(money.indexOf('.') == -1) money = money + '.00';
+    console.log(bid.bid);
+    var money = parseFloat(bid.bid)/100;
+    if(isNaN(money)) {
+        console.log('Skipping ', email, ', money not valid');
+        return;
+    }
+    money = bid.bid.substr(0, bid.bid.length -2) + '.' + bid.bid.substr(bid.bid.length -2)
     money = math.add('0.00', money);
     var locals = {
         itemId: item.itemNumber
@@ -244,16 +278,16 @@ exports.notifyWinner = function(email, artist, item, bid) {
         , itemCid: 'image.png'
         , itemLink: baseLink + 'items?itemNumber=' + item.itemNumber
     }
-    etemplate('won', locals, function(err, html, text){
-        var to = [bidderEmail];
+    TemplateWon('won', locals, function(err, html, text){
+        var to = [email];
         var subject = 'You have won the auction | ' + artist;
         var attachments = [];
-        console.log('Omage: ', item.image);
+        // console.log('Omage: ', item.image);
         if(item.image.length) {
             item.image = 'app/images/gallery/' + item.image;
             attachments.push({
                 fileName: 'image.png'
-                , cid: cid
+                , cid: 'image.png'
                 , filePath: item.image
             });
         }

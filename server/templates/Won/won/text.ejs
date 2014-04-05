@@ -1,7 +1,7 @@
-You are currently the highest bidder for the item # <%= outbid.itemId %>You have won the item # <%= outbid.itemId%>!
+You have won the item # <%= itemId%>!
 
-Artist: <%= outbid.artist %>,         Item #:  <%= outbid.itemId %>
-Your winning bid:                 <%= outbid.winning %>
+Artist: <%= artist %>,         Item #:  <%= itemId %>
+Your winning bid:                 <%= winning %>
 
 The auction has ended, please click this link to confirm your payment details.
 
@@ -12,4 +12,4 @@ Community Auction™ | A Localism Project | ©2014 All rights reserved.
 
 If you need help don't hesitate to email us at havenly@localism.zendesk.com! To stop receiving emails click on the link bellow.
 
-http://auctions.teachart.org/unsubscribe?email=<% outbid.email %>
+http://auctions.teachart.org/unsubscribe?email=<%= email %>

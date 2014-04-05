@@ -58,7 +58,7 @@ app.get('/api/notify-losers', auth, bids.notifyAllLosers);
 
 // Catchall route
 app.get('*', function(req, res) {
-    res.sendfile('404.html', {root: './public'});
+    res.sendfile('404.html', {root: './app'});
 });
 
 
