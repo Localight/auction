@@ -49,7 +49,7 @@
 
                     <div class="row">
                         <div class="col-xs-5">
-                            <input name="amount" required type="number" min="15" ng-model="model.amount"
+                            <input name="amount" required smart-float type="text" ng-model="model.amount"
                                    class="amount"
                                    style="width: 70%;display: inline;text-align: right;font-family: 'Roboto Slab';"/> .00
                         </div>
@@ -109,15 +109,15 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <img data-ng-src="images/gallery/{{selectedPic.src}}" class="img-responsive" alt=""/>
+                    <img data-ng-src="images/gallery/IMG_{{selectedPic.itemNumber}}.jpg" class="img-responsive" alt=""/>
                     <div class="row pic-detail">
                         <div class="col-xs-4">
                             <div>Item</div>
-                            <div class="big">7864</div>
+                            <div class="big">{{selectedPic.itemNumber}}</div>
                         </div>
                         <div class="col-xs-8 right">
                             <div>Made by</div>
-                            <div class="big">{{selectedPic.title}}</div>
+                            <div class="big">{{selectedPic.studentName}}</div>
                         </div>
                     </div>
                     <button data-ng-click="saveCard()" class="visible-xs">
