@@ -700,6 +700,16 @@ angular.module('NonProfitApp', [
     })
     .controller('Step1Ctrl',function ($scope, $http, $rootScope, $location,util, $firebase) {
         $(window).scrollTop(0);// go to top when a new page loads
+
+        var outbid = $location.search();
+        if(outbid.itemNumber){
+            var studentName = 'Jim' // TODO should be get student name via API
+            outbid.studentName = studentName
+            $rootScope.selectedPic = outbid;
+            var model = {amount:outbid.bid};
+            $scope.model = model;
+        }
+
         $scope.endTime = util.endTime();
         $scope.readonly = true;
         var isCard2Correct = function () {
