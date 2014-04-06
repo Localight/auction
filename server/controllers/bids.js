@@ -149,6 +149,35 @@ exports.post = function(req, res) {
                             message: 'Problem saving bid.'
                         });
                     }
+                    // if there are no previous bids, just make the payment and that's it.
+                    if(!bids.length) {
+                        createPayment(req.bidder, data, item, bid)
+                        .then(function(pmt){
+                            getAuctionEnd()
+                            .then(function(end) {
+                                mailer.notifyHighBidder(req.bidder._id, data.email, data.amount, end, item);
+                                return res.json({
+                                    message: 'Bid placed'
+                                });
+                            })
+                            .fail(function(err){
+                               // just in case. bid is there,email not, we can still let the guy know
+                               return res.json(200, {
+                                message: 'Payment made, but info email not sent.'
+                               });
+                            });
+                        })
+                        .fail(function(err){
+                            // failed payment. this one is not valid.
+                            bid.remove(function(err){
+                                return res.json(400, {
+                                    message: 'Failed making a payment.'
+                                });
+                            });
+                        });
+                        return;
+                    };
+
                     // do we need to create a charge and do we need to notify?
                     // if this bid is previousHighest then the past ones, create a charge.
                     // notify us if we're not the previousHighest bid now and somebody else is
@@ -158,7 +187,6 @@ exports.post = function(req, res) {
                     var previousHighest = getHighestBid(bids);
                     var isMyBid = previousHighest.bidder === '' + req.bidder._id;
                     var isHighestBid = parseFloat(previousHighest.bid) < parseFloat(data.amount);
-                    console.log('Is my prev bid previousHighest: ', isMyBid)
                     // if there is a higher bidder (other then us), insert bid without charge, email that we're not the previousHighest.
                     if(!isHighestBid && !isMyBid) {
                         //just notify us we have lost. nothing else changes.
@@ -166,22 +194,20 @@ exports.post = function(req, res) {
                         notifyLosers([bid], data, item, req, high);
                         return res.json({message: 'Bid placed.'});
                     } else {
-                        console.log('first else');
-                        var notifyLosers = true;
+                        var doNotifyLosers = true;
                         // if previousHighest bidder and we're it, just skip email but save the info.
                         if(isMyBid && !isHighestBid) {
-                            console.log('higher bid exists, were it.')
                             return res.json({
                                 message: 'Bid already submit, no change.'
                             });
                         } else if(isMyBid && isHighestBid) {
                             // new bid, outbidding myself. Just make a payment actually and notify of high bid.
-                            notifyLosers = false;
+                            doNotifyLosers = false;
                         }
                         // in other cases, we're cool. We need to create a charge and notify (and de-hold) the user.
                         // try payment first, then notify losers and stuff.
                         createPayment(req.bidder, data, item, bid)
-                        .then(function(payment){
+                        .then(function(pmt){
                             getAuctionEnd()
                             .then(function(end) {
                                 mailer.notifyHighBidder(req.bidder._id, data.email, data.amount, end, item);
@@ -197,10 +223,13 @@ exports.post = function(req, res) {
                             });
                             // We notify losers here, because otherwise the payment might have failed.
                             // when the payment is ok, and we didn't outbid ourselves, tell the others.
-                            if(notifyLosers) {
+                            if(doNotifyLosers) {
                                 notifyLosers(bids, data, item, req, data.amount);
                             }
                             // also cancel previous highest card hold.
+                            if(previousHighest) {
+                                payment.removePreviousHold(previousHighest.balanced_href);
+                            }
                         })
                         .fail(function(err){
                             return res.json(500, {message: 'Problem.'});
@@ -264,7 +293,6 @@ exports.students = function students(req, res){
 }
 
 function notifyLosers(bids, data, item, req, high) {
-    console.log('Outbid on my bid of ', data.amount, ' by the high bid of ', high)
     var bidderIds = [];
     for (var i in bids) {
         if(bids[i].notified == false) {
@@ -289,7 +317,6 @@ function notifyLosers(bids, data, item, req, high) {
                         bidAmount = bids[inner].bid;
                     }
                 }
-                console.log('Sending notif: ', bidders[b]._id, bidders[b].email,  high, end, item, bidAmount)
                 mailer.notifyLoser(bidders[b]._id, bidders[b].email,  high, end, item, bidAmount);
                 bids[inner].notified = true;
                 bids[inner].timestamp = new Date();

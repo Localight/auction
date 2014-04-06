@@ -103,3 +103,18 @@ exports.holdCharge = function(card, amount) {
     return d.promise;
 };
 
+exports.removePreviousHold = function(hold) {
+    balanced.get(hold)
+    .then(function(charge){
+        charge.void()
+        .then(function(done){
+            // console.log('Voided hold', done);
+        }
+        , function er(er){
+            console.log('Error voiding hold', er);
+        });
+    }
+    , function fail(er){
+        console.log('Failed getting hold.');
+    });
+}
