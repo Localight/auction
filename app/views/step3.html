@@ -76,7 +76,7 @@
                                        type="number" style="padding-left: 3.5em;" placeholder="XXXXXXXXXXXXXXXX"/>
                             </div>
                             <div style="margin-bottom: 2em;">
-                                <img data-ng-show="isCard2Correct" src="images/pic/go.png" class="go" data-ng-click="saveCard()"/>
+                                <img data-ng-show="isCard2Correct" src="images/pic/go.png" class="go" data-ng-click="saveCard()" data-ng-disabled="submitting"/>
                                 <div style="background: #ffffff;padding-bottom: 1px;" class="card" data-ng-class="{error:card2Invalid}">
                                     <input data-ng-model="model.MM" name="MM" type="number" required style="width: 18%;padding-left: 0.4em;" placeholder="MM" min="1" max="12"/>
                                     <input data-ng-model="model.YY" name="YY" type="number" required style="width: 15%" placeholder="YY" data-ng-minlength="2"data-ng-maxlength="2"/>
@@ -87,7 +87,7 @@
                             </div>
                         </div>
                         <div data-ng-show="isCCExist && readonly">
-                            <button data-ng-click="saveCard()" class="visible-xs">
+                            <button data-ng-click="saveCard()" class="visible-xs" data-ng-disabled="submitting">
                                 <img src="images/pic/processd.png" class="proceed" alt=""/>
                             </button>
                             <div  class="readyonlyCC">
@@ -103,7 +103,7 @@
                                 </span>
                             </div>
                         </div>
-                        <button data-ng-click="saveCard()" class="hidden-xs">
+                        <button data-ng-click="saveCard()" class="hidden-xs" data-ng-disabled="submitting">
                             <img src="images/pic/processd.png" class="proceed" alt=""/>
                         </button>
                     </div>
@@ -120,7 +120,7 @@
                             <div class="big">{{selectedPic.studentName}}</div>
                         </div>
                     </div>
-                    <button data-ng-click="saveCard()" class="visible-xs">
+                    <button data-ng-click="saveCard()" class="visible-xs" data-ng-disabled="submitting">
                         <img src="images/pic/processd.png" class="proceed" alt=""/>
                     </button>
                 </div>
