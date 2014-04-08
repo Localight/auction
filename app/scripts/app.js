@@ -3,14 +3,14 @@ angular.module('NonProfitApp', [
     ])
     .service('util', function () {
 		var auctionEndDateYear =  2014;
-		var auctionEndDateMonthNumber = 3;
-		var auctionEndDateDayNumber = 31;
+		var auctionEndDateMonthNumber = 4;
+		var auctionEndDateDayNumber = 11;
 		var auctionEndDateHour = 0;
 		var auctionEndDateMinute = 0;
 		
         return {
             endTime: function () {
-                // Ends March 30, 2014 at 5 PM (PST)
+                // TODO, Maybe this time can get from Back end API?
                 return (new Date(auctionEndDateYear, auctionEndDateMonthNumber-1, auctionEndDateDayNumber, auctionEndDateHour, auctionEndDateMinute)).getTime();
             }
         }
