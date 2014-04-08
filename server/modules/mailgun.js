@@ -275,6 +275,6 @@ exports.notifyWinner = function(email, artist, item, bid) {
 function getEndTime(time) {
     var ONE_DAY = 1000 * 60 * 60 * 24;
     var days = Math.round((Math.abs(new Date().getTime() - time.getTime()))/ONE_DAY);
-    return days + ' ' + pluralize('day', days) + ', Fri Apr 04 2014 at midnight (PST)'  ;
+    return days + ' ' + pluralize('day', days) + ', Fri Apr 11 2014 at midnight (PST)'  ;
 }
 prepareTemplates();

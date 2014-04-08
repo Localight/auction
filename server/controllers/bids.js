@@ -6,6 +6,17 @@ var Auction = require('../models/auctions');
 var Student = require('../models/students');
 var payment = require('../modules/payment');
 var mailer = require('../modules/mailgun');
+var ENDDATECONST = new Date('04/11/2014 23:59');
+var enddate;
+getAuctionEnd()
+.then(function(end){
+    enddate = ENDDATECONST;
+}
+, function fail(err){
+    console.log('error getting end date', err);
+    enddate = ENDDATECONST;
+});
+
 
 function getItem(cr) {
     var d = Q.defer();
@@ -119,6 +130,14 @@ exports.getBidder = function(req, res, next) {
     });
 }
 exports.post = function(req, res) {
+    if(enddate < new Date()) {
+        console.log('late to auction');
+        return res.json(405, {
+            message: 'Auction expired.'
+        });
+    } else {
+        console.log('date fine');
+    }
     // a bid is posted on an item. Let's first see if it exists and also get
     // the previous bids
     // submited bid has: item #, bid price, payment info, email, phone #
@@ -334,9 +353,9 @@ function getAuctionEnd(){
     var d = Q.defer();
     Auction.find(function(Err, auc){
         if(Err || !auc.length) {
-            return d.resolve(new Date('04/04/2014'));
+            return d.resolve(ENDDATECONST);
         } else {
-            return d.resolve(auc[0].end || new Date('04/04/2014'));
+            return d.resolve(auc[0].end || ENDDATECONST);
         }
     });
     return d.promise;

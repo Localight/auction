@@ -16,7 +16,7 @@
                 <!-- Logo placeholder -->
             </td>
             <td>
-                <h4>You have been outbid by <%= outbid.howmuch %>!</h4>
+                <h4>You have been outbid by $<%= outbid.howmuch %>!</h4>
             </td>
         </tr>
     </table><!-- Header table -->
@@ -47,8 +47,9 @@
             <td>Current winning bid: $<%= outbid.winning %></td>
         </tr>
         <tr>
-            <td><img src="cid:<%= outbid.itemCid %>" height="300" width="300"/>
-        </td>
+            <td>
+                <img src="cid:<%= outbid.itemCid %>" height="300" width="300"/>
+            </td>
         <tr>
             <td colspan="2">The auction ends in: <%= outbid.endTime %></td>
             <td></td>
