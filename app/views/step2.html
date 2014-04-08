@@ -43,14 +43,14 @@
                             Enter your mobile number to verify your transaction via textSMS. You will receive a verification message.
                         </p>
                         <div>
-                            <img data-ng-show="isMobileCorrect" class="go" data-ng-click="saveUser()"
+                            <img data-ng-show="isMobileCorrect" class="go" data-ng-click="saveUser()" data-ng-disabled="submitting"
                                  src="images/pic/go.png"/>
                             <input type="text" name="mobile" style="font-family: 'Roboto Slab';"
                                    data-ng-class="{error:mobileInvalid}"
                                    data-ng-model="model.mobile" data-ng-minlength="10"data-ng-maxlength="13"
                                    required placeholder="Mobile number"/>
                         </div>
-                        <button data-ng-click="saveUser()">
+                        <button data-ng-click="saveUser()" data-ng-disabled="submitting">
                             <img src="images/pic/processd.png" class="proceed" alt=""/>
                         </button>
 
@@ -69,7 +69,7 @@
                             <div class="big">{{getStudentDisplayName(selectedPic.studentName)}}</div>
                         </div>
                     </div>
-                    <button data-ng-click="saveUser()" class="visible-xs">
+                    <button data-ng-click="saveUser()" class="visible-xs" data-ng-disabled="submitting">
                         <img src="images/pic/processd.png" class="proceed" alt=""/>
                     </button>
 

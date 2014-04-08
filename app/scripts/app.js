@@ -3,14 +3,14 @@ angular.module('NonProfitApp', [
     ])
     .service('util', function () {
 		var auctionEndDateYear =  2014;
-		var auctionEndDateMonthNumber = 3;
-		var auctionEndDateDayNumber = 31;
+		var auctionEndDateMonthNumber = 4;
+		var auctionEndDateDayNumber = 11;
 		var auctionEndDateHour = 0;
 		var auctionEndDateMinute = 0;
 		
         return {
             endTime: function () {
-                // Ends March 30, 2014 at 5 PM (PST)
+                // TODO, Maybe this time can get from Back end API?
                 return (new Date(auctionEndDateYear, auctionEndDateMonthNumber-1, auctionEndDateDayNumber, auctionEndDateHour, auctionEndDateMinute)).getTime();
             }
         }
@@ -701,6 +701,8 @@ angular.module('NonProfitApp', [
     .controller('Step1Ctrl',function ($scope, $http, $rootScope, $location,util, $firebase) {
         $(window).scrollTop(0);// go to top when a new page loads
 
+        $scope.submitting = false;
+
         var outbid = $location.search();
         if(outbid.itemNumber){
             var studentName = 'Jim' // TODO should be get student name via API
@@ -733,6 +735,7 @@ angular.module('NonProfitApp', [
             $scope.card1Invalid = $scope.form.card1.$pristine || $scope.form.card1.$invalid;
             $scope.card2Invalid = !isCard2Correct();
             if ($scope.form.$valid) {
+                $scope.submitting = true;
 				//var fb = new Firebase("https://torid-fire-3919.firebaseio.com");
 				
 				/*jQuery.post(responseTarget, {
@@ -789,6 +792,9 @@ angular.module('NonProfitApp', [
 		}
     }).controller('Step2Ctrl', function ($scope, $rootScope, $location, api) {
         $(window).scrollTop(0);// go to top when a new page loads
+
+        $scope.submitting = false;
+
         $scope.$watch('model.mobile', function () {
             $scope.isMobileCorrect = !$scope.form.mobile.$pristine && $scope.form.mobile.$valid;
         });
@@ -798,6 +804,7 @@ angular.module('NonProfitApp', [
             $scope.emailInvalid = $scope.form.email.$invalid;
             $scope.mobileInvalid = $scope.form.mobile.$invalid;
             if ($scope.form.$valid) {
+                $scope.submitting = true;
                 // model should be correct data like
                 // {name: "Yong", email: "zengjunyong@gmail.com",mobile:"9492026850"}
                 // mobile must be digital, and the length is from 10 to 11
