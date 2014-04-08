@@ -1,0 +1,8 @@
+.*.sw?
+TODO.md
+gulpfile.js
+node_modules/
+*.sublime-project
+*.sublime-workspace
+node_modules/
+config/config.js
