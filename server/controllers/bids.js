@@ -6,7 +6,7 @@ var Auction = require('../models/auctions');
 var Student = require('../models/students');
 var payment = require('../modules/payment');
 var mailer = require('../modules/mailgun');
-var ENDDATECONST = new Date('04/11/2014 23:59');
+var ENDDATECONST = new Date('04/13/2014 23:59');
 var enddate;
 getAuctionEnd()
 .then(function(end){
