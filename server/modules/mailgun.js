@@ -15,7 +15,7 @@ var Bid = require('../models/bids');
 var Q = require('q');
 var mg, domain, key, from;
 var TemplateWon, TemplateLost, TemplateHigh, TemplateOutbid;
-var baseLink = 'http://auctions.TeachArt.org/';
+var baseLink = 'http://havenly.TeachArt.org/';
 
 /** Mailgun setup
  * To be called on app bootstrap.
@@ -127,7 +127,7 @@ function getBidByItemAndBidder(itemNumber, bidderId) {
  *
  **/
 
-exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auctionEnd, item, bidAmount) {
+exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auctionEnd, item, bidAmount, firstName) {
     Bidder.findOne({_id: bidderId}, function(err, bidder){
         if(err || bidder ===null) {
             return;
@@ -145,6 +145,12 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
         var bid2 = math.add(winning, '10.00');
         var bid3 = math.add(winning, '20.00');
         var cid = 'image.png';
+        var highBidder
+        if(!firstName) {
+            highBidder = ''
+        } else {
+            highBidder = ' by ' + firstName;
+        }
         var locals = {
             outbid: {
                 amount: amount
@@ -162,6 +168,7 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
                 , itemCid: cid
                 , endTime: getEndTime(auctionEnd)
                 , email: bidderEmail
+                , highBidder: highBidder
             }
         };
         var howmuch = math.subtract(auctionAmount, amount);

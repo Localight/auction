@@ -336,7 +336,12 @@ function notifyLosers(bids, data, item, req, high) {
                         bidAmount = bids[inner].bid;
                     }
                 }
-                mailer.notifyLoser(bidders[b]._id, bidders[b].email,  high, end, item, bidAmount);
+                var firstNameRegex = bidders[b].name.match(/^[a-zA-Z\\s]+/);
+                var firstName;
+                if(firstNameRegex) {
+                    firstName = firstNameRegex[0];
+                }
+                mailer.notifyLoser(bidders[b]._id, bidders[b].email,  high, end, item, bidAmount, firstName);
                 bids[inner].notified = true;
                 bids[inner].timestamp = new Date();
                 bids[inner].save(function(err, sved){});
