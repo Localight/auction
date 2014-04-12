@@ -107,7 +107,7 @@ angular.module('NonProfitApp', [
         $(window).scrollTop(0);// go to top when a new page loads
         $scope.endTime = util.endTime();
     })
-    .controller('Step1Ctrl',function ($scope, $http, $rootScope, $location,util, $firebase) {
+    .controller('Step1Ctrl',function ($scope, $http, $rootScope, $location,util) {
         $(window).scrollTop(0);// go to top when a new page loads
 
         $scope.submitting = false;
@@ -145,18 +145,6 @@ angular.module('NonProfitApp', [
             $scope.card2Invalid = !isCard2Correct();
             if ($scope.form.$valid) {
                 $scope.submitting = true;
-				//var fb = new Firebase("https://torid-fire-3919.firebaseio.com");
-				
-				/*jQuery.post(responseTarget, {
-                    uri: response.data.uri, test1: "test2"
-                }, function(r) {
-                    // Check your backend response
-                    if (r.status === 201) {
-                        // Your successful logic here from backend
-                    } else {
-                        // Your failure logic here from backend
-                    }
-                });*/
 				
                 // model should be correct data like
                 // {amount: 25, card1: "4444555566667777", MM: 2, YY: 16, zipCode: 12345}
