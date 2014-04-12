@@ -41,7 +41,7 @@ app.get('/test', function(req, res){
 });
 
 app.get('/', function(req, res) {
-    res.sendfile('index.html', {root: './public'});
+    res.sendfile('index.html', {root: './app'});
 });
 var auth = express.basicAuth('localism', 'a1207c');
 // Phase 1, a few RESTful endpoints
