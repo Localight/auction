@@ -4,7 +4,7 @@ angular.module('NonProfitApp', [
     .service('util', function () {
 		var auctionEndDateYear =  2014;
 		var auctionEndDateMonthNumber = 4;
-		var auctionEndDateDayNumber = 11;
+		var auctionEndDateDayNumber = 16;
 		var auctionEndDateHour = 0;
 		var auctionEndDateMinute = 0;
 		
