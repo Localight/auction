@@ -1,5 +1,6 @@
 var Item = require('../models/items');
 var Bid = require('../models/bids');
+var Student = require('../models/students');
 exports.get = function(req, res) {
     Item.find({}, 'studentNumber itemNumber image')
     .lean()
@@ -12,53 +13,75 @@ exports.get = function(req, res) {
             return res.json([]);
         }
         var bidIds = [];
+        var studentIds = [];
         for (var i in items) {
             bidIds.push(items[i].itemNumber);
+            studentIds.push(items[i].studentNumber);
         }
-        Bid.find({
-            item: {
-                $in: bidIds
+        Student.find({
+            number: {
+                $in: studentIds
             }
         })
-        .sort('item')
-        .exec(function(err, bids){
-            console.log('items: ', items.length, '\r\nbids: ', bids.length)
+        .sort('number')
+        .exec(function(err, students) {
             if(err) {
-                return res.json(500, {message: 'Error'});
-            }
-            for(var i in items) {
-                var itemBids = bids.filter(function(bid) {
-                    return items[i].itemNumber == bid.item;
+                return res.json(500, {
+                    message: 'Error'
                 });
-                if(!itemBids.length) {
-                    items[i].lastBid = {};
-                    items[i].timestamp = null;
-                    continue;
+            }
+            Bid.find({
+                item: {
+                    $in: bidIds
                 }
-                var bid = itemBids.shift();
-                while (bid !== undefined) {
-                    if(!items[i].lastBid) {
+            })
+            .sort('item')
+            .exec(function(err, bids){
+                console.log('items: ', items.length, '\r\nbids: ', bids.length)
+                if(err) {
+                    return res.json(500, {message: 'Error'});
+                }
+                for(var i in items) {
+                    items[i].studentID = items[i].studentNumber;
+                    var itemBids = bids.filter(function(bid) {
+                        return items[i].itemNumber == bid.item;
+                    });
+                    var student = students.filter(function(st){
+                        return st.number == '' + items[i].studentNumber
+                    })
+                    if(student.length) {
+                        items[i].studentName = student[0].lastName + ', ' + student[0].firstName;
+                    }
+                    if(!itemBids.length) {
+                        items[i].lastBid = {};
+                        items[i].timestamp = null;
+                        continue;
+                    }
+                    var bid = itemBids.shift();
+                    while (bid !== undefined) {
+                        if(!items[i].lastBid) {
+                            items[i].lastBid = {
+                                value: bid.bid
+                                , timestamp: bid.timestamp.getTime()
+                            };
+                            items[i].timestamp = bid.timestamp.getTime();
+                            bid = itemBids.shift();
+                            continue;
+                        }
+                        if(parseFloat(items[i].lastBid.value) > parseFloat(bid.bid)) {
+                            bid = itemBids.shift();
+                            continue;
+                        }
+                        items[i].timestamp = bid.timestamp.getTime();
                         items[i].lastBid = {
                             value: bid.bid
-                            , timestamp: bid.timestamp
-                        };
-                        items[i].timestamp = bid.timestamp;
+                            , timestamp: bid.timestamp.getTime()
+                        }
                         bid = itemBids.shift();
-                        continue;
                     }
-                    if(parseFloat(items[i].lastBid.value) > parseFloat(bid.bid)) {
-                        bid = itemBids.shift();
-                        continue;
-                    }
-                    items[i].timestamp = bid.timestamp;
-                    items[i].lastBid = {
-                        value: bid.bid
-                        , timestamp: bid.timestamp
-                    }
-                    bid = itemBids.shift();
-                }
-            };
-            return res.json(items);
+                };
+                return res.json(items);
+            });
         });
     });
 };
