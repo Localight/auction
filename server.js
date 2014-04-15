@@ -48,6 +48,7 @@ var auth = express.basicAuth('localism', 'a1207c');
 var items = require('./server/controllers/items');
 var bids = require('./server/controllers/bids');
 var bidders = require('./server/controllers/bidders');
+var auc = require('./server/controllers/auctions');
 app.get('/api/items', items.get);
 app.get('/api/students', bids.students);
 app.get('/api/items/:number', items.getItemByNumber);
@@ -55,6 +56,7 @@ app.post('/api/bids', bids.getBidder, bids.post);
 app.get('/api/unsubscribe', bidders.unsubscribe);
 app.get('/api/notify-winners', auth, bids.notifyAllWinners);
 app.get('/api/notify-losers', auth, bids.notifyAllLosers);
+app.get('/api/auction', auc.get);
 
 // Catchall route
 app.get('*', function(req, res) {

@@ -6,7 +6,7 @@ var Auction = require('../models/auctions');
 var Student = require('../models/students');
 var payment = require('../modules/payment');
 var mailer = require('../modules/mailgun');
-var ENDDATECONST = new Date('04/16/2014 23:59');
+var ENDDATECONST = new Date('04/20/2014 23:59');
 var enddate;
 getAuctionEnd()
 .then(function(end){
@@ -360,7 +360,8 @@ function getAuctionEnd(){
         if(Err || !auc.length) {
             return d.resolve(ENDDATECONST);
         } else {
-            return d.resolve(auc[0].end || ENDDATECONST);
+            return d.resolve(new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber - 1, auc[0].auctionEndDateDayNumber
+            , auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute) || ENDDATECONST);
         }
     });
     return d.promise;

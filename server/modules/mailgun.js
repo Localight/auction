@@ -11,11 +11,12 @@ var emailTemplates = require('email-templates');
 var pluralize = require('pluralize');
 var Bidder = require('../models/bidders');
 var Bid = require('../models/bids');
-
+var Auction = require('../models/auctions');
 var Q = require('q');
 var mg, domain, key, from;
 var TemplateWon, TemplateLost, TemplateHigh, TemplateOutbid;
 var baseLink = 'http://havenly.TeachArt.org/';
+var enddatestring = 'on April 20th at midnight PST';
 
 /** Mailgun setup
  * To be called on app bootstrap.
@@ -282,6 +283,15 @@ exports.notifyWinner = function(email, artist, item, bid) {
 function getEndTime(time) {
     var ONE_DAY = 1000 * 60 * 60 * 24;
     var days = Math.round((Math.abs(new Date().getTime() - time.getTime()))/ONE_DAY);
-    return days + ' ' + pluralize('day', days) + ', Fri Apr 11 2014 at midnight (PST)'  ;
+    return days + ' ' + pluralize('day', days) + ', ' + enddatestring + ' at midnight (PST)';
 }
 prepareTemplates();
+// setup time right away.;
+Auction.find(function(err, auc){
+    if(err || !auc) {
+        return;
+    }
+    var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber - 1, auc[0].auctionEndDateDayNumber
+            , auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
+    enddatestring = date.toDateString();
+});
