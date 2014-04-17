@@ -22,11 +22,31 @@ angular.module('NonProfitApp', [
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',
-                controller: 'MainCtrl'
+                controller: 'MainCtrl',
+                resolve: {
+                    app: function($q, api,$rootScope) {
+                        var defer = $q.defer();
+                        api.endAuction().then(function (endTime) {
+                            $rootScope.endTime = endTime;
+                            defer.resolve();
+                        });
+                        return defer.promise;
+                    }
+                }
             })
             .when('/about', {
                 templateUrl: 'views/about.html',
-                controller: 'AboutCtrl'
+                controller: 'AboutCtrl',
+                resolve: {
+                    app: function($q, api,$rootScope) {
+                        var defer = $q.defer();
+                        api.endAuction().then(function (endTime) {
+                            $rootScope.endTime = endTime;
+                            defer.resolve();
+                        });
+                        return defer.promise;
+                    }
+                }
             })
             .when('/step1', {
                 templateUrl: 'views/step1.html',
@@ -76,9 +96,7 @@ angular.module('NonProfitApp', [
             }
         });
 
-        api.endAuction().then(function (endTime) {
-            $scope.endTime = endTime;
-        });
+        $scope.endTime = $rootScope.endTime;
 
         $scope.selectPic = function (pic, item) {
             $rootScope.selectedPic = pic;
@@ -93,11 +111,9 @@ angular.module('NonProfitApp', [
             return displayName;
         }
     })
-    .controller('AboutCtrl', function ($scope, api) {
+    .controller('AboutCtrl', function ($scope, $rootScope) {
         $(window).scrollTop(0);// go to top when a new page loads
-        api.endAuction().then(function (endTime) {
-            $scope.endTime = endTime;
-        });
+        $scope.endTime = $rootScope.endTime;
     })
     .controller('Step1Ctrl',function ($scope, $http, $rootScope, $location,api) {
         $(window).scrollTop(0);// go to top when a new page loads
@@ -262,6 +278,6 @@ angular.module('NonProfitApp', [
                     });
                 return promise;
             }
-         };
-         return api;
+        };
+        return api;
      });
