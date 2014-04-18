@@ -1,19 +1,6 @@
 angular.module('NonProfitApp', [
         'ngRoute', 'timer'
     ])
-    .service('util', function () {
-		var auctionEndDateYear =  2014;
-		var auctionEndDateMonthNumber = 4;
-		var auctionEndDateDayNumber = 16;
-		var auctionEndDateHour = 23;
-		var auctionEndDateMinute = 59;
-		
-        return {
-            endTime: function () {
-                return (new Date(auctionEndDateYear, auctionEndDateMonthNumber-1, auctionEndDateDayNumber, auctionEndDateHour, auctionEndDateMinute)).getTime();
-            }
-        }
-    })
     .directive('smartFloat', function() {
         return {
             require: 'ngModel',
@@ -35,11 +22,31 @@ angular.module('NonProfitApp', [
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',
-                controller: 'MainCtrl'
+                controller: 'MainCtrl',
+                resolve: {
+                    app: function($q, api,$rootScope) {
+                        var defer = $q.defer();
+                        api.endAuction().then(function (endTime) {
+                            $rootScope.endTime = endTime;
+                            defer.resolve();
+                        });
+                        return defer.promise;
+                    }
+                }
             })
             .when('/about', {
                 templateUrl: 'views/about.html',
-                controller: 'AboutCtrl'
+                controller: 'AboutCtrl',
+                resolve: {
+                    app: function($q, api,$rootScope) {
+                        var defer = $q.defer();
+                        api.endAuction().then(function (endTime) {
+                            $rootScope.endTime = endTime;
+                            defer.resolve();
+                        });
+                        return defer.promise;
+                    }
+                }
             })
             .when('/step1', {
                 templateUrl: 'views/step1.html',
@@ -64,7 +71,7 @@ angular.module('NonProfitApp', [
     .run(function ($rootScope) {
         $rootScope.isCCExist = false;
     })
-    .controller('MainCtrl', function ($scope, $rootScope, util, api) {
+    .controller('MainCtrl', function ($scope, $rootScope, api) {
         var auction = $scope.auction = [];
         api.getItems()
         .then(function(data){
@@ -89,11 +96,12 @@ angular.module('NonProfitApp', [
             }
         });
 
+        $scope.endTime = $rootScope.endTime;
+
         $scope.selectPic = function (pic, item) {
             $rootScope.selectedPic = pic;
         }
-        $scope.endTime = util.endTime();
-		$scope.getStudentDisplayName = function (name) 
+		$scope.getStudentDisplayName = function (name)
 		{
 			var nameParts = name.split(",");
 			var firstName = nameParts[1];
@@ -103,11 +111,11 @@ angular.module('NonProfitApp', [
             return displayName;
         }
     })
-    .controller('AboutCtrl', function ($scope, util) {
+    .controller('AboutCtrl', function ($scope, $rootScope) {
         $(window).scrollTop(0);// go to top when a new page loads
-        $scope.endTime = util.endTime();
+        $scope.endTime = $rootScope.endTime;
     })
-    .controller('Step1Ctrl',function ($scope, $http, $rootScope, $location,util) {
+    .controller('Step1Ctrl',function ($scope, $http, $rootScope, $location,api) {
         $(window).scrollTop(0);// go to top when a new page loads
 
         $scope.submitting = false;
@@ -121,7 +129,9 @@ angular.module('NonProfitApp', [
             $scope.model = model;
         }
 
-        $scope.endTime = util.endTime();
+        api.endAuction().then(function (endTime) {
+            $scope.endTime = endTime;
+        });
         $scope.readonly = true;
         var isCard2Correct = function () {
 //            return !$scope.form.MM.$pristine && $scope.form.MM.$valid &&
@@ -241,7 +251,7 @@ angular.module('NonProfitApp', [
     }).controller('RegisteredCtrl', function ($scope, $rootScope, $location) {
         $(window).scrollTop(0);// go to top when a new page loads
     })
-    .service('api', function($http) {
+    .service('api', function($http,$rootScope) {
         var api = {
             getItems: function() {
                 var promise = $http.get('/api/items')
@@ -252,7 +262,22 @@ angular.module('NonProfitApp', [
             }
             , bidOnItem: function(data) {
                 return $http.post('/api/bids', data)
-             }
-         };
-         return api;
+            }, endAuction: function () {
+                var promise = $http.get('/api/auction')
+                    .then(function(response) {
+                        var data = response.data;
+                        var end = data[data.length-1];
+                        $rootScope.auctionEndDateText = end.auctionEndDateText;
+                        var auctionEndDateYear =  end.auctionEndDateYear;
+                        var auctionEndDateMonthNumber = end.auctionEndDateMonthNumber;
+                        var auctionEndDateDayNumber = end.auctionEndDateDayNumber;
+                        var auctionEndDateHour = end.auctionEndDateHour;
+                        var auctionEndDateMinute = end.auctionEndDateMinute;
+                        var endTime = (new Date(auctionEndDateYear, auctionEndDateMonthNumber-1, auctionEndDateDayNumber, auctionEndDateHour, auctionEndDateMinute)).getTime();
+                        return endTime;
+                    });
+                return promise;
+            }
+        };
+        return api;
      });
