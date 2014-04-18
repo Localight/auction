@@ -35,6 +35,8 @@ function getItem(cr) {
             var result = {
                 _id: item._id
                 , artist: student.firstName + ' ' + student.lastName.substr(0, 1) + '.'
+                , studentFirstname: student.firstName
+                , studentLastname: student.lastName
                 , itemNumber: item.itemNumber
                 , image: item.image
                 , studentNumber: item.studentNumber
@@ -100,9 +102,12 @@ But we only send one email to the bidder.
 Also, what if the current bid is not the best bid, but we're winning?
 
 */
-exports.getBidder = function(req, res, next) {
+function getBidder(req, res, next) {
     // middleware that finds current bidder, if there is one, or creates a new one. Attached to req.
     var email = req.body.email;
+    if(!email) {
+        email = req.query.email;
+    }
     Bidder.findOne({
         email: email
     })
@@ -129,7 +134,7 @@ exports.getBidder = function(req, res, next) {
         });
     });
 }
-exports.post = function(req, res) {
+function post(req, res) {
     if(enddate < new Date()) {
         console.log('late to auction');
         return res.json(405, {
@@ -304,7 +309,7 @@ function createPayment(bidder, data, item, bid) {
     return d.promise;
 }
 
-exports.students = function students(req, res){
+function students(req, res){
     Student.find({})
     .exec(function(err, data){
         res.json(data);
@@ -367,7 +372,7 @@ function getAuctionEnd(){
     return d.promise;
 }
 
-exports.notifyAllLosers = function(req, res){
+function notifyAllLosers(req, res){
     Bid.find({
         notified: true
     })
@@ -391,7 +396,7 @@ exports.notifyAllLosers = function(req, res){
         res.json({message: 'Delivery started.'});
     });
 }
-exports.notifyAllWinners = function(req, res) {
+function notifyAllWinners(req, res) {
     Bid.find({
         notified: false
     })
@@ -430,4 +435,50 @@ function sendAuctionEndNotification(bid) {
         })
         Student.findOne()
     })
+}
+
+function getBid(req, res){
+    var id = req.params.id;
+    var item, student, bidder;
+    Bid.findOne({
+        _id: id
+    })
+    .exec(function(err, bid){
+        if(err) {
+            console.log("Error getting bid: ", err);
+            return res.json(500, {message: 'Server error'});
+        }
+        if(!bid) {
+            return res.json(404, {message: 'No such bid.'});
+        }
+        getItem({itemNumber: bid.item})
+        .then(function(item){
+            findBidsByItemNumber(bid.item)
+            .then(function(bids) {
+                var previousHighest = getHighestBid(bids);
+                return res.json({
+                    bidId: id
+                    , bidderId: req.bidder._id
+                    , currentHighBid: previousHighest.bid
+                    , lastFour: (req.bidder.cards && req.bidder.cards.length) ? req.bidder.cards[0].lastFour: ''
+                    , itemNumber: bid.item
+                    , studentFirstname: item.studentFirstname
+                    , studentLastname: item.studentLastname
+                    , studentName: item.studentName
+                })
+            });
+        })
+        .fail(function(err){
+            console.log('Error getting bid details: ', err);
+            return res.json(500, {message: 'Server error.'});
+        });
+    });
+}
+module.exports = {
+    notifyAllWinners: notifyAllWinners
+    , notifyAllLosers: notifyAllLosers
+    , post: post
+    , getBidder: getBidder
+    , getBid: getBid
+    , students: students
 }
