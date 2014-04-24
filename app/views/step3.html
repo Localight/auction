@@ -17,7 +17,7 @@
                         What's your next move?
                     </p>
                     <p>
-                        The current high bid is $50. The suggested bid is $55 or higher. Time remaining:
+                        The current high bid is ${{data.currentHighBid}}. The suggested bid is ${{data.suggestBid}} or higher. Time remaining:
                     </p>
                     <div class="wrapper">
                         <div class="row count-down" style="border: none;margin-top: 0;margin-bottom: 0.4em;">
@@ -109,15 +109,15 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <img data-ng-src="images/gallery/IMG_{{selectedPic.itemNumber}}.jpg" class="img-responsive" alt=""/>
+                    <img data-ng-src="images/gallery/IMG_{{data.itemNumber}}.jpg" class="img-responsive" alt=""/>
                     <div class="row pic-detail">
                         <div class="col-xs-4">
                             <div>Item</div>
-                            <div class="big">{{selectedPic.itemNumber}}</div>
+                            <div class="big">{{data.itemNumber}}</div>
                         </div>
                         <div class="col-xs-8 right">
                             <div>Made by</div>
-                            <div class="big">{{selectedPic.studentName}}</div>
+                            <div class="big">{{data.studentName}}</div>
                         </div>
                     </div>
                     <button data-ng-click="saveCard()" class="visible-xs" data-ng-disabled="submitting">

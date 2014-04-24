@@ -50,7 +50,17 @@ angular.module('NonProfitApp', [
             })
             .when('/step1', {
                 templateUrl: 'views/step1.html',
-                controller: 'Step1Ctrl'
+                controller: 'Step1Ctrl',
+                resolve: {
+                    app: function($q, api,$rootScope) {
+                        var defer = $q.defer();
+                        api.endAuction().then(function (endTime) {
+                            $rootScope.endTime = endTime;
+                            defer.resolve();
+                        });
+                        return defer.promise;
+                    }
+                }
             })
             .when('/step2', {
                 templateUrl: 'views/step2.html',
@@ -121,17 +131,27 @@ angular.module('NonProfitApp', [
         $scope.submitting = false;
 
         var outbid = $location.search();
-        if(outbid.itemNumber){
-            var studentName = 'Jim' // TODO should be get student name via API
-            outbid.studentName = studentName
-            $rootScope.selectedPic = outbid;
-            var model = {amount:outbid.bid};
-            $scope.model = model;
+//        if(outbid.itemNumber){
+//            var studentName = 'Jim' // TODO should be get student name via API
+//            outbid.studentName = studentName
+//            $rootScope.selectedPic = outbid;
+//            var model = {amount:outbid.bid};
+//            $scope.model = model;
+//        }
+
+        var bid = outbid.bid;
+        if(bid){
+            $http.get('/api/bids/' + bid).success(function (data) {
+                data.suggestBid = data.currentHighBid * 1 + 5;
+                data.studentName = data.studentLastname + data.studentFirstname;
+                $scope.data = data;
+                var model = {amount: data.currentHighBid};
+                $scope.model = model;
+            });
         }
 
-        api.endAuction().then(function (endTime) {
-            $scope.endTime = endTime;
-        });
+        $scope.endTime = $rootScope.endTime;
+
         $scope.readonly = true;
         var isCard2Correct = function () {
 //            return !$scope.form.MM.$pristine && $scope.form.MM.$valid &&
@@ -147,15 +167,14 @@ angular.module('NonProfitApp', [
             $scope.isCard2Correct = isCard2Correct();
         },true);
         $scope.saveCard = function () {
-			var responseTarget = 'http://requestb.in/1gonvkk1';
-		
+
             $scope.invalid = $scope.form.$invalid;
             $rootScope.isCCExist = $scope.form.$valid;
             $scope.card1Invalid = $scope.form.card1.$pristine || $scope.form.card1.$invalid;
             $scope.card2Invalid = !isCard2Correct();
             if ($scope.form.$valid) {
                 $scope.submitting = true;
-				
+
                 // model should be correct data like
                 // {amount: 25, card1: "4444555566667777", MM: 2, YY: 16, zipCode: 12345}
                 // amount should be more than 15,
@@ -185,7 +204,7 @@ angular.module('NonProfitApp', [
             delete $scope.model.CVV;
             delete $scope.model.zipCode;
         }
-		$scope.getStudentDisplayName = function (name) 
+		$scope.getStudentDisplayName = function (name)
 		{
 			var nameParts = name.split(",");
 			var firstName = nameParts[1];
@@ -239,7 +258,7 @@ angular.module('NonProfitApp', [
             });
 
         }
-		$scope.getStudentDisplayName = function (name) 
+		$scope.getStudentDisplayName = function (name)
 		{
 			var nameParts = name.split(",");
 			var firstName = nameParts[1];
