@@ -1,3 +1,4 @@
+'use strict';
 var Q = require('q');
 var Bid = require('../models/bids');
 var Bidder = require('../models/bidders');
@@ -9,7 +10,7 @@ var mailer = require('../modules/mailgun');
 var ENDDATECONST = new Date('04/20/2014 23:59');
 var enddate;
 getAuctionEnd()
-.then(function(end){
+.then(function(){
     enddate = ENDDATECONST;
 }
 , function fail(err){
@@ -29,7 +30,7 @@ function getItem(cr) {
         .exec(function(err, student) {
             if(err || student === null)
             {
-                return d.reject(err)
+                return d.reject(err);
             }
             item.artist = student.firstName + ' ' + student.lastName.substr(0, 1) + '.';
             var result = {
@@ -40,7 +41,7 @@ function getItem(cr) {
                 , itemNumber: item.itemNumber
                 , image: item.image
                 , studentNumber: item.studentNumber
-            }
+            };
             d.resolve(result);
         });
     });
@@ -65,15 +66,6 @@ function findBidsByItemNumber(num) {
     return d.promise;
 }
 
-function checkHighestBidder(bids, data) {
-    var amount = parseFloat(data.amount);
-    for (var i in bids) {
-        if(parseFloat(bids[i].bid) >= amount) {
-            return false;
-        }
-    }
-    return true;
-}
 function getHighestBid(bids) {
     var amount = 0;
     var idx;
@@ -120,7 +112,7 @@ function getBidder(req, res, next) {
             req.bidder = bidder;
             return next();
         }
-        var bidder = new Bidder({
+        bidder = new Bidder({
             email: req.body.email
             , name: req.body.name
             , phone: req.body.phone
@@ -134,6 +126,7 @@ function getBidder(req, res, next) {
         });
     });
 }
+
 function post(req, res) {
     if(enddate < new Date()) {
         console.log('late to auction');
@@ -149,11 +142,11 @@ function post(req, res) {
     var fields = ['itemNumber', 'amount', 'mm', 'yy', 'card', 'ccv', 'zip', 'email', 'name', 'phone'];
     var data = {};
     for (var i in fields) {
-        if(!req.body[fields[i]] || req.body[fields[i]] == '') {
+        if(!req.body[fields[i]] || req.body[fields[i]] === '') {
             return res.json(400, {message: 'Missing parameter: ' +  fields[i]});
         }
         data[fields[i]] = req.body[fields[i]];
-    };
+    }
     data.amount = data.amount * 100;
     var notified = false;
     getItem({itemNumber: data.itemNumber})
@@ -176,7 +169,7 @@ function post(req, res) {
                     // if there are no previous bids, just make the payment and that's it.
                     if(!bids.length) {
                         createPayment(req.bidder, data, item, bid)
-                        .then(function(pmt){
+                        .then(function(){
                             getAuctionEnd()
                             .then(function(end) {
                                 mailer.notifyHighBidder(req.bidder._id, data.email, data.amount, end, item);
@@ -185,6 +178,7 @@ function post(req, res) {
                                 });
                             })
                             .fail(function(err){
+                                console.log(err);
                                // just in case. bid is there,email not, we can still let the guy know
                                return res.json(200, {
                                 message: 'Payment made, but info email not sent.'
@@ -192,15 +186,17 @@ function post(req, res) {
                             });
                         })
                         .fail(function(err){
+                            console.log(err);
                             // failed payment. this one is not valid.
                             bid.remove(function(err){
+                                console.log(err);
                                 return res.json(400, {
                                     message: 'Failed making a payment.'
                                 });
                             });
                         });
                         return;
-                    };
+                    }
 
                     // do we need to create a charge and do we need to notify?
                     // if this bid is previousHighest then the past ones, create a charge.
@@ -231,7 +227,7 @@ function post(req, res) {
                         // in other cases, we're cool. We need to create a charge and notify (and de-hold) the user.
                         // try payment first, then notify losers and stuff.
                         createPayment(req.bidder, data, item, bid)
-                        .then(function(pmt){
+                        .then(function(){
                             getAuctionEnd()
                             .then(function(end) {
                                 mailer.notifyHighBidder(req.bidder._id, data.email, data.amount, end, item);
@@ -240,6 +236,7 @@ function post(req, res) {
                                 });
                             })
                             .fail(function(err){
+                                console.log(err);
                                // just in case. bid is there,email not, we can still let the guy know
                                return res.json(500, {
                                 message: 'Error sending bid.'
@@ -256,6 +253,7 @@ function post(req, res) {
                             }
                         })
                         .fail(function(err){
+                            console.log(err);
                             return res.json(500, {message: 'Problem.'});
                         });
                     }
@@ -263,13 +261,14 @@ function post(req, res) {
                 return;
             })
             .fail(function(err){
-              return res.json(500, {message: 'Error getting bids'});
+                console.log(err);
+                return res.json(500, {message: 'Error getting bids'});
           });
     })
     .fail(function(err){
         res.json(500, {message: err});
     });
-};
+}
 
 // get customer.
 // see if we have a matching last four card on file.
@@ -287,12 +286,12 @@ function createPayment(bidder, data, item, bid) {
             .then(
                 function(held) {
                     bid.balanced_href = held.href;
-                    bid.save(function(err, saved){
+                    bid.save(function(err){
                         if(err){
                             return d.reject(err);
                         }
                         return d.resolve();
-                    })
+                    });
                 }
                 , function(failed){
                     return d.reject(failed);
@@ -318,13 +317,13 @@ function students(req, res){
 
 function notifyLosers(bids, data, item, req, high) {
     var bidderIds = [];
+    var cb = function(){};
     for (var i in bids) {
-        if(bids[i].notified == false) {
+        if(bids[i].notified === false) {
             bidderIds.push(bids[i].bidder);
             bids[i].notified = true;
             bids[i].timestamp = new Date();
-            bids[i].save(function(err, saved){
-            })
+            bids[i].save(cb);
         }
     }
     Bidder.find({_id: {$in: bidderIds}})
@@ -332,6 +331,9 @@ function notifyLosers(bids, data, item, req, high) {
         if(err) {
             return;
         }
+        var cb = function(){
+            // TODO, fix this
+        };
         getAuctionEnd()
         .then(function(end) {
             for (var b in bidders){
@@ -349,10 +351,10 @@ function notifyLosers(bids, data, item, req, high) {
                 mailer.notifyLoser(bidders[b]._id, bidders[b].email,  high, end, item, bidAmount, firstName);
                 bids[inner].notified = true;
                 bids[inner].timestamp = new Date();
-                bids[inner].save(function(err, sved){});
+                bids[inner].save(cb);
             }
         })
-        .fail(function(err){
+        .fail(function(){
             // just in case. bid is there,email not, we can still let the guy know
             return;
         });
@@ -417,7 +419,7 @@ function sendAuctionEndNotification(bid) {
         _id: bid.bidder
     })
     .exec(function(err, bidder){
-        if(err || bidder == null) return;
+        if(err || bidder === null) return;
         Item.findOne({
             itemNumber: bid.item
         })
@@ -432,46 +434,63 @@ function sendAuctionEndNotification(bid) {
                 var artist = student.firstName + ' ' + student.lastName.substr(0,1) + '.';
                 mailer.notifyWinner(bidder.email, artist, item, bid);
             });
-        })
-        Student.findOne()
-    })
+        });
+    });
 }
-
+function getBidderByBid(bid) {
+    var d = Q.defer();
+    Bidder.findOne({
+        _id: bid.bidder
+    })
+    .exec(function(err, bidder){
+        if(err || !bidder) {
+            console.log('Problem.', err || bidder);
+            return d.reject('Error.');
+        }
+        d.resolve(bidder);
+    });
+}
 function getBid(req, res){
     var id = req.params.id;
-    var item, student, bidder;
     Bid.findOne({
         _id: id
     })
     .exec(function(err, bid){
         if(err) {
-            console.log("Error getting bid: ", err);
+            console.log('Error getting bid: ', err);
             return res.json(500, {message: 'Server error'});
         }
         if(!bid) {
             return res.json(404, {message: 'No such bid.'});
         }
-        getItem({itemNumber: bid.item})
-        .then(function(item){
-            findBidsByItemNumber(bid.item)
-            .then(function(bids) {
-                var previousHighest = getHighestBid(bids);
-                return res.json({
-                    bidId: id
-                    , bidderId: req.bidder._id
-                    , currentHighBid: previousHighest.bid
-                    , lastFour: (req.bidder.cards && req.bidder.cards.length) ? req.bidder.cards[0].lastFour: ''
-                    , itemNumber: bid.item
-                    , studentFirstname: item.studentFirstname
-                    , studentLastname: item.studentLastname
-                    , studentName: item.studentName
-                })
+        getBidderByBid(bid)
+        .then(function(bidder){
+            getItem({itemNumber: bid.item})
+            .then(function(item){
+                findBidsByItemNumber(bid.item)
+                .then(function(bids) {
+                    var currentHigh = getHighestBid(bids);
+                    return res.json({
+                        bidId: id
+                        , bidderId: bidder._id
+                        , currentHighBid: currentHigh.bid
+                        , lastFour: (bidder.cards && bidder.cards.length) ? bidder.cards[0].lastFour: ''
+                        , itemNumber: bid.item
+                        , studentFirstname: item.studentFirstname
+                        , studentLastname: item.studentLastname
+                        , studentName: item.studentName
+                    });
+                });
+            })
+            .fail(function(err){
+                console.log('Error getting bid details: ', err);
+                return res.json(500, {message: 'Server error.'});
             });
         })
-        .fail(function(err){
-            console.log('Error getting bid details: ', err);
-            return res.json(500, {message: 'Server error.'});
-        });
+    .fail(function(err){
+        console.log('Failed getting bid by id.', err);
+        res.json(500, {message: 'Error getting bid.'});
+    });
     });
 }
 module.exports = {
@@ -481,4 +500,4 @@ module.exports = {
     , getBidder: getBidder
     , getBid: getBid
     , students: students
-}
+};
