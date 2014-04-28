@@ -449,6 +449,7 @@ function getBidderByBid(bid) {
         }
         d.resolve(bidder);
     });
+    return d.promise;
 }
 function getBid(req, res){
     var id = req.params.id;
@@ -487,10 +488,10 @@ function getBid(req, res){
                 return res.json(500, {message: 'Server error.'});
             });
         })
-    .fail(function(err){
-        console.log('Failed getting bid by id.', err);
-        res.json(500, {message: 'Error getting bid.'});
-    });
+        .fail(function(err){
+            console.log('Failed getting bid by id.', err);
+            res.json(500, {message: 'Error getting bid.'});
+        });
     });
 }
 module.exports = {
