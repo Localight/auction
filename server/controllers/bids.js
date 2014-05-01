@@ -11,6 +11,7 @@ var ENDDATECONST = new Date('05/20/2014 23:59');
 var enddate;
 getAuctionEnd()
 .then(function(end){
+    console.log('setting end to ', end);
     enddate = end || ENDDATECONST;
 }
 , function fail(err){
@@ -128,6 +129,7 @@ function getBidder(req, res, next) {
 }
 
 function post(req, res) {
+    console.log(enddate);
     if(enddate < new Date()) {
         console.log('late to auction');
         return res.json(405, {
@@ -365,9 +367,10 @@ function getAuctionEnd(){
     var d = Q.defer();
     Auction.find(function(Err, auc){
         if(Err || !auc.length) {
+        console.log('Auction: ', auc);
             return d.resolve(ENDDATECONST);
         } else {
-            return d.resolve(new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber - 1, auc[0].auctionEndDateDayNumber
+            return d.resolve(new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber, auc[0].auctionEndDateDayNumber
             , auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute) || ENDDATECONST);
         }
     });
