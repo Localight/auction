@@ -7,11 +7,11 @@ var Auction = require('../models/auctions');
 var Student = require('../models/students');
 var payment = require('../modules/payment');
 var mailer = require('../modules/mailgun');
-var ENDDATECONST = new Date('04/20/2014 23:59');
+var ENDDATECONST = new Date('05/20/2014 23:59');
 var enddate;
 getAuctionEnd()
-.then(function(){
-    enddate = ENDDATECONST;
+.then(function(end){
+    enddate = end || ENDDATECONST;
 }
 , function fail(err){
     console.log('error getting end date', err);
