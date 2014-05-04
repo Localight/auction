@@ -156,6 +156,9 @@ angular.module('NonProfitApp', [
                 data.studentName = data.studentLastname + data.studentFirstname;
                 $scope.data = data;
                 var model = {amount: data.currentHighBid};
+                if(data.lastFour){
+                    $rootScope.isCCExist = true;
+                }
                 $scope.model = model;
             });
         }
