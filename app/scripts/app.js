@@ -68,7 +68,17 @@ angular.module('NonProfitApp', [
             })
             .when('/step3', {
                 templateUrl: 'views/step3.html',
-                controller: 'Step1Ctrl'
+                controller: 'Step1Ctrl',
+                resolve: {
+                    app: function($q, api,$rootScope) {
+                        var defer = $q.defer();
+                        api.endAuction().then(function (endTime) {
+                            $rootScope.endTime = endTime;
+                            defer.resolve();
+                        });
+                        return defer.promise;
+                    }
+                }
             })
             .when('/registered', {
                 templateUrl: 'views/registered.html',
@@ -146,6 +156,9 @@ angular.module('NonProfitApp', [
                 data.studentName = data.studentLastname + data.studentFirstname;
                 $scope.data = data;
                 var model = {amount: data.currentHighBid};
+                if(data.lastFour){
+                    $rootScope.isCCExist = true;
+                }
                 $scope.model = model;
             });
         }
