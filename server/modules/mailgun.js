@@ -123,12 +123,12 @@ function getBidByItemAndBidder(itemNumber, bidderId) {
     return d.promise;
 }
 /**
- * Function that does the actual notification.
+ * Function that does the actual notification when the user is outbid.
  * Skip bidders who are not verified.
  *
  **/
 
-exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auctionEnd, item, bidAmount, firstName) {
+exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auctionEnd, item, bidAmount, firstName, bidid) {
     Bidder.findOne({_id: bidderId}, function(err, bidder){
         if(err || bidder ===null) {
             return;
@@ -155,13 +155,13 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
         var locals = {
             outbid: {
                 amount: amount
-                , bidLink1: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid1 + '&bidderid=' + bidderId
+                , bidLink1: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid1 + '&bidderid=' + bidderId + '&bid=' + bidid
                 , bidAmount1: bid1
-                , bidLink2: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid2 + '&bidderid=' + bidderId
+                , bidLink2: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid2 + '&bidderid=' + bidderId + '&bid=' + bidid
                 , bidAmount2: bid2
-                , bidLink3: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid3 + '&bidderid=' + bidderId
+                , bidLink3: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid3 + '&bidderid=' + bidderId + '&bid=' + bidid
                 , bidAmount3: bid3
-                , bidLinkFree: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bidderid=' + bidderId
+                , bidLinkFree: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bidderid=' + bidderId + '&bid=' + bidid
                 , artist: item.artist
                 , itemId: item.itemNumber
                 , itemLink: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber

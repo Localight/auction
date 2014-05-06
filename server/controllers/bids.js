@@ -350,7 +350,7 @@ function notifyLosers(bids, data, item, req, high) {
                 if(firstNameRegex) {
                     firstName = firstNameRegex[0];
                 }
-                mailer.notifyLoser(bidders[b]._id, bidders[b].email,  high, end, item, bidAmount, firstName);
+                mailer.notifyLoser(bidders[b]._id, bidders[b].email,  high, end, item, bidAmount, firstName, bids[inner]._id;
                 bids[inner].notified = true;
                 bids[inner].timestamp = new Date();
                 bids[inner].save(cb);
