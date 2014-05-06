@@ -11,18 +11,22 @@ var db = {
 };
 function init() {
 	if(process.argv[2] && process.argv[2] === 'get') {
-		console.log('Getting data...');
+		console.log('Getting data.');
+		console.log('Connecting to db...');
 		mongoose.connect(db.uri, db.opts, function(err){
 			if(err) {
 				return exit(err);
 			}
+			console.log('Connected, receiving data...');
 			getInfo(exit);
 		});
 	} else if (process.argv[2] && process.argv[2] === 'update') {
-		console.log('Updating data...');
-		var month = (process.argv[3] || 5) - 1;
+		console.log('Updating data.');
+		var month = (process.argv[3] || 5);
 		var day = (process.argv[4] || 10);
+		console.log('Connecting to db...');
 		mongoose.connect(db.uri, db.opts, function(){
+			console.log('Updating information...');
 			updateInfo(month, day, exit);
 		});
 	} else {
@@ -51,13 +55,12 @@ function getInfo(cb) {
 	});
 }
 function updateInfo(month, day, cb){
-	console.log('update');
 	model.find(function(err, data){
-		console.log(err || data);
+		console.log('Current data: ', err || data);
 		if(err || !data.length) {
 			return cb('No data');
 		}
-		data[0].end = new Date(2014, month, day, 23, 59);
+		data[0].end = new Date(2014, (month - 1), day, 23, 59);
 		data[0].auctionEndDateMonthNumber = month;
 		data[0].auctionEndDateDayNumber = day;
 		data[0].auctionEndDateText = 'Ends ' + data[0].end.toDateString().substr(4,6) + ' at midnight PST';
