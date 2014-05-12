@@ -52,8 +52,9 @@ exports.getBidder = function(req, res) {
           "phone": bidder.phone,
           "cards": []
         };
-        for (var i in bidder.cards) {
-            item.cards.push(bidder.cards[i].lastFour);
+        var cards = bidder.cards;
+        for (var i = 0; i < cards.length; i++) {
+            item.cards.push(cards[i].lastFour);
         }
         res.json(item);
     });
