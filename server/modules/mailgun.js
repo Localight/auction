@@ -155,11 +155,11 @@ exports.notifyLoser = function notify(bidderId, bidderEmail, auctionAmount, auct
         var locals = {
             outbid: {
                 amount: amount
-                , bidLink1: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid1 + '&bidderid=' + bidderId + '&bid=' + bidid
+                , bidLink1: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bidAmount=' + bid1 + '&bidderid=' + bidderId + '&bid=' + bidid
                 , bidAmount1: bid1
-                , bidLink2: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid2 + '&bidderid=' + bidderId + '&bid=' + bidid
+                , bidLink2: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bidAmount=' + bid2 + '&bidderid=' + bidderId + '&bid=' + bidid
                 , bidAmount2: bid2
-                , bidLink3: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bid=' + bid3 + '&bidderid=' + bidderId + '&bid=' + bidid
+                , bidLink3: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bidAmount=' + bid3 + '&bidderid=' + bidderId + '&bid=' + bidid
                 , bidAmount3: bid3
                 , bidLinkFree: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber + 'action=placebid&bidderid=' + bidderId + '&bid=' + bidid
                 , artist: item.artist
