@@ -224,8 +224,10 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
                 , email: bidderEmail
             }
         };
+        console.log('High bid locals: ', locals);
         TemplateHigh('highbid', locals, function(err, htm, text){
             console.log('################################## HIGH #############################################')
+            console.log(text.substring(text.indexOf('unsubscribe?email')));
             var to = [bidderEmail];
             var subject = 'You have the high bid: $' + amount + ' | Artist: ' + item.artist;
             var attachments = [];
@@ -264,7 +266,9 @@ exports.notifyWinner = function(email, artist, item, bid) {
         , itemCid: 'image.png'
         , itemLink: baseLink + 'items?itemNumber=' + item.itemNumber
     }
+    console.log('Winner locals: ', locals);
     TemplateWon('won', locals, function(err, html, text){
+        console.log(text.substring(text.indexOf('unsubscribe?email')));
         var to = [email];
         var subject = 'You have won the auction | ' + artist;
         var attachments = [];

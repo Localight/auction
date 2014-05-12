@@ -21,16 +21,18 @@ getAuctionEnd()
 
 
 function getItem(cr) {
+    console.log('getting item');
     var d = Q.defer();
     Item.findOne(cr)
     .exec(function(err, item){
         if(err || item === null) {
             return d.reject(err);
         }
+        console.log(item);
         Student.findOne({number: item.studentNumber})
         .exec(function(err, student) {
-            if(err || student === null)
-            {
+            if(err || student === null) {
+                console.log('err or student null: ', err);
                 return d.reject(err);
             }
             item.artist = student.firstName + ' ' + student.lastName.substr(0, 1) + '.';
@@ -154,6 +156,7 @@ function post(req, res) {
     getItem({itemNumber: data.itemNumber})
     .then(function(item) {
         // ok, item is there. Do we have a higher bid?
+    console.log('here');
          findBidsByItemNumber(data.itemNumber)
          .then(function(bids) {
                 var bid = new Bid({
@@ -164,6 +167,7 @@ function post(req, res) {
                 });
                 bid.save(function(err, bid){
                     if(err) {
+                        console.log('saving bid issue', err);
                         return res.json(500, {
                             message: 'Problem saving bid.'
                         });
@@ -197,6 +201,7 @@ function post(req, res) {
                                 });
                             });
                         });
+                        console.log('end here');
                         return;
                     }
 
@@ -263,11 +268,12 @@ function post(req, res) {
                 return;
             })
             .fail(function(err){
-                console.log(err);
+                console.log('nullerror: ', err);
                 return res.json(500, {message: 'Error getting bids'});
           });
     })
     .fail(function(err){
+        console.log('Error: ', err);
         res.json(500, {message: err});
     });
 }
