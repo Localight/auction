@@ -216,7 +216,7 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
                 amount: amount
                 , artist: item.artist
                 , itemId: item.itemNumber
-                , itemLink: baseLink + 'index.html#/step3?itemNumber=' + item.itemNumber
+                , itemLink: baseLink + 'index.html#/step1?itemNumber=' + item.itemNumber
                 , winning: winning
                 , itemCid: cid
                 , cid: cid
