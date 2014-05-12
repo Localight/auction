@@ -291,7 +291,7 @@ Auction.find(function(err, auc){
     if(err || !auc) {
         return;
     }
-    var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber - 1, auc[0].auctionEndDateDayNumber
+    var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber, auc[0].auctionEndDateDayNumber
             , auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
     enddatestring = date.toDateString();
 });
