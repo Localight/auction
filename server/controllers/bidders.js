@@ -42,6 +42,20 @@ exports.getBidder = function(req, res) {
             console.log('error getting bidder', err);
             return res.json(500, {message: 'Error getting bidder'});
         }
-        res.json(bidder);
+        if(!bidder) {
+            return res.json({});
+        }
+        var item = {
+          "_id": bidder._id,
+          "email": bidder.email,
+          "name": bidder.name,
+          "phone": bidder.phone,
+          "cards": []
+        };
+        var cards = bidder.cards;
+        for (var i = 0; i < cards.length; i++) {
+            item.cards.push(cards[i].lastFour);
+        }
+        res.json(item);
     });
 }
