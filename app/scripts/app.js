@@ -150,9 +150,11 @@ angular.module('NonProfitApp', [
 //        }
 
         var bid = outbid.bid;
+        var bidAmount = outbid.bidAmount;
         if(bid){
             $http.get('/api/bids/' + bid).success(function (data) {
-                data.suggestBid = data.currentHighBid * 1 + 5;
+//                data.suggestBid = data.currentHighBid * 1 + 5;
+                data.suggestBid = bidAmount * 1;
                 data.studentName = data.studentFirstname.trim() + ' ' + data.studentLastname.trim().charAt(0);
                 $scope.data = data;
                 var model = {amount: data.currentHighBid};
