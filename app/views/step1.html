@@ -12,6 +12,27 @@
         </div>
         <form name="form" class="bid-form control-group">
             <div class="row">
+
+                <div class="col-md-6">
+
+                    <img data-ng-src="images/gallery/IMG_{{selectedPic.itemNumber}}.jpg" class="img-responsive"
+                         alt=""/>
+
+                    <div class="row pic-detail">
+                        <div class="col-xs-4">
+                            <div>Item</div>
+                            <div class="big">{{selectedPic.itemNumber}}</div>
+                        </div>
+                        <div class="col-xs-8 right">
+                            <div>Made by</div>
+                            <div class="big">{{getStudentDisplayName(selectedPic.studentName)}}</div>
+                        </div>
+                    </div>
+
+                    <!--<button data-ng-click="saveCard()" class="visible-xs" data-ng-disabled="submitting">-->
+                        <!--<img src="images/pic/processd.png" class="proceed" alt=""/>-->
+                    <!--</button>-->
+                </div>
                 <div class="col-md-6">
                     <p>
                         Please enter your auction bid! You will not be charged until you win an item.
@@ -95,30 +116,10 @@
                             </div>
                         </div>
 
-                        <button data-ng-click="saveCard()" class="hidden-xs" data-ng-disabled="submitting">
+                        <button data-ng-click="saveCard()" data-ng-disabled="submitting">
                             <img src="images/pic/processd.png" class="proceed" alt=""/>
                         </button>
                     </div>
-                </div>
-                <div class="col-md-6">
-
-                    <img data-ng-src="images/gallery/IMG_{{selectedPic.itemNumber}}.jpg" class="img-responsive"
-                         alt=""/>
-
-                    <div class="row pic-detail">
-                        <div class="col-xs-4">
-                            <div>Item</div>
-                            <div class="big">{{selectedPic.itemNumber}}</div>
-                        </div>
-                        <div class="col-xs-8 right">
-                            <div>Made by</div>
-                            <div class="big">{{getStudentDisplayName(selectedPic.studentName)}}</div>
-                        </div>
-                    </div>
-
-                    <button data-ng-click="saveCard()" class="visible-xs" data-ng-disabled="submitting">
-                        <img src="images/pic/processd.png" class="proceed" alt=""/>
-                    </button>
                 </div>
             </div>
         </form>
