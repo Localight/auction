@@ -1,0 +1,200 @@
+<!doctype html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:100' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body ng-app="NonProfitApp" class="body-bg-loaded">
+<ng-view></ng-view>
+<script src="bower_components/retina.js/src/retina.js"></script>
+<script src="bower_components/jquery/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-timer/dist/angular-timer.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="scripts/app.js"></script>
+<div class="about-bg">
+
+    <div class="container">
+
+        <div class="row-fluid logo">
+
+            <div class="col-md-6"  style="margin: 0 0 0 -2em;">
+                <a href="#/">
+                    <img src="images/pic/logo.png" alt="" width="40" height="40"/>
+                </a>
+
+                <h1 class="dash-title">
+                    <strong>BENEFIT AUCTION</strong>
+                </h1>
+            </div>
+
+                <p class="end-time">
+                    <img src="images/pic/clock.png" alt="" width="20" height="19"/>
+                    <span data-ng-bind="auctionEndDateText"></span>
+                </p>
+
+        </div>
+            <div class="row stripe2">
+
+                <div class="col-md-6">
+                    <div class="dash-title">
+                        <!-- <div class="leader"> -->
+                        Live Leaderboard
+                        <!-- </div> -->
+                        <div style="float:right">
+                        <a href="#/dashboard" class="hidden-xs">
+                            <button type="button" class="btn btn-info btn-sm btn-view-gallery" style="width: auto;">Refresh</button>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <timer end-time="endTime" interval="1000">
+                        <div class="col-xs-2 days">
+                            <span class="num">{{days}}</span>
+                            <div class="timer">Days</div>
+                        </div>
+                        <div class="col-xs-2 hours-2">
+                            <span class="num">{{hours}}</span>
+                            <div class="timer">Hours</div>
+                        </div>
+                        <div class="col-xs-2 mins-2">
+                            <span class="num">{{minutes}}</span>
+                            <div class="timer">Mins</div>
+                        </div>
+                        <div class="col-xs-2 secs-2">
+                            <span class="num">{{seconds}}</span>
+                            <div class="timer">Secs</div>
+                        </div>
+                    </timer>
+                </div>
+
+            </div>
+        
+
+    </div>
+
+    <div class="container about">
+
+        <div class="row">
+
+            <div class="col-md-6 section">
+                <div class="dash-headers">
+                    Top bids
+                </div>
+                <div class="col-md-3 image">
+                </div>
+                <div class="col-md-3">
+                    <div>Item {{selectedPic.itemNumber}} by {{getStudentDisplayName(selectedPic.studentName)}}
+                    </div>
+                </div>
+            </div>
+
+                <span class="bottom-border"></span>
+
+            <div class="row-fluid">
+                <div class="col-md-6 section">
+                    <div class="dash-headers">
+                        Total
+                    </div>
+                    <div class="dash-font">
+                        Total amount raised for <br> The Havenly Blue Foundation <br> as of 11:33:32 on May 24, 2014
+                    </div>
+                    <div class="col-md-2 right total-price">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 section">
+                <div class="dash-headers">
+                    Recent bids
+                </div>
+
+                <div class="col-md-3 image">
+                </div>
+
+                <div class="col-md-3">
+                    <div>Item {{selectedPic.itemNumber}} by {{getStudentDisplayName(selectedPic.studentName)}}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-6 section">
+                <div class="dash-headers">
+                    Top 10 bidders
+                </div>
+            </div>
+
+        </div> 
+    </div>
+
+    <div class="container about copyright hidden-xs">
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <img src="images/pic/haventy.png" class="img-responsive" alt="">
+                </td>
+                <td>
+                    <a href="http://teachart.org">
+                        <img src="images/pic/teachart.png" class="img-responsive" alt="">
+                    </a>
+                </td>
+
+                <td>
+                    <a href="http://localism.co">
+                        <img src="images/pic/localism.png" class="img-responsive" alt="">
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p style="padding: 3em 0 3em 0;text-align: center;border-top: 1px solid #5c5c5c;margin-top: 5em;color: #bdbdbd">
+            Community Auction™ by <a style="text-decoration: underline;color: #bdbdbd;" href="http://localism.co">Localism
+            Inc.</a> ©2014 All rights reserved.
+        </p>
+    </div>
+    <div class="container about copyright visible-xs">
+        <table class="table">
+            <tr>
+                <td style="padding-right: 1em">
+                    <img src="images/pic/haventy.png" class="img-responsive" alt=""/>
+                </td>
+                <td>
+                    <a href="http://teachart.org">
+                        <img src="images/pic/teachart.png" class="img-responsive" alt=""/>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top: 2em;">
+                    <img style="width: 11em;margin: auto" src="images/pic/localism.png" class="img-responsive" alt=""/>
+                </td>
+            </tr>
+        </table>
+        <a href="#/">
+            <button type="button" class="btn btn-info btn-view-gallery">View auction gallery</button>
+        </a>
+
+        <p style="padding: 2em 0 0 0;text-align: center;font-size: 0.9em;">
+            Community Auction™ by <a style="color: #ffffff;text-decoration: underline;" href="http://localism.co">Localism
+            Inc.</a> ©2014 <br/>All rights reserved.
+        </p>
+    </div>
+</div>
+</body>
+</html> 

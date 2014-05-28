@@ -109,9 +109,15 @@ var sendMessage = exports.sendMessage = function sendMessage(to, subject, body, 
 setup({
     apiKey: 'key-9dvf0-00loxr-uzq4moazo0gwwc3qsk2'
     , domain: 'https://api.mailgun.net/v2/outgoing.arstempo.hr/messages'
-    , from: 'zlatko@arstempo.hr'
+    , from: 'alex@localism.co'
+    // , o:deliverytime='Fri, 14 Oct 2011 23:10:10 -0000'
 });
-sendMessage('zladuric@gmail.com', 'Test email on TeachArt', 'Mailgun works.', '<h2>Mailgun works.</h2>')
+var currentDate = new Date().toLocaleString().replace(" ","");
+var endOfAuction = "ThuMay22201413:20:00GMT-0700(PDT)";
+if (currentDate === endOfAuction){
+sendMessage('ag.saldivar@gmail.com', 'Test email on TeachArt', 'Mailgun works.', '<h2>'+currentDate+'</h2>')
+};
+// sendMessage('ag.saldivar@gmail.com', 'Test email on TeachArt', 'Mailgun works.', '<h2>Mailgun works.</h2>')
 // helper
 function getBidByItemAndBidder(itemNumber, bidderId) {
     var d = Q.defer();

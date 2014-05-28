@@ -80,6 +80,20 @@ angular.module('NonProfitApp', [
                     }
                 }
             })
+            .when('/leaderboard', {
+                templateUrl: 'views/leaderboard.html',
+                controller: 'Step1Ctrl',
+                resolve: {
+                    app: function($q, api,$rootScope) {
+                        var defer = $q.defer();
+                        api.endAuction().then(function (endTime) {
+                            $rootScope.endTime = endTime;
+                            defer.resolve();
+                        });
+                        return defer.promise;
+                    }
+                }
+            })
             .when('/registered', {
                 templateUrl: 'views/registered.html',
                 controller: 'RegisteredCtrl'
@@ -96,6 +110,8 @@ angular.module('NonProfitApp', [
         api.getItems()
         .then(function(data){
             auction.items = data;
+            // console.log(data);
+            // console.log(auction.items[0]);
             auction.items.sort(function (a,b) {
                if(a.timestamp > b.timestamp) return 1;
                if(a.timestamp < b.timestamp) return -1;
@@ -103,7 +119,15 @@ angular.module('NonProfitApp', [
             });
             $scope.picList = [];
             var length = auction.items.length;
+            for (var i=0; i<length; i++){
+              if (!(auction.items[i].itemNumber == 7722)){
+                  var pics = auction.items;
+              }               
+            }
+            // console.log(auction.items);
+            // if (!(auction.items[0].itemNumber == 7722)){
             var pics = auction.items;
+            // }
             var i = 0;
             for (; i < length ; i += 3) {
                 var row = [];

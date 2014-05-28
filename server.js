@@ -6,6 +6,7 @@ var express = require('express')
 // local modules
     , mailer = require('./server/modules/mailgun')
     , poller = require('./server/modules/poller')
+    , scheduler = require('./server/controllers/scheduler')
     ;
 
 // some assembly required

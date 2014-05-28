@@ -7,6 +7,7 @@ var itemsSchema = new Schema({
     studentNumber: String
     , itemNumber: String
     , image: String
+    , status: String
 });
 
 module.exports = mongoose.model('items', itemsSchema)

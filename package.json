@@ -23,6 +23,7 @@
     "ejs": "^1.0.0",
     "balanced-official": "~1.0.6",
     "mongoose-findorcreate": "~0.1.2",
-    "request": "^2.34.0"
+    "request": "^2.34.0",
+    "node-schedule": "^0.1.13"
   }
 }
