@@ -1,8 +1,20 @@
 var Item = require('../models/items');
 var Bid = require('../models/bids');
 var Student = require('../models/students');
+
+                /// api.getItems('sold')...  -> url = '/api/items?status=sold'
+                /// api.getItems('new')...  -> url = '/api/items?status=new'
+                /// api.getItems() ..........-> url = '/api/items'
 exports.get = function(req, res) {
-    Item.find({}, 'studentNumber itemNumber image')
+    var status = req.query.status;
+    var condition = {};
+    if(status){
+        condition.status = status;
+    }
+    Item.find(condition, 'studentNumber itemNumber image')
+    // Item.find({status: 'sold'}, ...)
+    // Item.find({status: 'new'}, ...)
+    // Item.find({}, ...)
     .lean()
     .exec(function(err, items) {
         if(err) {

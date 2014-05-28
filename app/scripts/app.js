@@ -122,7 +122,7 @@ angular.module('NonProfitApp', [
             for (var i=0; i<length; i++){
               if (!(auction.items[i].itemNumber == 7722)){
                   var pics = auction.items;
-              }               
+              }
             }
             // console.log(auction.items);
             // if (!(auction.items[0].itemNumber == 7722)){
@@ -311,7 +311,14 @@ angular.module('NonProfitApp', [
     })
     .service('api', function($http,$rootScope) {
         var api = {
-            getItems: function() {
+            getItems: function(status, date, range) {
+                var url = '/api/items';
+                if(status) {
+                    url += '?status=' + status;
+                }
+                /// api.getItems('sold')...  -> url = '/api/items?status=sold'
+                /// api.getItems('new')...  -> url = '/api/items?status=new'
+                /// api.getItems() ..........-> url = '/api/items'
                 var promise = $http.get('/api/items')
                 .then(function(response) {
                     return response.data;
