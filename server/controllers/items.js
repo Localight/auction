@@ -2,7 +2,12 @@ var Item = require('../models/items');
 var Bid = require('../models/bids');
 var Student = require('../models/students');
 exports.get = function(req, res) {
-    Item.find({}, 'studentNumber itemNumber image')
+    var status = req.query.status;
+    var condition = {};
+    if (status){
+        condition.status = status;
+    }
+    Item.find(condition, 'studentNumber itemNumber image')
     .lean()
     .exec(function(err, items) {
         if(err) {

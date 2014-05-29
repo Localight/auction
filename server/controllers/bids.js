@@ -503,6 +503,54 @@ function getBid(req, res){
         });
     });
 }
+
+function getBids(req, res) {
+    var filter = req.query.filter;
+    if (filter === 'top') {
+        Bid.find({
+            notified: false
+        })
+        .exec(function(err, data){
+            //
+            if (err) {
+                return res.json(500, {message: 'there was an error'});
+            }
+            data.sort(function(a, b) {
+                if(parseInt(a.bid) > parseInt(b.bid)) {
+                    return 1
+                } else if(parseInt(a.bid) < parseInt(b.bid)) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
+            res.json(data.slice(0, 9));
+        });
+    } else if(filter === 'recent') {
+        Bid.find({
+            notified: false
+        })
+        .limit(10)
+        .sort({_id: -1})
+        .exec(function(err, data){
+            if(err) {
+                return vomit();
+            }
+            return res.json(data);
+        });
+    } else {
+        Bid.find({
+            notified: false
+        })
+        .exec(function(err, bids){
+            if(err){
+                return throwUp();
+            }
+            return res.json(bids);
+        });
+    }
+}
+
 module.exports = {
     notifyAllWinners: notifyAllWinners
     , notifyAllLosers: notifyAllLosers
@@ -510,4 +558,5 @@ module.exports = {
     , getBidder: getBidder
     , getBid: getBid
     , students: students
+    , getBids : getBids
 };

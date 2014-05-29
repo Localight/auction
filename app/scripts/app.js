@@ -82,7 +82,7 @@ angular.module('NonProfitApp', [
             })
             .when('/leaderboard', {
                 templateUrl: 'views/leaderboard.html',
-                controller: 'Step1Ctrl',
+                controller: 'LeaderBoardCtrl',
                 resolve: {
                     app: function($q, api,$rootScope) {
                         var defer = $q.defer();
@@ -109,6 +109,7 @@ angular.module('NonProfitApp', [
         var auction = $scope.auction = [];
         api.getItems()
         .then(function(data){
+          console.log(data)
             auction.items = data;
             // console.log(data);
             // console.log(auction.items[0]);
@@ -125,9 +126,10 @@ angular.module('NonProfitApp', [
               }               
             }
             // console.log(auction.items);
-            // if (!(auction.items[0].itemNumber == 7722)){
+            // for ()
+            if ( item.status){
             var pics = auction.items;
-            // }
+            }
             var i = 0;
             for (; i < length ; i += 3) {
                 var row = [];
@@ -140,7 +142,7 @@ angular.module('NonProfitApp', [
             }
         });
 
-        $scope.endTime = $rootScope.endTime;
+        // $scope.endTime = $rootScope.endTime;
 
         $scope.selectPic = function (pic, item) {
             $rootScope.selectedPic = pic;
@@ -309,10 +311,117 @@ angular.module('NonProfitApp', [
     }).controller('RegisteredCtrl', function ($scope, $rootScope, $location) {
         $(window).scrollTop(0);// go to top when a new page loads
     })
+    .controller('LeaderBoardCtrl',function ($scope, $http, $rootScope, $location,api) {
+
+
+        $(window).scrollTop(0);// go to top when a new page loads
+
+        $scope.submitting = false;
+
+        var outbid = $location.search();
+//        if(outbid.itemNumber){
+//            var studentName = 'Jim' // TODO should be get student name via API
+//            outbid.studentName = studentName
+//            $rootScope.selectedPic = outbid;
+//            var model = {amount:outbid.bid};
+//            $scope.model = model;
+//        }
+
+        var bid = outbid.bid;
+        // console.log(bid);
+        var bidAmount = outbid.bidAmount;
+        // console.log(bidAmount);
+//         if(bid){
+//             $http.get('/api/bids/' + bid).success(function (data) {
+// //                data.suggestBid = data.currentHighBid * 1 + 5;
+//                 data.suggestBid = bidAmount * 1;
+//                 data.studentName = data.studentFirstname.trim() + ' ' + data.studentLastname.trim().charAt(0);
+//                 $scope.data = data;
+//                 var model = {amount: data.currentHighBid};
+//                 if(data.lastFour){
+//                     $rootScope.isCCExist = true;
+//                 }
+//                 $scope.model = model;
+//             });
+//         }
+
+        $scope.endTime = $rootScope.endTime;
+
+        // $scope.readonly = true;
+//         var isCard2Correct = function () {
+// //            return !$scope.form.MM.$pristine && $scope.form.MM.$valid &&
+// //                !$scope.form.YY.$pristine && $scope.form.YY.$valid &&
+// //                !$scope.form.CVV.$pristine && $scope.form.CVV.$valid &&
+// //                !$scope.form.zipCode.$pristine && $scope.form.zipCode.$valid;
+//             return $scope.form.MM.$valid &&
+//                       $scope.form.YY.$valid &&
+//                       $scope.form.CVV.$valid &&
+//                       $scope.form.zipCode.$valid;
+//         }
+        // $scope.$watch('model', function () {
+        //     $scope.isCard2Correct = isCard2Correct();
+        // },true);
+        // $scope.saveCard = function () {
+
+        //     $scope.invalid = $scope.form.$invalid;
+        //     $rootScope.isCCExist = $scope.form.$valid;
+        //     $scope.card1Invalid = $scope.form.card1.$pristine || $scope.form.card1.$invalid;
+        //     $scope.card2Invalid = !isCard2Correct();
+        //     if ($scope.form.$valid) {
+        //         $scope.submitting = true;
+
+        //         // model should be correct data like
+        //         // {amount: 25, card1: "4444555566667777", MM: 2, YY: 16, zipCode: 12345}
+        //         // amount should be more than 15,
+        //         // card1 should be number and length is 16,
+        //         // MM is month, YY is year, CVV's length should be 3 or 4 ,and zipCode's length is 5,
+        //         // all must be reasonable value
+        //         console.log($scope.model);
+        //         $rootScope.model = $scope.model;  // save to global scope if you'd like to use it in other control
+        //   $rootScope.data = {
+        //             amount: $scope.model.amount
+        //             , itemNumber: $rootScope.selectedPic.itemNumber
+        //             , mm: $scope.model.MM
+        //             , yy: $scope.model.YY
+        //             , card: $scope.model.card1
+        //             , ccv: $scope.model.CVV
+        //       , zip: $scope.model.zipCode
+        //             };
+
+        //         // $location.path('/step2');
+        //     }
+        // }
+    //     $scope.change = function () {
+    //         $scope.readonly = false;
+    //         delete $scope.model.card1;
+    //         delete $scope.model.MM;
+    //         delete $scope.model.YY;
+    //         delete $scope.model.CVV;
+    //         delete $scope.model.zipCode;
+    //     }
+    // $scope.getStudentDisplayName = function (name)
+    // {
+    //   var nameParts = name.split(",");
+    //   var firstName = nameParts[1];
+    //   var lastName = nameParts[0];
+    //   var lastNameInitial = lastName.substring(0,1);
+    //   var displayName = firstName+" "+lastNameInitial+".";
+    //         return displayName;
+    //     }
+    $scope.createNewCard = function ()
+    {
+    }
+    })
     .service('api', function($http,$rootScope) {
         var api = {
-            getItems: function() {
-                var promise = $http.get('/api/items')
+          // right now if there is no status param passed it says get all the items
+          // but if there is a status, only get the items with that status
+            getItems: function(status) {
+                var url = '/api/items';
+                if (status) {
+                  url += '?status=' + status
+                }
+                var promise = $http.get(url)
                 .then(function(response) {
                     return response.data;
                 });
@@ -335,7 +444,14 @@ angular.module('NonProfitApp', [
                         return endTime;
                     });
                 return promise;
+            }, getTopBids:function() {
+              var promise = $http.get('/api/bids?filter=top')
+              .then(function(response){
+                return response.data;
+              })
             }
         };
         return api;
      });
+
+// api.getItems('sold') // use for controller

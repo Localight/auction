@@ -302,3 +302,66 @@ img.go {
     padding: 0.5em;
     margin-bottom: 2em;
 }
+
+/*********DASHBOARD**********/
+.logo .dash-title {
+    color: #18aadd;
+    margin-left: 0.1em;
+    font-size: 2.2em;
+    display: inline;
+    line-height: 2;
+    font-family: 'Roboto Slab';
+}
+
+.dash-title {
+    color: #cdc5c5;
+    margin: 0;
+    font-size: .5em;
+    font-family: 'Roboto Slab';
+}
+
+.stripe2 {
+    border: 1px solid #ded9d9;
+    border-left: none;
+    border-right: none;
+    font-size: 3em;
+    margin-top: 0.25em;
+    /*text-align: center;*/
+    padding-bottom: 0.15em;
+    font-family: 'Roboto Slab';
+}
+
+.dash-headers {
+    color: #ffffff;
+    margin: 0;
+    font-size: 2.7em;
+    font-family: 'Roboto Slab';
+}
+
+.section {
+  border-bottom: .1em solid #ded9d9;
+  padding-bottom: 2em;
+}
+
+.image {
+  border: 1px solid red;
+  height: 10em;
+  width: 10em;
+  margin-right: 2em;
+}
+
+.dash-font {
+  font-size: 1.7em;
+  padding: 0;
+}
+
+.timer {
+    font-family: 'Roboto';
+    font-size: .4em;
+    line-height: .01em;
+}
+
+.num {
+    font-size: 1.8em;
+    line-height: 1em;
+}

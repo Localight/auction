@@ -24,7 +24,6 @@ var notifyWinner = function(bid){
       if (err){
         return console.log("no bidder ", bid.bidder)
       }
-      console.log(item.studentNumber);
       Student.findOne({number: ""+item.studentNumber})
       .exec(function(err, student){
         // email set to alex for testing, should be bidder.email
@@ -44,25 +43,30 @@ var notifyLoser = function(bid){
   });
 };
 
-var resetAuctionItems = function(bid){
+var soldItems = function(bid){
   Item.findOne({itemNumber:bid.item})
   .exec(function(err, item){
     if (err){
       return console.log("no item ", bid.item)
     }
-    // console.log(item);
-
-    Item.create({
-      itemNumber: bid.item
-      , status: "sold"
-      , studentNumber: item.studentNumber
-      , image: item.image
+    item.status = 'sold';
+    item.save(function(err, data){
+      // now it's saved
+      if(err)return;
+      // console.log(item);
     });
-    item.studentNumber = 16098;
-    item.remove();
-    // Item.update({status:""}, {$set: {status:"sold"}});
-    // console.log(item);
   })
+};
+
+var unsoldItems = function(item){
+  if (item.status != 'sold'){
+    item.status = 'unsold';
+    item.save(function(err, data){
+      // now it's saved
+      if(err)return;
+      // console.log(item);
+    });
+  }
 };
 
 /////-------------------------------------////////
@@ -114,42 +118,49 @@ Auction.find(function(Err, auc){
 
   // schedule new auction with items that have no bids
   var createNewAuction = schedule.scheduleJob(date, function(){
-    // commented out until deploy with Zlatko
-    // reset auction end date to June 3
-    // Auction.create(
-    //   {auctionEndDateDayNumber: 3, auctionEndDateHour: 23, auctionEndDateMinute: 59, auctionEndDateMonthNumber: 6, auctionEndDateText: "Ends June 3 at midnight PST", auctionEndDateYear: 2014, auctionNumber: 1, end: "2014-06-03T21:59:00.000Z", start: "2014-04-15T19:02:43.237Z"}
-    // ); 
 
-    // auc[0].remove(); // commented out until deploy with Zlatko
+    Auction.findOne()
+    .exec(function(err, auction){
+      if (err){
+        return console.log("no auction date ", err)
+      }
+      auction.end = new Date(2014/6/3);
+      auction.auctionNumber = 555;
+      auction.save(function(err, data){
+        if(err)return;
+        // console.log(data);
+      })
+    });
 
-    // remove all items with a bid
+    // set all items with a bid to status of sold
     Bids.find()
     .exec(function(err, bids){
       if (err){
         throw new Error("Can't get Bids", err);
       }
+      var itemsWithBids = [];
       for (var i=0; i<bids.length; i++){
-        resetAuctionItems(bids[i]);
+        itemsWithBids += bids[i].item;
+      }
+      for (var i=0; i<bids.length; i++){
+        soldItems(bids[i]);
+      }
+      
+    });
+
+    // set all items without a status of sold to a status of unsold
+    Item.find()
+    .exec(function(err, items){
+      if (err){
+        return console.log("no item ", err)
+      }
+      for (var i=0; i<items.length; i++){
+        unsoldItems(items[i]);
       }
     });
-      // find all item numbers associated with bids and use them to remove them from items array
+
   });
 
-  emailWinners.cancel();
-  emailLosers.cancel();
-  createNewAuction.cancel();
 });
 
 
-
-
-// Auction.find(function(err, result){
-
-// })
-
-// Auction.find({"start": "2014-04-15T19:02:43.237Z"})
-// .exec(function(err, result){
-  
-// })
-// always pass err as first argument
-// result is second argument
