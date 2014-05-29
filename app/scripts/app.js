@@ -87,8 +87,8 @@ angular.module('NonProfitApp', [
                     app: function($q, api,$rootScope) {
                         var defer = $q.defer();
                         api.endAuction().then(function (endTime) {
-                            $rootScope.endTime = endTime;
-                            defer.resolve();
+                          $rootScope.endTime = endTime;
+                          defer.resolve();
                         });
                         return defer.promise;
                     }
@@ -136,7 +136,7 @@ angular.module('NonProfitApp', [
             }
         });
 
-        // $scope.endTime = $rootScope.endTime;
+        $scope.endTime = $rootScope.endTime;
 
         $scope.selectPic = function (pic, item) {
             $rootScope.selectedPic = pic;
@@ -309,7 +309,14 @@ angular.module('NonProfitApp', [
       api.getTopBids()
       .then(function(data){
         console.log(data);
+        $scope.topBids = [];
+        var topBids = data;
+        for (var i=0; i<topBids.length; i++){
+          $scope.topBids += topBids[i]
+        }
+        console.log($scope.topBids);
       })
+
 
 
     })
@@ -345,11 +352,17 @@ angular.module('NonProfitApp', [
                         return endTime;
                     });
                 return promise;
-            }, getTopBids:function() {
-              var promise = $http.get('/api/bids?filter=top')
+            }, getTopBids: function(filter) {
+              var url = '/api/bids';
+              if (filter){
+                url += '?filter=' + filter
+              }
+              var promise = $http.get(url)
               .then(function(response){
                 return response.data;
-              })
+                console.log(response.data);
+              });
+              return promise;
             }
         };
         return api;

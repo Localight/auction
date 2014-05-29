@@ -506,7 +506,7 @@ function getBid(req, res){
 
 function getBids(req, res) {
     var filter = req.query.filter;
-    if (filter === 'top') {
+    if (filter == 'top') {
         Bid.find({
             notified: false
         })
@@ -526,29 +526,37 @@ function getBids(req, res) {
             });
             res.json(data.slice(0, 9));
         });
-    } else if(filter === 'recent') {
+    } else if (filter == 'recent') {
         Bid.find({
             notified: false
         })
         .limit(10)
-        .sort({_id: -1})
+        .sort({_id: -1}) // sort id in descending order
         .exec(function(err, data){
             if(err) {
-                return vomit();
+                return console.log("no bid ", err);
             }
             return res.json(data);
         });
+    } else if (filter == 'total'){
+        Bid.find()
+        .exec(function(err, data){
+            if (err) {
+                return console.log("no bid ", err);
+            }
+        })
     } else {
         Bid.find({
             notified: false
         })
         .exec(function(err, bids){
             if(err){
-                return throwUp();
+                return console.log("no bid ", err);
             }
             return res.json(bids);
         });
     }
+
 }
 
 module.exports = {
