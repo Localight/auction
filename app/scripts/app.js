@@ -306,105 +306,12 @@ angular.module('NonProfitApp', [
         $(window).scrollTop(0);// go to top when a new page loads
     })
     .controller('LeaderBoardCtrl',function ($scope, $http, $rootScope, $location,api) {
+      api.getTopBids()
+      .then(function(data){
+        console.log(data);
+      })
 
 
-        $(window).scrollTop(0);// go to top when a new page loads
-
-        $scope.submitting = false;
-
-        var outbid = $location.search();
-//        if(outbid.itemNumber){
-//            var studentName = 'Jim' // TODO should be get student name via API
-//            outbid.studentName = studentName
-//            $rootScope.selectedPic = outbid;
-//            var model = {amount:outbid.bid};
-//            $scope.model = model;
-//        }
-
-        var bid = outbid.bid;
-        // console.log(bid);
-        var bidAmount = outbid.bidAmount;
-        // console.log(bidAmount);
-//         if(bid){
-//             $http.get('/api/bids/' + bid).success(function (data) {
-// //                data.suggestBid = data.currentHighBid * 1 + 5;
-//                 data.suggestBid = bidAmount * 1;
-//                 data.studentName = data.studentFirstname.trim() + ' ' + data.studentLastname.trim().charAt(0);
-//                 $scope.data = data;
-//                 var model = {amount: data.currentHighBid};
-//                 if(data.lastFour){
-//                     $rootScope.isCCExist = true;
-//                 }
-//                 $scope.model = model;
-//             });
-//         }
-
-        $scope.endTime = $rootScope.endTime;
-
-        // $scope.readonly = true;
-//         var isCard2Correct = function () {
-// //            return !$scope.form.MM.$pristine && $scope.form.MM.$valid &&
-// //                !$scope.form.YY.$pristine && $scope.form.YY.$valid &&
-// //                !$scope.form.CVV.$pristine && $scope.form.CVV.$valid &&
-// //                !$scope.form.zipCode.$pristine && $scope.form.zipCode.$valid;
-//             return $scope.form.MM.$valid &&
-//                       $scope.form.YY.$valid &&
-//                       $scope.form.CVV.$valid &&
-//                       $scope.form.zipCode.$valid;
-//         }
-        // $scope.$watch('model', function () {
-        //     $scope.isCard2Correct = isCard2Correct();
-        // },true);
-        // $scope.saveCard = function () {
-
-        //     $scope.invalid = $scope.form.$invalid;
-        //     $rootScope.isCCExist = $scope.form.$valid;
-        //     $scope.card1Invalid = $scope.form.card1.$pristine || $scope.form.card1.$invalid;
-        //     $scope.card2Invalid = !isCard2Correct();
-        //     if ($scope.form.$valid) {
-        //         $scope.submitting = true;
-
-        //         // model should be correct data like
-        //         // {amount: 25, card1: "4444555566667777", MM: 2, YY: 16, zipCode: 12345}
-        //         // amount should be more than 15,
-        //         // card1 should be number and length is 16,
-        //         // MM is month, YY is year, CVV's length should be 3 or 4 ,and zipCode's length is 5,
-        //         // all must be reasonable value
-        //         console.log($scope.model);
-        //         $rootScope.model = $scope.model;  // save to global scope if you'd like to use it in other control
-        //   $rootScope.data = {
-        //             amount: $scope.model.amount
-        //             , itemNumber: $rootScope.selectedPic.itemNumber
-        //             , mm: $scope.model.MM
-        //             , yy: $scope.model.YY
-        //             , card: $scope.model.card1
-        //             , ccv: $scope.model.CVV
-        //       , zip: $scope.model.zipCode
-        //             };
-
-        //         // $location.path('/step2');
-        //     }
-        // }
-    //     $scope.change = function () {
-    //         $scope.readonly = false;
-    //         delete $scope.model.card1;
-    //         delete $scope.model.MM;
-    //         delete $scope.model.YY;
-    //         delete $scope.model.CVV;
-    //         delete $scope.model.zipCode;
-    //     }
-    // $scope.getStudentDisplayName = function (name)
-    // {
-    //   var nameParts = name.split(",");
-    //   var firstName = nameParts[1];
-    //   var lastName = nameParts[0];
-    //   var lastNameInitial = lastName.substring(0,1);
-    //   var displayName = firstName+" "+lastNameInitial+".";
-    //         return displayName;
-    //     }
-    $scope.createNewCard = function ()
-    {
-    }
     })
     .service('api', function($http,$rootScope) {
         var api = {
