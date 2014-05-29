@@ -111,8 +111,6 @@ angular.module('NonProfitApp', [
         .then(function(data){
           console.log(data)
             auction.items = data;
-            // console.log(data);
-            // console.log(auction.items[0]);
             auction.items.sort(function (a,b) {
                if(a.timestamp > b.timestamp) return 1;
                if(a.timestamp < b.timestamp) return -1;
@@ -125,11 +123,7 @@ angular.module('NonProfitApp', [
                   var pics = auction.items;
               }               
             }
-            // console.log(auction.items);
-            // for ()
-            if ( item.status){
             var pics = auction.items;
-            }
             var i = 0;
             for (; i < length ; i += 3) {
                 var row = [];
