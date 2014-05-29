@@ -107,7 +107,7 @@ angular.module('NonProfitApp', [
     })
     .controller('MainCtrl', function ($scope, $rootScope, api) {
         var auction = $scope.auction = [];
-        api.getItems()
+        api.getItems('unsold')
         .then(function(data){
           console.log(data)
             auction.items = data;
