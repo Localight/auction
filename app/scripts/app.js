@@ -308,14 +308,18 @@ angular.module('NonProfitApp', [
     .controller('LeaderBoardCtrl',function ($scope, $http, $rootScope, $location,api) {
       api.getTopBids()
       .then(function(data){
-        console.log(data);
+        console.log(data[0].bid);
         $scope.topBids = [];
         var topBids = data;
         for (var i=0; i<topBids.length; i++){
-          $scope.topBids += topBids[i]
+          $scope.topBids.push(topBids[i].bid);
         }
-        console.log($scope.topBids);
-      })
+        // console.log($scope.topBids);
+      });
+
+      // $scope.dog = top
+
+
 
 
 
