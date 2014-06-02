@@ -1,7 +1,7 @@
 var Auction = require('../models/auctions');
 
 function update(month, day, cb){
-
+        // console.log(Auction.db)
         Auction.find(function(err, data){
                 console.log('Current data: ', err || data);
                 if(err || !data.length) {
@@ -12,7 +12,11 @@ function update(month, day, cb){
                 data[0].auctionEndDateDayNumber = day;
                 data[0].auctionEndDateText = 'Ends ' + data[0].end.toDateString().substr(4,6) + ' at midnight PST';
                 data[0].save(function(err, saved){
-                        console.log(err || saved);
+                        console.log(saved);
+                        Auction.find(function(err, data){
+                                if (err) console.log("this is error ", err);
+                                console.log(data)});
+                        console.log(err);
                         cb(err);
                 })
         })

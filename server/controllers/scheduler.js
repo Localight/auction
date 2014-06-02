@@ -28,7 +28,7 @@ var notifyWinner = function(bid){
       Student.findOne({number: ""+item.studentNumber})
       .exec(function(err, student){
         // email set to alex for testing, should be bidder.email
-        // mailer.notifyWinner("ag.saldivar@gmail.com", student.firstName +" "+ student.lastName.substr(0,1)+".", item, bid);
+        mailer.notifyWinner(bidder.email, student.firstName +" "+ student.lastName.substr(0,1)+".", item, bid);
       })
     });
   });
@@ -75,10 +75,10 @@ Auction.find(function(Err, auc){
   if(Err || !auc.length) {
   throw new Error("No Auction Date");
   }
-  var date = new Date();  // test date
+  // var date = new Date();  // test date
 
   // fetch auction end date; month needs to be recalibrated by index # for scheduler
-  // var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber=4, auc[0].auctionEndDateDayNumber, auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
+  var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber=4, auc[0].auctionEndDateDayNumber, auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
 
   // creates a job to execute a function at auction end date
   var emailWinners = schedule.scheduleJob(date, function(){
@@ -119,26 +119,26 @@ Auction.find(function(Err, auc){
   // schedule new auction with items that have no bids
   var createNewAuction = schedule.scheduleJob(date, function(){
 
-    // updater.update(6, 3, function(err) {
-    //   if(err) {
-    //       return console.log("no auction date ", err);
-    //   } else {
-    //       console.log("auction updated");
-    //   }
-    // });
-
-    Auction.find()
-    .exec(function(err, auctions){
-      if (err){
-        throw new Error("Can't get auctions", err);
+    updater.update(6, 3, function(err) {
+      if(err) {
+          return console.log("no auction date ", err);
+      } else {
+          console.log("auction updated");
       }
-      console.log(auctions[0]);
-      auctions[0].please = "work";
-      auctions[0].save(function(err,data){
-        if(err) return;
-        console.log(data);
-      })
     });
+
+    // Auction.find()
+    // .exec(function(err, auctions){
+    //   if (err){
+    //     throw new Error("Can't get auctions", err);
+    //   }
+    //   console.log(auctions[0]);
+    //   auctions[0].please = "work";
+    //   auctions[0].save(function(err,data){
+    //     if(err) return;
+    //     console.log(data);
+    //   })
+    // });
 
     // set all items with a bid to status of sold
     Bids.find()
