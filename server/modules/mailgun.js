@@ -274,6 +274,7 @@ var notifyWinner = exports.notifyWinner= function notifyWinner(email, artist, it
     }
     winnerEmailSending = true;
     notifyWinnerHelper(email, artist, item, bid, function(){
+	winnerEmailSending = false;
         if(winnerEmailsQueue.length) {
             var last = winnerEmailsQueue.pop();
             notifyWinner(last.email, last.artist, last.item, last.bid);
