@@ -55,6 +55,7 @@ app.get('/api/students', bids.students);
 app.get('/api/items/:number', items.getItemByNumber);
 app.post('/api/bids', bids.getBidder, bids.post);
 app.get('/api/bids', bids.getBids);
+app.get('/api/bidders', bids.getBidders);
 app.get('/api/bidders/:id', bidders.getBidder);
 app.get('/api/bids/:id', bids.getBidder, bids.getBid);
 app.get('/unsubscribe', bidders.unsubscribe);

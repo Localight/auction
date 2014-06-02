@@ -5,6 +5,7 @@ var Bidder = require('../models/bidders');
 var Item = require('../models/items');
 var Bids = require('../models/bids');
 var Student = require('../models/students');
+var updater = require('./updater');
 
 // look for all bidders with notify set to true/they lost
 // people have bid more than once / sort unique winners and unique losers
@@ -39,7 +40,7 @@ var notifyLoser = function(bid){
     if (err) {
       return console.log("no bidder", bid.bidder)
     }
-    mailer.notifyAuctionLoser(bidder.email);
+    // mailer.notifyAuctionLoser(bidder.email);
   });
 };
 
@@ -53,7 +54,6 @@ var soldItems = function(bid){
     item.save(function(err, data){
       // now it's saved
       if(err)return;
-      // console.log(item);
     });
   })
 };
@@ -78,7 +78,7 @@ Auction.find(function(Err, auc){
   var date = new Date();  // test date
 
   // fetch auction end date; month needs to be recalibrated by index # for scheduler
-  var aed = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber=4, auc[0].auctionEndDateDayNumber, auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
+  // var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber=4, auc[0].auctionEndDateDayNumber, auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
 
   // creates a job to execute a function at auction end date
   var emailWinners = schedule.scheduleJob(date, function(){
@@ -119,17 +119,24 @@ Auction.find(function(Err, auc){
   // schedule new auction with items that have no bids
   var createNewAuction = schedule.scheduleJob(date, function(){
 
-    Auction.findOne()
-    .exec(function(err, auction){
-      if (err){
-        return console.log("no auction date ", err)
+    // Auction.findOne()
+    // .exec(function(err, auction){
+    //   if (err){
+    //     return console.log("no auction date ", err)
+    //   }
+    //   auction.end = new Date(2014/6/3);
+    //   auction.auctionNumber = 555;
+    //   auction.save(function(err, data){
+    //     if(err)return;
+    //     // console.log(data);
+    //   })
+    // });
+    updater.update(6, 3, function(err) {
+      if(err) {
+          return console.log("no auction date ", err);
+      } else {
+          console.log("auction updated");
       }
-      auction.end = new Date(2014/6/3);
-      auction.auctionNumber = 555;
-      auction.save(function(err, data){
-        if(err)return;
-        // console.log(data);
-      })
     });
 
     // set all items with a bid to status of sold

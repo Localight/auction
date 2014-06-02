@@ -517,9 +517,9 @@ function getBids(req, res) {
             }
             data.sort(function(a, b) {
                 if(parseInt(a.bid) > parseInt(b.bid)) {
-                    return 1
+                    return -1
                 } else if(parseInt(a.bid) < parseInt(b.bid)) {
-                    return -1;
+                    return 1;
                 } else {
                     return 0;
                 }
@@ -559,6 +559,47 @@ function getBids(req, res) {
 
 }
 
+function getBidders(req, res){
+  Bid.find({
+      notified: false
+  })
+  .exec(function(err, data){
+      // console.log(data[0].item);
+      if (err) {
+          return res.json(500, {message: 'there was an error'});
+      }
+      var length = data.length;
+      var bidderNames = [];
+      // console.log(data[0].item);
+      // console.log(Bidder.findOne({item:data[0].item}));
+      for (var i=0; i<length; i++){
+        Bidder.find({item:data[i].item})
+        .exec(function(err, bidder){
+          if (err) return;
+          console.log(bidder);
+          return bidder;
+        });
+
+        // console.log(data[i].item);
+        var bidder = Bidder;
+        // console.log(Bidder.findOne({item:data[i].item}));
+        // bidderNames.push(Bidder.findOne({item : data[i].item}).name);
+        // console.log(bidderNames);
+      }
+      // console.log(bidderNames);
+      data.sort(function(a, b) {
+          if(parseInt(a.bid) > parseInt(b.bid)) {
+              return -1
+          } else if(parseInt(a.bid) < parseInt(b.bid)) {
+              return 1;
+          } else {
+              return 0;
+          }
+      });
+      res.json(data.slice(0, 9));
+  });
+}
+
 module.exports = {
     notifyAllWinners: notifyAllWinners
     , notifyAllLosers: notifyAllLosers
@@ -567,4 +608,5 @@ module.exports = {
     , getBid: getBid
     , students: students
     , getBids : getBids
+    , getBidders: getBidders
 };

@@ -119,9 +119,9 @@ angular.module('NonProfitApp', [
             $scope.picList = [];
             var length = auction.items.length;
             for (var i=0; i<length; i++){
-              if (!(auction.items[i].itemNumber == 7722)){
+              // if (!(auction.items[i].itemNumber == 7722)){
                   var pics = auction.items;
-              }               
+              // }               
             }
             var pics = auction.items;
             var i = 0;
@@ -306,23 +306,30 @@ angular.module('NonProfitApp', [
         $(window).scrollTop(0);// go to top when a new page loads
     })
     .controller('LeaderBoardCtrl',function ($scope, $http, $rootScope, $location,api) {
-      api.getTopBids()
+      api.getBids('top')
       .then(function(data){
-        console.log(data[0].bid);
         $scope.topBids = [];
+        console.log(data);
         var topBids = data;
         for (var i=0; i<topBids.length; i++){
-          $scope.topBids.push(topBids[i].bid);
+          $scope.topBids.push(topBids[i]);
         }
-        // console.log($scope.topBids);
       });
 
-      // $scope.dog = top
+      api.getBids('recent')
+      .then(function(data){
+        $scope.recentBids = [];
+        var recentBids = data;
+        for (var i=0; i<recentBids.length; i++){
+          $scope.recentBids.push(recentBids[i]);
+        }
+      });
 
-
-
-
-
+      api.getBidders()
+      .then(function(data){
+        // console.log(data);
+      });
+      
     })
     .service('api', function($http,$rootScope) {
         var api = {
@@ -356,12 +363,18 @@ angular.module('NonProfitApp', [
                         return endTime;
                     });
                 return promise;
-            }, getTopBids: function(filter) {
+            }, getBids: function(filter) {
               var url = '/api/bids';
               if (filter){
                 url += '?filter=' + filter
               }
               var promise = $http.get(url)
+              .then(function(response){
+                return response.data;
+              });
+              return promise;
+            }, getBidders: function(){
+              var promise = $http.get('/api/bidders')
               .then(function(response){
                 return response.data;
                 console.log(response.data);

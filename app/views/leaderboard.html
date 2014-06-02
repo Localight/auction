@@ -69,15 +69,21 @@
                 <div class="dash-headers">
                     Top bids
                 </div>
-                <div class="col-md-3 image">
-                </div>
+
+                <!-- <div class="col-md-3 image"> -->
+<!--                     <div ng-repeat="pic in itemPic track by $index">
+                      <img class="col-md-3 image" data-ng-src="images/gallery/IMG_{{pic}}.jpg"/>
+                    </div> -->
+                <!-- </div> -->
                 <div class="col-md-3">
-                    <div>Item {{selectedPic.itemNumber}} by {{getStudentDisplayName(selectedPic.studentName)}}
-                    </div>
                     <div ng-repeat="bid in topBids track by $index">
-                      <span>{{bid}}</span>
+                      <div>
+                        <img class="col-md-3 image" data-ng-src="images/gallery/IMG_{{bid.item}}.jpg"/>
+                        <span>${{bid.bid}} bid by</span>
+                      </div>
                     </div>
                 </div>
+
             </div>
 
                 <span class="bottom-border"></span>
@@ -105,11 +111,20 @@
                     Recent bids
                 </div>
 
-                <div class="col-md-3 image">
-                </div>
+                <!-- <div class="col-md-3 image"> -->
+<!--                     <div ng-repeat="pic in itemPic track by $index">
+                      <img class="col-md-3 image" data-ng-src="images/gallery/IMG_{{pic}}.jpg"/>
+                    </div> -->
+                <!-- </div> -->
 
                 <div class="col-md-3">
                     <div>Item {{selectedPic.itemNumber}} by {{getStudentDisplayName(selectedPic.studentName)}}
+                    </div>
+                    <div ng-repeat="bid in recentBids track by $index">
+                      <div>
+                        <img class="col-md-3 image" data-ng-src="images/gallery/IMG_{{bid.item}}.jpg"/>
+                        {{bid.bid}}
+                      </div>
                     </div>
                 </div>
 
