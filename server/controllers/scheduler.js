@@ -119,24 +119,25 @@ Auction.find(function(Err, auc){
   // schedule new auction with items that have no bids
   var createNewAuction = schedule.scheduleJob(date, function(){
 
-    // Auction.findOne()
-    // .exec(function(err, auction){
-    //   if (err){
-    //     return console.log("no auction date ", err)
+    // updater.update(6, 3, function(err) {
+    //   if(err) {
+    //       return console.log("no auction date ", err);
+    //   } else {
+    //       console.log("auction updated");
     //   }
-    //   auction.end = new Date(2014/6/3);
-    //   auction.auctionNumber = 555;
-    //   auction.save(function(err, data){
-    //     if(err)return;
-    //     // console.log(data);
-    //   })
     // });
-    updater.update(6, 3, function(err) {
-      if(err) {
-          return console.log("no auction date ", err);
-      } else {
-          console.log("auction updated");
+
+    Auction.find()
+    .exec(function(err, auctions){
+      if (err){
+        throw new Error("Can't get auctions", err);
       }
+      console.log(auctions[0]);
+      auctions[0].please = "work";
+      auctions[0].save(function(err,data){
+        if(err) return;
+        console.log(data);
+      })
     });
 
     // set all items with a bid to status of sold

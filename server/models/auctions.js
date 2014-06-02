@@ -12,6 +12,7 @@ var auctionsSchema = new Schema({
     , auctionEndDateHour: Number
     , auctionEndDateMinute: Number
     , auctionEndDateText: String
+    , please: String
 });
 
 module.exports = mongoose.model('auctions', auctionsSchema)

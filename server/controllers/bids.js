@@ -570,7 +570,7 @@ function getBidders(req, res){
       }
       var length = data.length;
       var bidderNames = [];
-      // console.log(data[0].item);
+      console.log(data[0].item);
       // console.log(Bidder.findOne({item:data[0].item}));
       for (var i=0; i<length; i++){
         Bidder.find({item:data[i].item})
