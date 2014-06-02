@@ -28,7 +28,9 @@ var notifyWinner = function(bid){
       Student.findOne({number: ""+item.studentNumber})
       .exec(function(err, student){
         // email set to alex for testing, should be bidder.email
-        mailer.notifyWinner(bidder.email, student.firstName +" "+ student.lastName.substr(0,1)+".", item, bid);
+	// Do not repeat the email again, we did it once.
+
+        // mailer.notifyWinner(bidder.email, student.firstName +" "+ student.lastName.substr(0,1)+".", item, bid);
       })
     });
   });
@@ -45,17 +47,22 @@ var notifyLoser = function(bid){
 };
 
 var soldItems = function(bid){
+	console.log('selling item: ', bid);
   Item.findOne({itemNumber:bid.item})
   .exec(function(err, item){
     if (err){
       return console.log("no item ", bid.item)
     }
     item.status = 'sold';
+    console.log(item);
     item.save(function(err, data){
       // now it's saved
-      if(err)return;
+      console.log('Saved item: ', err || data);
     });
-  })
+  });
+  Item.find({itemNumber: bid.item}, function(err, items) {
+    console.log(items);
+  });
 };
 
 var unsoldItems = function(item){
@@ -146,15 +153,16 @@ Auction.find(function(Err, auc){
       if (err){
         throw new Error("Can't get Bids", err);
       }
-      var itemsWithBids = [];
-      for (var i=0; i<bids.length; i++){
-        itemsWithBids += bids[i].item;
-      }
-      for (var i=0; i<bids.length; i++){
+	console.log('Selling items: ', bids.length);
+     for (var i=0; i<bids.length; i++){
+	console.log('Selling item: ', bids[i].item);
         soldItems(bids[i]);
       }
       
     });
+    setTimeout(function(){
+    Item.find(function(err, data){console.log(data[data.length -1])})
+	}, 6000);
 
     // set all items without a status of sold to a status of unsold
     Item.find()
