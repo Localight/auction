@@ -257,7 +257,30 @@ exports.notifyAuctionLoser = function(email){
         sendMessage(to, subject, text, html, attachments);
     })
 };
-exports.notifyWinner = function(email, artist, item, bid) {
+/**
+ *queue up outgoing emails
+ */
+var winnerEmailsQueue = [];
+var winnerEmailSending = false;
+var notifyWinner = exports.notifyWinner= function notifyWinner(email, artist, item, bid) {
+    if(winnerEmailSending) {
+        winnerEmailsQueue.push({
+            email: email,
+            artist: artist,
+            item: item,
+            bid: bid
+        });
+        return;
+    }
+    winnerEmailSending = true;
+    notifyWinnerHelper(email, artist, item, bid, function(){
+        if(winnerEmailsQueue.length) {
+            var last = winnerEmailsQueue.pop();
+            notifyWinner(last.email, last.artist, last.item, last.bid);
+        }
+    });
+}
+var notifyWinnerHelper = exports.notifyWinnerHelper = function notifyWinnerHelper(email, artist, item, bid, done) {
     var money = parseFloat(bid.bid)/100;
     if(isNaN(money)) {
         return;
@@ -287,6 +310,7 @@ exports.notifyWinner = function(email, artist, item, bid) {
             });
         }
         sendMessage(to, subject, text, html, attachments);
+        done();
     });
 }
 // helper for date calc
