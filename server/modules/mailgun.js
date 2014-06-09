@@ -251,6 +251,7 @@ exports.notifyHighBidder = function notify(bidderId, bidderEmail, bidderAmount, 
 };
 exports.notifyAuctionLoser = function(email){
     TemplateLost('losers', {email: email}, function(err, html, text){
+        console.log(err || "created for email" + email);
         var to = [email];
         var subject = 'You did not win at the auction.';
         var attachments = [];

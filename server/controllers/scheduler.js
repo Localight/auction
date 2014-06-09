@@ -37,8 +37,10 @@ var notifyWinner = function(bid){
 };
 
 var notifyLoser = function(bid){
+  console.log(bid);
   Bidder.findOne({_id: bid.bidder})
   .exec(function(err, bidder){
+    console.log(err || bidder);
     if (err) {
       return console.log("no bidder", bid.bidder)
     }
@@ -87,6 +89,7 @@ Auction.find(function(Err, auc){
   // var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber=4, auc[0].auctionEndDateDayNumber, auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
 
   var date = new Date(2012, 11, 21, 5, 30, 0);
+  // var date = new Date();
 
   // var date = new Date(2014, 05, 2, 17, 00, 0); // test date
 
@@ -109,13 +112,21 @@ Auction.find(function(Err, auc){
     Bids.find({notified: true}) 
     .exec(function(err, bids){
       // if mongoDB comes back with an error
+      console.log(err || bids.length + " emails to send loser");
       if(err){
         throw new Error("Can't get Bids", err);
       }
       // loop through array of found bids
+      var emailedLosers = [];
       for (var i=0; i<bids.length; i++){
         // email each loser
-        notifyLoser(bids[i]);
+        emailedLosers.push(bids[i].bidder);
+        if (emailedLosers.indexOf(bids[i].bidder) === -1) {
+          notifyLoser(bids[i]);
+        }
+        // TODO add notified status
+        // setBidToNotifiedToEmails(bids[i]);
+        // bid.status = loserNotified
       }
     });
   });

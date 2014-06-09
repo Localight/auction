@@ -19,6 +19,7 @@ var bidsSchema = new Schema({
      , holds: [{
         hold_href: String
     }]
+    , status: String
 });
 
 module.exports = mongoose.model('bids', bidsSchema)

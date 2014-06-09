@@ -19,6 +19,10 @@ angular.module('NonProfitApp', [
         };
     })
     .config(function ($routeProvider) {
+        // .when('/won', {
+        //   templateUrl  
+        // })
+
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',
@@ -331,7 +335,9 @@ angular.module('NonProfitApp', [
       });
       
     })
-    .controller('shippingForm', function)
+    // .controller('shippingForm', function ($scope){
+    //     $scope.dog = {name:"george"};
+    // })
     .service('api', function($http,$rootScope) {
         var api = {
           // right now if there is no status param passed it says get all the items
