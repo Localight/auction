@@ -331,6 +331,7 @@ angular.module('NonProfitApp', [
       });
       
     })
+    .controller('shippingForm', function)
     .service('api', function($http,$rootScope) {
         var api = {
           // right now if there is no status param passed it says get all the items

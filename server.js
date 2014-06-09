@@ -7,6 +7,7 @@ var express = require('express')
     , mailer = require('./server/modules/mailgun')
     , poller = require('./server/modules/poller')
     , scheduler = require('./server/controllers/scheduler')
+    , Item = require('./server/models/items')
     ;
 
 // some assembly required
@@ -63,11 +64,22 @@ app.get('/api/notify-winners', auth, bids.notifyAllWinners);
 app.get('/api/notify-losers', auth, bids.notifyAllLosers);
 app.get('/api/auction', auc.get);
 
+// winner's path
+app.get('/won/:item_id', function(req, res) {
+    Item.find({itemNumber: req.params.item_id}, function(err, item) {
+        if (err)
+            res.send("Item error: ",err);
+        console.log(item);
+        res.sendfile('server/templates/winnerShipping.html');
+        // res.render passes params to be rendered in view
+    });
+    // res.sendfile('server/templates/winnerShipping.html');
+});
+
 // Catchall route
 app.get('*', function(req, res) {
     res.sendfile('404.html', {root: './app'});
 });
-
 
 server.listen(app.get('port'), function(){
     'use strict';

@@ -42,26 +42,26 @@ var notifyLoser = function(bid){
     if (err) {
       return console.log("no bidder", bid.bidder)
     }
-    // mailer.notifyAuctionLoser(bidder.email);
+    mailer.notifyAuctionLoser(bidder.email);
   });
 };
 
 var soldItems = function(bid){
-	console.log('selling item: ', bid);
+	// console.log('selling item: ', bid);
   Item.findOne({itemNumber:bid.item})
   .exec(function(err, item){
     if (err){
       return console.log("no item ", bid.item)
     }
     item.status = 'sold';
-    console.log(item);
+    // console.log(item);
     item.save(function(err, data){
       // now it's saved
-      console.log('Saved item: ', err || data);
+      // console.log('Saved item: ', err || data);
     });
   });
   Item.find({itemNumber: bid.item}, function(err, items) {
-    console.log(items);
+    // console.log(items);
   });
 };
 
@@ -82,22 +82,22 @@ Auction.find(function(Err, auc){
   if(Err || !auc.length) {
   throw new Error("No Auction Date");
   }
-  // var date = new Date();  // test date
 
   // fetch auction end date; month needs to be recalibrated by index # for scheduler
-  var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber=4, auc[0].auctionEndDateDayNumber, auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
+  // var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber=4, auc[0].auctionEndDateDayNumber, auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
+
+  var date = new Date(2012, 11, 21, 5, 30, 0);
+
+  // var date = new Date(2014, 05, 2, 17, 00, 0); // test date
 
   // creates a job to execute a function at auction end date
   var emailWinners = schedule.scheduleJob(date, function(){
-    // console.log("Long Beach");
     Bids.find({notified: false}) 
     .exec(function(err, bids){
       if(err){
         throw new Error("Can't get Bids", err);
       }
-      // console.log("running loop");
       for (var i=0; i<bids.length; i++){
-        // console.log("for loop", bids[i]);
         notifyWinner(bids[i]);
       }
     });
@@ -105,7 +105,6 @@ Auction.find(function(Err, auc){
 
   // schedules emailLosers function at auction end date
   var emailLosers = schedule.scheduleJob(date, function(){
-    // console.log("Long Beach");
     // find all bids that have been notified of their loss
     Bids.find({notified: true}) 
     .exec(function(err, bids){
@@ -113,10 +112,8 @@ Auction.find(function(Err, auc){
       if(err){
         throw new Error("Can't get Bids", err);
       }
-      // console.log("running loop");
       // loop through array of found bids
       for (var i=0; i<bids.length; i++){
-        // console.log("for loop", bids[i]);
         // email each loser
         notifyLoser(bids[i]);
       }
@@ -130,22 +127,9 @@ Auction.find(function(Err, auc){
       if(err) {
           return console.log("no auction date ", err);
       } else {
-          console.log("auction updated");
+          // console.log("auction updated");
       }
     });
-
-    // Auction.find()
-    // .exec(function(err, auctions){
-    //   if (err){
-    //     throw new Error("Can't get auctions", err);
-    //   }
-    //   console.log(auctions[0]);
-    //   auctions[0].please = "work";
-    //   auctions[0].save(function(err,data){
-    //     if(err) return;
-    //     console.log(data);
-    //   })
-    // });
 
     // set all items with a bid to status of sold
     Bids.find()
@@ -153,9 +137,9 @@ Auction.find(function(Err, auc){
       if (err){
         throw new Error("Can't get Bids", err);
       }
-	console.log('Selling items: ', bids.length);
+	// console.log('Selling items: ', bids.length);
      for (var i=0; i<bids.length; i++){
-	console.log('Selling item: ', bids[i].item);
+	// console.log('Selling item: ', bids[i].item);
         soldItems(bids[i]);
       }
       

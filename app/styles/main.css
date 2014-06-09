@@ -365,3 +365,28 @@ img.go {
     font-size: 1.8em;
     line-height: 1em;
 }
+
+
+
+
+/*************** WINNER SHIPPING EMAIL *****************/
+
+.shipping {
+    font-family: 'Roboto';
+    background-color: black;
+    color: white;
+}
+
+.wonbid {
+    border: 2px solid black;
+    margin: 2em;
+    color: #18aadd;
+    font-size: 2.5em;
+    padding: .2em;
+}
+
+.shipForm {
+    margin-top: 1em;
+}
+
+
