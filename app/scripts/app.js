@@ -19,10 +19,6 @@ angular.module('NonProfitApp', [
         };
     })
     .config(function ($routeProvider) {
-        // .when('/won', {
-        //   templateUrl  
-        // })
-
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',
@@ -102,6 +98,10 @@ angular.module('NonProfitApp', [
                 templateUrl: 'views/registered.html',
                 controller: 'RegisteredCtrl'
             })
+            .when('/won', {
+              templateUrl: 'views/won.html',
+              controller: 'ShippingCtrl'  
+            })  
             .otherwise({
                 redirectTo: '/'
             });
@@ -335,9 +335,98 @@ angular.module('NonProfitApp', [
       });
       
     })
-    // .controller('shippingForm', function ($scope){
-    //     $scope.dog = {name:"george"};
-    // })
+    .controller('ShippingCtrl', function ($scope, $rootScope, $http, $location){
+        $scope.states = [
+            {stateCode: "AK"},
+            {stateCode: "AS"},
+            {stateCode: "AZ"},
+            {stateCode: "AR"},
+            {stateCode: "CA"},
+            {stateCode: "CO"},
+            {stateCode: "CT"},
+            {stateCode: "DE"},
+            {stateCode: "DC"},
+            {stateCode: "FM"},
+            {stateCode: "FL"},
+            {stateCode: "GA"},
+            {stateCode: "GU"},
+            {stateCode: "HI"},
+            {stateCode: "ID"},
+            {stateCode: "IL"},
+            {stateCode: "IN"},
+            {stateCode: "IA"},
+            {stateCode: "KS"},
+            {stateCode: "KY"},
+            {stateCode: "LA"},
+            {stateCode: "ME"},
+            {stateCode: "MH"},
+            {stateCode: "MD"},
+            {stateCode: "MA"},
+            {stateCode: "MI"},
+            {stateCode: "MN"},
+            {stateCode: "MS"},
+            {stateCode: "MO"},
+            {stateCode: "MT"},
+            {stateCode: "NE"},
+            {stateCode: "NV"},
+            {stateCode: "NH"},
+            {stateCode: "NJ"},
+            {stateCode: "NM"},
+            {stateCode: "NY"},
+            {stateCode: "NC"},
+            {stateCode: "ND"},
+            {stateCode: "MP"},
+            {stateCode: "OH"},
+            {stateCode: "OK"},
+            {stateCode: "OR"},
+            {stateCode: "PW"},
+            {stateCode: "PA"},
+            {stateCode: "PR"},
+            {stateCode: "RI"},
+            {stateCode: "SC"},
+            {stateCode: "SD"},
+            {stateCode: "TN"},
+            {stateCode: "TX"},
+            {stateCode: "UT"},
+            {stateCode: "VT"},
+            {stateCode: "VI"},
+            {stateCode: "VA"},
+            {stateCode: "WA"},
+            {stateCode: "WV"},
+            {stateCode: "WI"},
+            {stateCode: "WY"}
+        ];
+
+        $scope.address ={};
+        
+        $scope.address.myState = $scope.states[4].stateCode;
+
+        var searchObject = $location.search();
+        var state = $scope.myState
+        var bid = searchObject.bidid;
+        var item = searchObject.itemid;
+        var email = searchObject.email;
+        // $scope.address = {};
+        var shippingInfo = {
+            bid: searchObject.bidid,
+            item: searchObject.itemid,
+            // email: searchObject.email,
+            pickup: $scope.address.pickup,
+            poBox: $scope.address.poBox,
+            street: $scope.address.street,
+            // city: $scope.address.city,
+            // state: $scope.address.state,
+            zipCode: $scope.address.zipCode,
+            state: $scope.address.myState
+        };
+        console.log(shippingInfo);
+        // console.log(shippingInfo);
+        $scope.sendShippingInfo = function(address){
+            $http.post('api/shipping', shippingInfo)
+            $scope.address = angular.copy(address);
+            console.log(address);
+        };
+    })
     .service('api', function($http,$rootScope) {
         var api = {
           // right now if there is no status param passed it says get all the items

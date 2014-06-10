@@ -63,6 +63,7 @@ app.get('/unsubscribe', bidders.unsubscribe);
 app.get('/api/notify-winners', auth, bids.notifyAllWinners);
 app.get('/api/notify-losers', auth, bids.notifyAllLosers);
 app.get('/api/auction', auc.get);
+app.post('/api/shipping', bids.postShippingInfo);
 
 // winner's path
 // app.get('/won/:item_id', function(req, res) {

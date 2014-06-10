@@ -20,26 +20,32 @@
       </div>
       <div class="col-md-5 col-md-offset-4 col-xs-6 col-xs-offset-3 shipForm">
         Which would you prefer?
-        <form method="get" action="/shippingConfirmation" ng-controller="shippingForm">
+        <form ng-controller="ShippingCtrl">
           <!-- <span class="shipForm"> -->
-          <input type="radio" name="value" >
-            Pick up at Los Alamitos High School {{dog.name}}
+          <input type="radio" name="value" ng-model="address.pickup" value="true">
+            Pick up at Los Alamitos High School 
           </input>
           </span>
           <br>
-          <input type="radio" name="value" class="shipForm">
+          <input type="radio" name="value" class="shipForm" ng-model="address.pickup" value="false">
             Ship to the address below:
           </input>
           <br>
           <span class="shipForm">
-          <input placeholder="Address line 1">
+          <input placeholder="Address line 1" ng-model="address.poBox">
           <br>
-          <input placeholder="Address line 2">
+          <input placeholder="Address line 2" ng-model="address.street">
           <br>
-          <input placeholder="Zip Code">
+          <input placeholder="Zip Code" ng-model="address.zipCode"> 
+          <br>
+          <input placeholder="City" ng-model="address.city">
+          <br>
+          <select placeholder="State" ng-init="address.myState='CA'" ng-model="address.myState" ng-options="state.stateCode for state in states">
+            <!-- <option></option> -->
+          </select>
           <!-- </span> -->
           <br>
-          <button type="submit" class="btn btn-default">SUBMIT</button>
+          <button type="submit" class="btn btn-default" ng-click="sendShippingInfo(address)">SUBMIT</button>
         </form>
 
       </div>

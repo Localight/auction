@@ -600,6 +600,10 @@ function getBidders(req, res){
   });
 }
 
+function postShippingInfo(req, res) {
+    console.log(req.body);
+}
+
 module.exports = {
     notifyAllWinners: notifyAllWinners
     , notifyAllLosers: notifyAllLosers
@@ -609,4 +613,5 @@ module.exports = {
     , students: students
     , getBids : getBids
     , getBidders: getBidders
+    , postShippingInfo: postShippingInfo
 };
