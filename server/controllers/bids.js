@@ -600,6 +600,7 @@ function getBidders(req, res){
   });
 }
 
+
 function postShippingInfo(req, res) {
     console.log(req.body);
 }

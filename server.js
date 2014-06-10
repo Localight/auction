@@ -58,7 +58,7 @@ app.post('/api/bids', bids.getBidder, bids.post);
 app.get('/api/bids', bids.getBids);
 app.get('/api/bidders', bids.getBidders);
 app.get('/api/bidders/:id', bidders.getBidder);
-app.get('/api/bids/:id', bids.getBidder, bids.getBid);
+app.get('/api/bids/:id', bids.getBid);
 app.get('/unsubscribe', bidders.unsubscribe);
 app.get('/api/notify-winners', auth, bids.notifyAllWinners);
 app.get('/api/notify-losers', auth, bids.notifyAllLosers);

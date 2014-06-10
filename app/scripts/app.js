@@ -335,7 +335,7 @@ angular.module('NonProfitApp', [
       });
       
     })
-    .controller('ShippingCtrl', function ($scope, $rootScope, $http, $location){
+    .controller('ShippingCtrl', function ($scope, $rootScope, $http, $location, api){
         $scope.states = [
             {stateCode: "AK"},
             {stateCode: "AS"},
@@ -397,8 +397,9 @@ angular.module('NonProfitApp', [
             {stateCode: "WY"}
         ];
 
+        console.log($location.search.bidid);
         $scope.address ={};
-        
+
         $scope.address.myState = $scope.states[4].stateCode;
 
         var searchObject = $location.search();
@@ -406,25 +407,24 @@ angular.module('NonProfitApp', [
         var bid = searchObject.bidid;
         var item = searchObject.itemid;
         var email = searchObject.email;
+        $scope.bidDetails = api.getBidDetails(bid);
         // $scope.address = {};
-        var shippingInfo = {
-            bid: searchObject.bidid,
-            item: searchObject.itemid,
-            // email: searchObject.email,
-            pickup: $scope.address.pickup,
-            poBox: $scope.address.poBox,
-            street: $scope.address.street,
-            // city: $scope.address.city,
-            // state: $scope.address.state,
-            zipCode: $scope.address.zipCode,
-            state: $scope.address.myState
-        };
-        console.log(shippingInfo);
+
+        // console.log(shippingInfo);
         // console.log(shippingInfo);
         $scope.sendShippingInfo = function(address){
+            var shippingInfo = {
+                bid: searchObject.bidid,
+                item: searchObject.itemid,
+                pickup: $scope.address.pickup,
+                poBox: $scope.address.poBox,
+                street: $scope.address.street,
+                zipCode: $scope.address.zipCode,
+                state: $scope.address.myState.stateCode
+            };
             $http.post('api/shipping', shippingInfo)
             $scope.address = angular.copy(address);
-            console.log(address);
+            // console.log(address);
         };
     })
     .service('api', function($http,$rootScope) {
@@ -476,8 +476,18 @@ angular.module('NonProfitApp', [
                 console.log(response.data);
               });
               return promise;
-            }
-        };
+            }, getBidDetails: function(bidid) {
+              var promise = $http.get('/api/bids/' + bidid)
+              .then(function(res) {
+              console.log('Bid data: ', res.data);
+              return res.data;
+              })
+              .catch(function(err){
+              console.log('error getting bid data:', err);
+              });
+              return promise;
+              }
+        }
         return api;
      });
 
