@@ -8,6 +8,7 @@ var Student = require('../models/students');
 var payment = require('../modules/payment');
 var mailer = require('../modules/mailgun');
 var ENDDATECONST = new Date('05/20/2014 23:59');
+var Shipment = require('../models/shipping');
 var enddate;
 getAuctionEnd()
 .then(function(end){
@@ -602,7 +603,35 @@ function getBidders(req, res){
 
 
 function postShippingInfo(req, res) {
-    console.log(req.body);
+    var shipment = new Shipment({
+        bidder: req.body.bid
+        , item: req.body.item
+        , bid: ""
+        , pickup: req.body.pickup
+        , poBox: req.body.poBox
+        , street: req.body.street
+        , zipCode: req.body.zipCode
+        , state: req.body.state
+        });
+    console.log(shipment.poBox);
+    shipment.save(function(err, save){
+        if (err) return res.json(500, "could not save shipment");
+        res.json({message: "saved"});
+    })
+    console.log("this is req.body.bid: ", req.body.bid);
+    // Bidder.findOne({ _id: "537fbba4682b3e5099954a1a"})
+    Bidder.findOne({ _id: req.body.bid})
+    .exec(function(err,data){
+        // console.log("this should be bidder: ", data);
+        mailer.notifyConfirmation("ag.saldivar@gmail.com", shipment.item, shipment.poBox, shipment.street, shipment.zipCode, shipment.state);
+    });
+}
+
+function getShippingInfo(req, res){
+    Shipment.find({})
+    .exec(function(err, data){
+        res.json(data);
+    });
 }
 
 module.exports = {
@@ -615,4 +644,5 @@ module.exports = {
     , getBids : getBids
     , getBidders: getBidders
     , postShippingInfo: postShippingInfo
+    , getShippingInfo: getShippingInfo
 };

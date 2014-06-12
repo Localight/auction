@@ -87,6 +87,18 @@ exports.holdCharge = function(card, amount) {
          d.reject(err);
      });
  };
+ exports.makePayment = function(card, amount){
+    var d = Q.defer();
+   /// card ;
+    balanced.get(card)
+    .then(function(crd){
+        card.charge({amount: amount})
+         d.resolve();
+     }, function(err) {
+         console.log('Error charging', err);
+         d.reject(err);
+     }); 
+ };
 
  exports.getCustomer = function(bidder) {
     var d = Q.defer();

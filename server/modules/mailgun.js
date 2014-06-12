@@ -14,7 +14,7 @@ var Bid = require('../models/bids');
 var Auction = require('../models/auctions');
 var Q = require('q');
 var mg, domain, key, from;
-var TemplateWon, TemplateLost, TemplateHigh, TemplateOutbid;
+var TemplateWon, TemplateLost, TemplateHigh, TemplateOutbid, TemplateConfirmation;
 var baseLink = 'http://havenly.TeachArt.org/';
 var enddatestring = 'on April 20th at midnight PST';
 
@@ -44,7 +44,9 @@ function prepareTemplates() {
     emailTemplates('./server/templates/Won', function(err, wontpl) {
         TemplateWon = wontpl;
     });
-
+    emailTemplates('./server/templates/Confirmation', function(err, confirmtpl){
+      TemplateConfirmation = confirmtpl;
+    });
 }
 /**
  * Actual sending of the message for the auction event
@@ -258,6 +260,27 @@ exports.notifyAuctionLoser = function(email){
         sendMessage(to, subject, text, html, attachments);
     })
 };
+
+exports.notifyConfirmation = function(email, item, poBox, street, zipCode, state, payment ){
+  // TemplateConfirmation('confirmation', locals, function(err, html, text){
+  //   console.log("###################Shipping Confirmation Email##########################");
+  var locals = {
+    item: item,
+    poBox: poBox,
+    street: street,
+    zipCode: zipCode,
+    state: state,
+    payment: payment
+  };
+  TemplateConfirmation('confirmation', locals, function(err, html, text){
+    var subject = "Shipping Confirmation";
+    var attachments = [];
+    sendMessage(email, subject, text, html, attachments);
+  });
+  // sendMessage(email,'shipment confirmation test', 'confirmationworks', '<h2>mailgunHTMLworks</h2>' );
+  // })
+};
+
 /**
  *queue up outgoing emails
  */

@@ -375,10 +375,12 @@ img.go {
     font-family: 'Roboto';
     background-color: black;
     color: white;
+    background-size: 100%;
+    background-repeat: repeat-y;
 }
 
 .wonbid {
-    border: 2px solid black;
+    border: 2px solid #b3b3b3;
     margin: 2em;
     color: #18aadd;
     font-size: 2.5em;
@@ -387,7 +389,25 @@ img.go {
 
 .shipForm {
     margin-top: 1em;
-
 }
 
+.form {
+    color: #b3b3b3;
+}
 
+form {
+    color: black;
+}
+
+.payment {
+    margin-top: 2em;
+    color: #b3b3b3
+}
+
+.field {
+    margin: .5em;
+}
+
+.small {
+    font-size: .7em
+}

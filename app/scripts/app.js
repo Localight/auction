@@ -397,7 +397,7 @@ angular.module('NonProfitApp', [
             {stateCode: "WY"}
         ];
 
-        console.log($location.search.bidid);
+        // console.log($location.search.bidid);
         $scope.address ={};
 
         $scope.address.myState = $scope.states[4].stateCode;
@@ -407,13 +407,18 @@ angular.module('NonProfitApp', [
         var bid = searchObject.bidid;
         var item = searchObject.itemid;
         var email = searchObject.email;
-        $scope.bidDetails = api.getBidDetails(bid);
+        api.getBidDetails(bid)
+        .then(function(data){
+            $scope.bidDetails = data
+            console.log($scope.bidDetails.lastFour);
+        });
         // $scope.address = {};
-
+        
         // console.log(shippingInfo);
         // console.log(shippingInfo);
         $scope.sendShippingInfo = function(address){
             var shippingInfo = {
+                bidder: $scope.bidDetails.bidderId,
                 bid: searchObject.bidid,
                 item: searchObject.itemid,
                 pickup: $scope.address.pickup,
@@ -422,9 +427,11 @@ angular.module('NonProfitApp', [
                 zipCode: $scope.address.zipCode,
                 state: $scope.address.myState.stateCode
             };
+            
             $http.post('api/shipping', shippingInfo)
             $scope.address = angular.copy(address);
-            // console.log(address);
+            console.log("in controller "+address);
+            $scope.submit = true;
         };
     })
     .service('api', function($http,$rootScope) {
@@ -477,15 +484,15 @@ angular.module('NonProfitApp', [
               });
               return promise;
             }, getBidDetails: function(bidid) {
-              var promise = $http.get('/api/bids/' + bidid)
-              .then(function(res) {
-              console.log('Bid data: ', res.data);
-              return res.data;
-              })
-              .catch(function(err){
-              console.log('error getting bid data:', err);
-              });
-              return promise;
+                  var promise = $http.get('/api/bids/' + bidid)
+                  .then(function(res) {
+                    // console.log('Bid data: ', res.data);
+                    return res.data;
+                  })
+                  .catch(function(err){
+                    console.log('error getting bid data:', err);
+                  });
+                  return promise;
               }
         }
         return api;
