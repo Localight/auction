@@ -10,6 +10,7 @@ var shipmentsSchema = new Schema({
     , pickup: String
     , poBox: String
     , street: String
+    , city: String
     , zipCode: String
     , state: String
 });

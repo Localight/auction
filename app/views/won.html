@@ -48,13 +48,16 @@
           <!-- </span> -->
           <br>
           <!-- <div>ng-click="submit=!submit"</div>  -->
-          <button type="submit" class="btn btn-default" ng-click="sendShippingInfo(address)">SUBMIT</button>
+          <button type="submit" class="btn btn-default" ng-click="sendShippingInfo(address)">Submit</button>
         </form>
         <img src="/images/pic/check_mark.png" ng-show="submit">
       </div>
       <div class="col-md-5 col-md-offset-4 col-xs-6 col-xs-offset-3 payment">
         Confirm your payment method
+      <div>{{bidDetails.lastFour}}</div>
+      <button type="submit" class="btn btn-default">Confirm</button>
       </div>
+
   </div>
 
 <!-- </script>

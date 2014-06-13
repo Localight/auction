@@ -261,7 +261,7 @@ exports.notifyAuctionLoser = function(email){
     })
 };
 
-exports.notifyConfirmation = function(email, item, poBox, street, zipCode, state, payment ){
+exports.notifyConfirmation = function(email, item, poBox, street, city, zipCode, state, payment ){
   // TemplateConfirmation('confirmation', locals, function(err, html, text){
   //   console.log("###################Shipping Confirmation Email##########################");
   var locals = {
@@ -269,6 +269,7 @@ exports.notifyConfirmation = function(email, item, poBox, street, zipCode, state
     poBox: poBox,
     street: street,
     zipCode: zipCode,
+    city: city,
     state: state,
     payment: payment
   };

@@ -18,6 +18,7 @@ angular.module('NonProfitApp', [
             }
         };
     })
+    // .directive('')
     .config(function ($routeProvider) {
         $routeProvider
             .when('/', {
@@ -336,71 +337,12 @@ angular.module('NonProfitApp', [
       
     })
     .controller('ShippingCtrl', function ($scope, $rootScope, $http, $location, api){
-        $scope.states = [
-            {stateCode: "AK"},
-            {stateCode: "AS"},
-            {stateCode: "AZ"},
-            {stateCode: "AR"},
-            {stateCode: "CA"},
-            {stateCode: "CO"},
-            {stateCode: "CT"},
-            {stateCode: "DE"},
-            {stateCode: "DC"},
-            {stateCode: "FM"},
-            {stateCode: "FL"},
-            {stateCode: "GA"},
-            {stateCode: "GU"},
-            {stateCode: "HI"},
-            {stateCode: "ID"},
-            {stateCode: "IL"},
-            {stateCode: "IN"},
-            {stateCode: "IA"},
-            {stateCode: "KS"},
-            {stateCode: "KY"},
-            {stateCode: "LA"},
-            {stateCode: "ME"},
-            {stateCode: "MH"},
-            {stateCode: "MD"},
-            {stateCode: "MA"},
-            {stateCode: "MI"},
-            {stateCode: "MN"},
-            {stateCode: "MS"},
-            {stateCode: "MO"},
-            {stateCode: "MT"},
-            {stateCode: "NE"},
-            {stateCode: "NV"},
-            {stateCode: "NH"},
-            {stateCode: "NJ"},
-            {stateCode: "NM"},
-            {stateCode: "NY"},
-            {stateCode: "NC"},
-            {stateCode: "ND"},
-            {stateCode: "MP"},
-            {stateCode: "OH"},
-            {stateCode: "OK"},
-            {stateCode: "OR"},
-            {stateCode: "PW"},
-            {stateCode: "PA"},
-            {stateCode: "PR"},
-            {stateCode: "RI"},
-            {stateCode: "SC"},
-            {stateCode: "SD"},
-            {stateCode: "TN"},
-            {stateCode: "TX"},
-            {stateCode: "UT"},
-            {stateCode: "VT"},
-            {stateCode: "VI"},
-            {stateCode: "VA"},
-            {stateCode: "WA"},
-            {stateCode: "WV"},
-            {stateCode: "WI"},
-            {stateCode: "WY"}
-        ];
 
-        // console.log($location.search.bidid);
         $scope.address ={};
 
-        $scope.address.myState = $scope.states[4].stateCode;
+        var states = api.states;
+        $scope.states = states;
+        $scope.address.myState = states[4].stateCode;
 
         var searchObject = $location.search();
         var state = $scope.myState
@@ -412,6 +354,7 @@ angular.module('NonProfitApp', [
             $scope.bidDetails = data
             console.log($scope.bidDetails.lastFour);
         });
+        // $scope.lastFour = $scope.bidDetails.lastFour;
         // $scope.address = {};
         
         // console.log(shippingInfo);
@@ -424,6 +367,7 @@ angular.module('NonProfitApp', [
                 pickup: $scope.address.pickup,
                 poBox: $scope.address.poBox,
                 street: $scope.address.street,
+                city: $scope.address.city,
                 zipCode: $scope.address.zipCode,
                 state: $scope.address.myState.stateCode
             };
@@ -493,7 +437,67 @@ angular.module('NonProfitApp', [
                     console.log('error getting bid data:', err);
                   });
                   return promise;
-              }
+            }, states:
+                states = [
+                    {stateCode: "AK"},
+                    {stateCode: "AS"},
+                    {stateCode: "AZ"},
+                    {stateCode: "AR"},
+                    {stateCode: "CA"},
+                    {stateCode: "CO"},
+                    {stateCode: "CT"},
+                    {stateCode: "DE"},
+                    {stateCode: "DC"},
+                    {stateCode: "FM"},
+                    {stateCode: "FL"},
+                    {stateCode: "GA"},
+                    {stateCode: "GU"},
+                    {stateCode: "HI"},
+                    {stateCode: "ID"},
+                    {stateCode: "IL"},
+                    {stateCode: "IN"},
+                    {stateCode: "IA"},
+                    {stateCode: "KS"},
+                    {stateCode: "KY"},
+                    {stateCode: "LA"},
+                    {stateCode: "ME"},
+                    {stateCode: "MH"},
+                    {stateCode: "MD"},
+                    {stateCode: "MA"},
+                    {stateCode: "MI"},
+                    {stateCode: "MN"},
+                    {stateCode: "MS"},
+                    {stateCode: "MO"},
+                    {stateCode: "MT"},
+                    {stateCode: "NE"},
+                    {stateCode: "NV"},
+                    {stateCode: "NH"},
+                    {stateCode: "NJ"},
+                    {stateCode: "NM"},
+                    {stateCode: "NY"},
+                    {stateCode: "NC"},
+                    {stateCode: "ND"},
+                    {stateCode: "MP"},
+                    {stateCode: "OH"},
+                    {stateCode: "OK"},
+                    {stateCode: "OR"},
+                    {stateCode: "PW"},
+                    {stateCode: "PA"},
+                    {stateCode: "PR"},
+                    {stateCode: "RI"},
+                    {stateCode: "SC"},
+                    {stateCode: "SD"},
+                    {stateCode: "TN"},
+                    {stateCode: "TX"},
+                    {stateCode: "UT"},
+                    {stateCode: "VT"},
+                    {stateCode: "VI"},
+                    {stateCode: "VA"},
+                    {stateCode: "WA"},
+                    {stateCode: "WV"},
+                    {stateCode: "WI"},
+                    {stateCode: "WY"}
+                    ]
         }
         return api;
      });

@@ -603,6 +603,7 @@ function getBidders(req, res){
 
 
 function postShippingInfo(req, res) {
+    console.log("this is req.body ", req.body);
     var shipment = new Shipment({
         bidder: req.body.bid
         , item: req.body.item
@@ -610,20 +611,24 @@ function postShippingInfo(req, res) {
         , pickup: req.body.pickup
         , poBox: req.body.poBox
         , street: req.body.street
+        , city: req.body.city
         , zipCode: req.body.zipCode
         , state: req.body.state
         });
-    console.log(shipment.poBox);
+    console.log("shipment ",shipment);
     shipment.save(function(err, save){
         if (err) return res.json(500, "could not save shipment");
         res.json({message: "saved"});
     })
+    payment.makePayment("card", 7, function(err, success){
+        res.json("it worked");
+    });
     console.log("this is req.body.bid: ", req.body.bid);
     // Bidder.findOne({ _id: "537fbba4682b3e5099954a1a"})
     Bidder.findOne({ _id: req.body.bid})
     .exec(function(err,data){
         // console.log("this should be bidder: ", data);
-        mailer.notifyConfirmation("ag.saldivar@gmail.com", shipment.item, shipment.poBox, shipment.street, shipment.zipCode, shipment.state);
+        mailer.notifyConfirmation("ag.saldivar@gmail.com", shipment.item, shipment.poBox, shipment.street, shipment.city, shipment.zipCode, shipment.state);
     });
 }
 
