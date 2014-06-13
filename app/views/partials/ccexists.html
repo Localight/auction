@@ -1,0 +1,21 @@
+<div data-ng-show="isCCExist && readonly">
+    <button data-ng-click="saveCard()" class="visible-xs" data-ng-disabled="submitting">
+        <img src="images/pic/processd.png" class="proceed" alt=""/>
+    </button>
+    <div class="readyonlyCC">
+        <p style="margin-top: 0.6em;">
+            <span data-ng-click="change()"
+                  style="cursor: pointer;float: right;border-radius: 0.4em;border: 1px solid #78787b;padding: 0.2em 0.4em 0.2em 0.4em;margin-top: -0.3em;">Change</span>
+            <span class="glyphicon glyphicon-lock"></span>
+            Payment info
+        </p>
+        <img src="images/pic/account.png" style="width: 3em;margin: 0.7em;"/>
+        <span style="font-family: 'MyWebFont';font-size: 1.5em;">
+            ************{{model.card1.substr(model.card1.length-4)}}
+        </span>
+    </div>
+</div>
+
+<button data-ng-click="saveCard()" data-ng-disabled="submitting">
+    <img src="images/pic/processd.png" class="proceed" alt=""/>
+</button>

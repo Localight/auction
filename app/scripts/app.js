@@ -18,7 +18,38 @@ angular.module('NonProfitApp', [
             }
         };
     })
-    // .directive('')
+    .directive('havenlyCcNew', function(){
+        return {
+            // require: 'ngModel',
+            templateUrl: 'views/partials/ccnew.html',
+            // link: function(scp, elm, attrs) {
+
+                // $scope.isCCExist = scp.isCCExist;
+            //     elm.click(function(){
+            //         // stuff
+            //     })
+            //     attrs.lastfour;
+            //     $scope.card = scp.modelCard;
+            //     scp.card1Invalid;
+            // }
+        }
+    })    
+    .directive('havenlyCcExists', function(){
+        return {
+            // require: 'ngModel',
+            templateUrl: 'views/partials/ccexists.html',
+            // link: function(scp, elm, attrs) {
+
+                // $scope.isCCExist = scp.isCCExist;
+            //     elm.click(function(){
+            //         // stuff
+            //     })
+            //     attrs.lastfour;
+            //     $scope.card = scp.modelCard;
+            //     scp.card1Invalid;
+            // }
+        }
+    })
     .config(function ($routeProvider) {
         $routeProvider
             .when('/', {
@@ -340,9 +371,9 @@ angular.module('NonProfitApp', [
 
         $scope.address ={};
 
-        var states = api.states;
-        $scope.states = states;
-        $scope.address.myState = states[4].stateCode;
+        $scope.states = api.states;
+
+        $scope.address.myState = $scope.states[4].stateCode;
 
         var searchObject = $location.search();
         var state = $scope.myState
@@ -352,13 +383,8 @@ angular.module('NonProfitApp', [
         api.getBidDetails(bid)
         .then(function(data){
             $scope.bidDetails = data
-            console.log($scope.bidDetails.lastFour);
         });
-        // $scope.lastFour = $scope.bidDetails.lastFour;
-        // $scope.address = {};
         
-        // console.log(shippingInfo);
-        // console.log(shippingInfo);
         $scope.sendShippingInfo = function(address){
             var shippingInfo = {
                 bidder: $scope.bidDetails.bidderId,
