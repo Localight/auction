@@ -20,34 +20,35 @@ angular.module('NonProfitApp', [
     })
     .directive('havenlyCcNew', function(){
         return {
-            // require: 'ngModel',
+            require: 'ngModel',
             templateUrl: 'views/partials/ccnew.html',
-            // link: function(scp, elm, attrs) {
+            link: function(scp, elm, attrs) {
 
-                // $scope.isCCExist = scp.isCCExist;
-            //     elm.click(function(){
-            //         // stuff
-            //     })
-            //     attrs.lastfour;
-            //     $scope.card = scp.modelCard;
-            //     scp.card1Invalid;
-            // }
+                $scope.isCCExist = scp.isCCExist;
+                elm.click(function(){
+                    // stuff
+                })
+                attrs.lastfour;
+                $scope.card = scp.modelCard;
+                scp.card1Invalid;
+            }
         }
     })    
     .directive('havenlyCcExists', function(){
         return {
-            // require: 'ngModel',
+            require: 'ngModel',
             templateUrl: 'views/partials/ccexists.html',
-            // link: function(scp, elm, attrs) {
+            link: function(scp, elm, attrs) {
 
-                // $scope.isCCExist = scp.isCCExist;
-            //     elm.click(function(){
-            //         // stuff
-            //     })
-            //     attrs.lastfour;
-            //     $scope.card = scp.modelCard;
-            //     scp.card1Invalid;
-            // }
+                $scope.isCCExist = scp.isCCExist;
+                $scope.isCCExist = true;
+                elm.click(function(){
+                    // stuff
+                })
+                attrs.lastfour;
+                $scope.card = scp.modelCard;
+                scp.card1Invalid;
+            }
         }
     })
     .config(function ($routeProvider) {

@@ -620,14 +620,16 @@ function postShippingInfo(req, res) {
         if (err) return res.json(500, "could not save shipment");
         res.json({message: "saved"});
     })
-    payment.makePayment("card", 7, function(err, success){
-        res.json("it worked");
     });
     console.log("this is req.body.bid: ", req.body.bid);
     // Bidder.findOne({ _id: "537fbba4682b3e5099954a1a"})
     Bidder.findOne({ _id: req.body.bid})
     .exec(function(err,data){
         // console.log("this should be bidder: ", data);
+        
+// TODO for Zlatko: grab money. bidder.card_href, bid.cardHold, bid.amount
+            //
+            // TODO for Zlatko: grab money, bidder.card_href, '7.00';
         mailer.notifyConfirmation("ag.saldivar@gmail.com", shipment.item, shipment.poBox, shipment.street, shipment.city, shipment.zipCode, shipment.state);
     });
 }
