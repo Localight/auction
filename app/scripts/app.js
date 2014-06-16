@@ -20,6 +20,7 @@ angular.module('NonProfitApp', [
     })
     .directive('havenlyCcNew', function(){
         return {
+            restrict: 'E',
             require: 'ngModel',
             templateUrl: 'views/partials/ccnew.html',
             link: function(scp, elm, attrs) {
@@ -36,6 +37,7 @@ angular.module('NonProfitApp', [
     })    
     .directive('havenlyCcExists', function(){
         return {
+            restrict: 'E',
             require: 'ngModel',
             templateUrl: 'views/partials/ccexists.html',
             link: function(scp, elm, attrs) {
