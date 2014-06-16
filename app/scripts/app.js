@@ -355,9 +355,7 @@ angular.module('NonProfitApp', [
             // TODO: remove this, it's a mock
         })
         .catch(function(err){
-            console.log('bid fetching error: ', err);
-            $scope.isCCExist = true;
-            $scope.lastfour = '1234';
+
         });
 
         $scope.sendShippingInfo = function(address){

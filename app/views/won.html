@@ -45,7 +45,7 @@
         Confirm your payment method
       <div>{{bidDetails.lastFour}}</div>
       <havenly-cc-new></havenly-cc-new>
-      <havenly-cc-exists showme="true" lastfour="{{lastfour}}"></havenly-cc-exists>
+      <havenly-cc-exists showme="{{bidDetails}}" lastfour="{{bidDetails.lastFour}}"></havenly-cc-exists>
       </div>
 
   </div>
