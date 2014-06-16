@@ -18,41 +18,7 @@ angular.module('NonProfitApp', [
             }
         };
     })
-    .directive('havenlyCcNew', function(){
-        return {
-            restrict: 'E',
-            require: 'ngModel',
-            templateUrl: 'views/partials/ccnew.html',
-            link: function(scp, elm, attrs) {
 
-                $scope.isCCExist = scp.isCCExist;
-                elm.click(function(){
-                    // stuff
-                })
-                attrs.lastfour;
-                $scope.card = scp.modelCard;
-                scp.card1Invalid;
-            }
-        }
-    })    
-    .directive('havenlyCcExists', function(){
-        return {
-            restrict: 'E',
-            require: 'ngModel',
-            templateUrl: 'views/partials/ccexists.html',
-            link: function(scp, elm, attrs) {
-
-                $scope.isCCExist = scp.isCCExist;
-                $scope.isCCExist = true;
-                elm.click(function(){
-                    // stuff
-                })
-                attrs.lastfour;
-                $scope.card = scp.modelCard;
-                scp.card1Invalid;
-            }
-        }
-    })
     .config(function ($routeProvider) {
         $routeProvider
             .when('/', {
@@ -135,8 +101,8 @@ angular.module('NonProfitApp', [
             })
             .when('/won', {
               templateUrl: 'views/won.html',
-              controller: 'ShippingCtrl'  
-            })  
+              controller: 'ShippingCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });
@@ -160,7 +126,7 @@ angular.module('NonProfitApp', [
             for (var i=0; i<length; i++){
               // if (!(auction.items[i].itemNumber == 7722)){
                   var pics = auction.items;
-              // }               
+              // }
             }
             var pics = auction.items;
             var i = 0;
@@ -368,7 +334,7 @@ angular.module('NonProfitApp', [
       .then(function(data){
         // console.log(data);
       });
-      
+
     })
     .controller('ShippingCtrl', function ($scope, $rootScope, $http, $location, api){
 
@@ -387,7 +353,7 @@ angular.module('NonProfitApp', [
         .then(function(data){
             $scope.bidDetails = data
         });
-        
+
         $scope.sendShippingInfo = function(address){
             var shippingInfo = {
                 bidder: $scope.bidDetails.bidderId,
@@ -400,7 +366,7 @@ angular.module('NonProfitApp', [
                 zipCode: $scope.address.zipCode,
                 state: $scope.address.myState.stateCode
             };
-            
+
             $http.post('api/shipping', shippingInfo)
             $scope.address = angular.copy(address);
             console.log("in controller "+address);
@@ -529,6 +495,38 @@ angular.module('NonProfitApp', [
                     ]
         }
         return api;
-     });
+     })
+.directive('havenlyCcNew', ['api', function(api){
+            return {
+                restrict: 'E',
+                //require: 'ngModel',
+                templateUrl: 'views/partials/ccnew.html',
+                link: function(scp, elm, attrs) {
+
+                    //$scope.isCCExist = scp.isCCExist;
+                    elm.click(function(){
+                        // stuff
+                    })
+                    attrs.lastfour;
+                    // $scope.card = scp.modelCard;
+                    scp.card1Invalid;
+                }
+            }
+        }])
+    .directive('havenlyCcExists', ['api', function(api){
+            return {
+                restrict: 'E',
+                //require: 'ngModel',
+                templateUrl: 'views/partials/ccexists.html',
+                link: function(scp, elm, attrs) {
+
+                    elm.click(function(){
+                        // stuff
+                    })
+                    attrs.lastfour;
+                    scp.card1Invalid;
+                }
+            }
+        }]);
 
 // api.getItems('sold') // use for controller
