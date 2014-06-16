@@ -352,6 +352,12 @@ angular.module('NonProfitApp', [
         api.getBidDetails(bid)
         .then(function(data){
             $scope.bidDetails = data
+            // TODO: remove this, it's a mock
+        })
+        .catch(function(err){
+            console.log('bid fetching error: ', err);
+            $scope.isCCExist = true;
+            $scope.lastfour = '1234';
         });
 
         $scope.sendShippingInfo = function(address){
@@ -430,6 +436,7 @@ angular.module('NonProfitApp', [
                   })
                   .catch(function(err){
                     console.log('error getting bid data:', err);
+                    promise.reject(err);
                   });
                   return promise;
             }, states:
@@ -501,15 +508,23 @@ angular.module('NonProfitApp', [
                 restrict: 'E',
                 //require: 'ngModel',
                 templateUrl: 'views/partials/ccnew.html',
-                link: function(scp, elm, attrs) {
+                link: function(scope, elm, attrs) {
 
-                    //$scope.isCCExist = scp.isCCExist;
-                    elm.click(function(){
-                        // stuff
-                    })
-                    attrs.lastfour;
-                    // $scope.card = scp.modelCard;
-                    scp.card1Invalid;
+                    scope.$watch(function(){return elm.attr('showme');},
+                        function(newVal){
+                            console.log('showme change');
+                            if(newVal === 'true') {
+                                scope.showme = true;
+                                alert('showing the directive')
+                            } else {
+                                scope.showme = false;
+                                alert('hiding the directive')
+                            }
+                    });
+                    scope.$watch(function(){return elm.attr('lastfour');}, function(newVal){
+                        console.log('lastfour change');
+                        scope.lastfour = newVal;
+                    });
                 }
             }
         }])

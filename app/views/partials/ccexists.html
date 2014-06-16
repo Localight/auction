@@ -1,4 +1,4 @@
-<div data-ng-show="isCCExist">
+<div data-ng-show="showme">
     <button data-ng-click="saveCard()" class="visible-xs" data-ng-disabled="submitting">
         <img src="images/pic/processd.png" class="proceed" alt=""/>
     </button>
@@ -11,7 +11,7 @@
         </p>
         <img src="images/pic/account.png" style="width: 3em;margin: 0.7em;"/>
         <span style="font-family: 'MyWebFont';font-size: 1.5em;">
-            ************{{model.card1.substr(model.card1.length-4)}}
+            ************{{lastFour}}
         </span>
     </div>
 </div>
