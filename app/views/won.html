@@ -44,8 +44,12 @@
       <div class="col-md-5 col-md-offset-4 col-xs-6 col-xs-offset-3 payment">
         Confirm your payment method
       <div>{{bidDetails.lastFour}}</div>
-      <havenly-cc-new></havenly-cc-new>
-      <havenly-cc-exists showme="{{bidDetails}}" lastfour="{{bidDetails.lastFour}}"></havenly-cc-exists>
+      <havenly-cc-new data-ng-hide="isCCExist"></havenly-cc-new>
+      <havenly-cc-exists data-ng-show="isCCExist" showme="{{bidDetails}}" lastfour="{{bidDetails.lastFour}}">
+      </havenly-cc-exists>
+          <button data-ng-click="saveCard()" data-ng-disabled="submitting">
+              <img src="images/pic/processd.png" class="proceed" alt=""/>
+          </button>
       </div>
 
   </div>

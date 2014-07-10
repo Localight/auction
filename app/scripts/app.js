@@ -1,5 +1,5 @@
 angular.module('NonProfitApp', [
-        'ngRoute', 'timer'
+        'ngRoute', 'timer', 'debug'
     ])
     .directive('smartFloat', function() {
         return {
@@ -338,6 +338,10 @@ angular.module('NonProfitApp', [
     })
     .controller('ShippingCtrl', function ($scope, $rootScope, $http, $location, api){
 
+        // TODO please call back end API like api.getCC(bid)
+        // if cc exist, set $rootScope.isCCExist = true , else set $rootScope.isCCExist = false
+        $rootScope.isCCExist = true;    // here I assume it's true, you can change it to false and have a try
+
         $scope.address ={};
 
         $scope.states = api.states;
@@ -501,28 +505,13 @@ angular.module('NonProfitApp', [
         }
         return api;
      })
-.directive('havenlyCcNew', ['api', function(api){
+.directive('havenlyCcNew', ['api','$rootScope', function(api,$rootScope){
             return {
                 restrict: 'E',
                 //require: 'ngModel',
                 templateUrl: 'views/partials/ccnew.html',
                 link: function(scope, elm, attrs) {
 
-                    scope.$watch(function(){return elm.attr('showme');},
-                        function(newVal){
-                            console.log('showme change');
-                            if(newVal === 'true') {
-                                scope.showme = true;
-                                alert('showing the directive')
-                            } else {
-                                scope.showme = false;
-                                alert('hiding the directive')
-                            }
-                    });
-                    scope.$watch(function(){return elm.attr('lastfour');}, function(newVal){
-                        console.log('lastfour change');
-                        scope.lastfour = newVal;
-                    });
                 }
             }
         }])
@@ -533,11 +522,6 @@ angular.module('NonProfitApp', [
                 templateUrl: 'views/partials/ccexists.html',
                 link: function(scp, elm, attrs) {
 
-                    elm.click(function(){
-                        // stuff
-                    })
-                    attrs.lastfour;
-                    scp.card1Invalid;
                 }
             }
         }]);
