@@ -10,7 +10,8 @@ function update(month, day, cb){
                 data[0].end = new Date(2014, (month - 1), day, 23, 59);
                 data[0].auctionEndDateMonthNumber = 8;
                 data[0].auctionEndDateDayNumber = day;
-                data[0].auctionEndDateText = 'Ends ' + data[0].end.toDateString().substr(4,6) + ' at midnight PST';
+                // data[0].auctionEndDateText = 'Ends ' + data[0].end.toDateString().substr(4,6) + ' at midnight PST';
+                data[0].auctionEndDateText = 'Ends August 3rd at midnight PST';
                 data[0].save(function(err, saved){
                         // console.log(saved);
                         Auction.find(function(err, data){
