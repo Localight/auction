@@ -88,8 +88,8 @@ Auction.find(function(Err, auc){
   // fetch auction end date; month needs to be recalibrated by index # for scheduler
   // var date = new Date(auc[0].auctionEndDateYear, auc[0].auctionEndDateMonthNumber=4, auc[0].auctionEndDateDayNumber, auc[0].auctionEndDateHour, auc[0].auctionEndDateMinute);
 
-  var date = new Date(2012, 8, 12, 23, 59, 0);
-  // var date = new Date();
+  // var date = new Date(2012, 8, 12, 23, 59, 0);
+  var date = new Date();
 
   // var date = new Date(2014, 05, 2, 17, 00, 0); // test date
 

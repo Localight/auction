@@ -8,7 +8,7 @@ function update(month, day, cb){
                         return cb('No data');
                 }
                 data[0].end = new Date(2014, (month - 1), day, 23, 59);
-                data[0].auctionEndDateMonthNumber = month;
+                data[0].auctionEndDateMonthNumber = 8;
                 data[0].auctionEndDateDayNumber = day;
                 data[0].auctionEndDateText = 'Ends ' + data[0].end.toDateString().substr(4,6) + ' at midnight PST';
                 data[0].save(function(err, saved){
