@@ -112,6 +112,7 @@ angular.module('NonProfitApp', [
     })
     .controller('MainCtrl', function ($scope, $rootScope, api) {
         var auction = $scope.auction = [];
+        auction.name="Los Alamitos High School";
         api.getItems('unsold')
         .then(function(data){
           console.log(data)
@@ -173,7 +174,6 @@ angular.module('NonProfitApp', [
 //            var model = {amount:outbid.bid};
 //            $scope.model = model;
 //        }
-
         var bid = outbid.bid;
         var bidAmount = outbid.bidAmount;
         if(bid){

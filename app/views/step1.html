@@ -29,9 +29,7 @@
                         </div>
                     </div>
 
-                    <!--<button data-ng-click="saveCard()" class="visible-xs" data-ng-disabled="submitting">-->
-                        <!--<img src="images/pic/processd.png" class="proceed" alt=""/>-->
-                    <!--</button>-->
+                    
                 </div>
                 <div class="col-md-6">
                     <p>
@@ -59,11 +57,14 @@
                     </div>
 <!-- first directive -->
                     <div class="payment">
-                        <havenly-cc-new></havenly-cc-new>
+                        <havenly-cc-new data-ng-hide="isCCExist"></havenly-cc-new>
 <!-- second directive -->
-                        <havenly-cc-exists></havenly-cc-exists>
+                        <havenly-cc-exists data-ng-show="isCCExist"></havenly-cc-exists>
                     </div>
                 </div>
+                <button data-ng-click="saveCard()"  data-ng-disabled="submitting">
+                        <img src="images/pic/processd.png" class="proceed" alt=""/>
+                    </button>
             </div>
         </form>
     </div>
